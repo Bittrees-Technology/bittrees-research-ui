@@ -1,6 +1,8 @@
-# bittrees-nft-deployer-ui-for-bag
+# bittrees-research-ui
 
-NFT Deployer for Builders Advocacy Group (BAG)
+Web UI for Bittrees Research site.
+
+Based on <https://github.com/Bittrees-Technology/bittrees-nft-deployer-ui-for-bag>
 
 Includes:
 
