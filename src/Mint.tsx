@@ -83,9 +83,10 @@ export function Mint() {
         <button
           className="btn btn-primary"
           onClick={onClick}
-          disabled={!Boolean(address) || Boolean(error)}
+          // disabled={!Boolean(address) || Boolean(error)}
+          disabled={true}
         >
-          Mint
+          Mint not available yet
         </button>
 
         {!address && (

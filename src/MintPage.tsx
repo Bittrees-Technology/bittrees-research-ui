@@ -4,19 +4,18 @@ import { Mint } from "./Mint";
 function MintPage() {
   return (
     <div className="max-w-4xl mx-auto">
-      <header className="bg-primary h-56">
-        <div className="flex p-4 items-start justify-center">
-          <div className="flex-1">&nbsp;</div>
+      <header className="bg-[#dedede] border-b-2 border-gray-500">
+        <div className="w-full bg-red-500">
+          <img className="" src="/br-banner.jpg" width="1000" height="500" />
         </div>
-        <div className="text-7xl font-bold text-center mt-4">[B | Â | G]</div>
       </header>
 
-      <main className="text-center bg-[#eef3ee]">
+      <main className="text-center bg-[#dedede]">
         <div className="flex flex-col gap-3 p-6 items-center">
           <div className="mx-auto">
-            <div className="text-xl">BAG Membership</div>
+            <div className="text-xl">Bittrees Research Membership</div>
             <img
-              src="/bag-briefcase.png"
+              src="/br-logo.jpg"
               width="256px"
               height="256px"
               alt="Business Advocacy Group logo"
@@ -29,18 +28,20 @@ function MintPage() {
             <ConnectButton />
           </div>
           <div className="mt-8">
-            Builders Advocacy Group (BAG) is a Representative Body, Unifying
-            &amp; Amplifying the Experience of Voxels Builders.
+            Bittrees Research -- Lorem ipsum dolor sit amet consectetur
+            adipisicing elit. Itaque vero fuga impedit eveniet voluptatum
+            voluptatibus cum hic quisquam? Impedit quisquam alias consequuntur
+            officiis maiores dolores explicabo laborum natus vitae accusamus.
           </div>
-          <div>Become a Member to Have Your Voice Heard.</div>
+          \{" "}
           <footer className="flex flex-col gap-6 mx-auto">
             <div className="underline">
               <a
-                href="https://twitter.com/voxelsadvocacy"
+                href="https://twitter.com/BittreesR"
                 target="_blank"
                 rel="noreferrer"
               >
-                @voxelsadvocacy
+                @BittreesR
               </a>
             </div>
             <div>
