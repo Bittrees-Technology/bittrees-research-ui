@@ -21,10 +21,10 @@ function App() {
             <Link to="/mint" className="flex flex-col items-center">
               <div className="text-xl">Mint Membership</div>
               <img
-                src="/br-logo.jpg"
+                src="/bittrees-research.jpg"
                 width="256px"
                 height="256px"
-                alt="Business Advocacy Group logo"
+                alt="Bittrees Research logo"
               />
             </Link>
           </div>
