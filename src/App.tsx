@@ -10,6 +10,7 @@ function App() {
             src="/br-banner.jpg"
             width="1000"
             height="500"
+            alt="BR Banner"
           />
         </div>
       </header>
