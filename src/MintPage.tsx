@@ -15,10 +15,10 @@ function MintPage() {
           <div className="mx-auto">
             <div className="text-xl">Bittrees Research Membership</div>
             <img
-              src="/br-logo.jpg"
+              src="bittrees-research.jpg"
               width="256px"
               height="256px"
-              alt="Business Advocacy Group logo"
+              alt="Bittrees Research logo"
             />
           </div>
           <div>
