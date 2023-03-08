@@ -10,22 +10,24 @@ function App() {
             src="/br-banner.jpg"
             width="1000"
             height="500"
-            alt="BR Banner"
+            alt="Bittrees Research banner"
           />
         </div>
       </header>
 
       <main className="text-center bg-[#dedede]">
         <div className="flex flex-col gap-6 p-6">
-          <div className="mx-auto border border-black p-4 w-80 h-80">
+          <div className="mx-auto border border-black p-4 w-80 h-64">
             <Link to="/mint" className="flex flex-col items-center">
               <div className="text-xl">Mint Membership</div>
-              <img
-                src="/bittrees-research.jpg"
-                width="256px"
-                height="256px"
-                alt="Bittrees Research logo"
-              />
+              <div className="mt-6">
+                <img
+                  src="/br-logo.jpg"
+                  width="128px"
+                  height="128px"
+                  alt="Bittrees Research logo"
+                />
+              </div>
             </Link>
           </div>
           <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center">
