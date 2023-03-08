@@ -11,7 +11,7 @@ const chainId =
 console.info(`Contract: ${CONTRACT_ADDRESS}`);
 console.info(`Chain ID: ${chainId}`);
 
-const mintPrice = "0.0100";
+const mintPrice = "0.0250";
 
 function displayFriendlyError(message: string | undefined): string {
   if (!message) return "";
