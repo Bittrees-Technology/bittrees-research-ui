@@ -17,7 +17,7 @@ function App() {
 
       <main className="text-center bg-[#dedede]">
         <div className="flex flex-col gap-6 p-6">
-          <div className="mx-auto border border-black p-4 w-80 h-64">
+          <div className="mx-auto border border-black p-4 w-80 h-64 shadow-md shadow-gray-500 hover:shadow-black">
             <Link to="/mint" className="flex flex-col items-center">
               <div className="text-xl">Mint Membership</div>
               <div className="mt-6">
@@ -30,7 +30,7 @@ function App() {
               </div>
             </Link>
           </div>
-          <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center">
+          <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center shadow-md shadow-gray-500 hover:shadow-black">
             <div className="text-xl">Members-only Services</div>
             <div>Coming Soon!</div>
           </div>
