@@ -25,6 +25,7 @@ function MintPage() {
               width="128px"
               height="128px"
               alt="Bittrees Research logo"
+              className="border border-black m-8"
             />
           </div>
           <div>
