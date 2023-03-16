@@ -42,27 +42,43 @@ function App() {
                 target="_blank"
                 rel="noreferrer"
               >
-                @BittreesR
+                <img
+                  className="mx-auto"
+                  src="/twitter.svg"
+                  width="100"
+                  height="100"
+                  alt="Bittrees Research logo"
+                />
               </a>
             </div>
             <div className="flex justify-center">
-              <Link to="/mint">
-                <img
-                  src="/bag-logo-circle-smaller.png"
-                  width="128px"
-                  height="128px"
-                  alt="Business Advocacy Group logo"
-                />
-              </Link>
-            </div>
-            <div className="underline w-60">
               <a
-                href="https://app.gitbook.com/invite/l128PJAr3ltvGCqdsBkP/Q9hrQC2Iz4m6KqyvHx3B
-                "
+                href="https://www.voxels.com/play?coords=W@429W,182S"
                 target="_blank"
                 rel="noreferrer"
               >
-                Gitbook
+                <img
+                  className="mx-auto"
+                  src="/bittrees_logo_tree.png"
+                  width="100"
+                  height="100"
+                  alt="Bittrees Research logo"
+                />
+              </a>
+            </div>
+            <div className="w-60">
+              <a
+                href="https://paragraph.xyz/@bittrees_research"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <img
+                  className="mx-auto"
+                  src="/paragraph-logo.png"
+                  width="100"
+                  height="100"
+                  alt="paragraph.xyz logo"
+                />
               </a>
             </div>
           </footer>
