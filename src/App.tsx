@@ -4,7 +4,7 @@ function App() {
   return (
     <div className="max-w-4xl mx-auto">
       <header className="bg-[#dedede] border-b-2 border-gray-500">
-        <div className="w-full bg-red-500">
+        <div className="w-full">
           <img
             className=""
             src="/br-banner.jpg"
