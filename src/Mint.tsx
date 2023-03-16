@@ -4,7 +4,7 @@ import { goerli, mainnet } from "wagmi/chains";
 import { ethers } from "ethers";
 import { useState } from "react";
 
-const CONTRACT_ADDRESS = "0x6e8c260cB878489c8066Dd75536e5E9B5ca4C288";
+const CONTRACT_ADDRESS = "0xc8121e650bd797d8b9dad00227a9a77ef603a84a";
 const chainId =
   process.env.REACT_APP_ENABLE_TESTNETS === "true" ? goerli.id : mainnet.id;
 
@@ -73,7 +73,7 @@ export function Mint() {
         </div>
       </div>
       {error && (
-        <div className="text-red-500 m-4 mx-auto max-w-xl">
+        <div className="m-4 mx-auto max-w-xl">
           An error occurred preparing the transaction:{" "}
           {displayFriendlyError(error.message)}
         </div>
@@ -83,10 +83,9 @@ export function Mint() {
         <button
           className="btn btn-primary"
           onClick={onClick}
-          // disabled={!Boolean(address) || Boolean(error)}
-          disabled={true}
+          disabled={!Boolean(address) || Boolean(error)}
         >
-          Mint not available yet
+          Mint
         </button>
 
         {!address && (
