@@ -19,12 +19,12 @@ function MintPage() {
       </header>
 
       <main className="text-center bg-[#dedede]">
-        <div className="flex flex-col gap-3 p-12 items-center">
-          <div className="mx-auto flex flex-col items-center">
+        <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
+          <div className="mx-auto flex flex-col items-center max-w-md">
             <img
               src="/bittrees-membership-card.png"
-              width="50%"
-              height="50%"
+              width="1400px"
+              height="800px"
               alt="Bittrees Research Membership Card"
             />
           </div>
