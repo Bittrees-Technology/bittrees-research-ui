@@ -6,29 +6,29 @@ function MintPage() {
     <div className="max-w-4xl mx-auto">
       <header className="bg-[#dedede] border-b-2 border-gray-500">
         <div className="w-full">
-          <img
-            className=""
-            src="/br-banner.jpg"
-            width="1000"
-            height="500"
-            alt="Bittrees Research banner"
-          />
+          <a href="./" className="mx-auto">
+            <img
+              className="mx-auto"
+              src="/br-banner.jpg"
+              width="75%"
+              height="75%"
+              alt="Bittrees Research banner"
+            />
+          </a>
         </div>
       </header>
 
       <main className="text-center bg-[#dedede]">
-        <div className="flex flex-col gap-3 p-6 items-center">
+        <div className="flex flex-col gap-3 p-12 items-center">
           <div className="mx-auto flex flex-col items-center">
-            <div className="text-xl">Bittrees Research Membership</div>
             <img
-              src="/br-logo.jpg"
-              width="128px"
-              height="128px"
-              alt="Bittrees Research logo"
-              className="border border-black m-8"
+              src="/bittrees-membership-card.png"
+              width="50%"
+              height="50%"
+              alt="Bittrees Research Membership Card"
             />
           </div>
-          <div>
+          <div className="mt-4">
             <Mint />
           </div>
           <div>
