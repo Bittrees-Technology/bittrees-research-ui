@@ -6,10 +6,10 @@ function App() {
       <header className="bg-[#dedede] border-b-2 border-gray-500">
         <div className="w-full">
           <img
-            className=""
+            className="mx-auto"
             src="/br-banner.jpg"
-            width="1000"
-            height="500"
+            width="75%"
+            height="75%"
             alt="Bittrees Research banner"
           />
         </div>
@@ -30,7 +30,7 @@ function App() {
               </div>
             </Link>
           </div>
-          <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center shadow-md shadow-gray-500 hover:shadow-black">
+          <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center">
             <div className="text-xl">Members-only Services</div>
             <div>Coming Soon!</div>
           </div>
