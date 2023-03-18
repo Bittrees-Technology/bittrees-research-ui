@@ -74,10 +74,10 @@ function MintPage() {
             </div>
             <div>
               <img
-                src="/bag-logo-circle-smaller.png"
+                src="/bittrees_logo_tree.png"
                 width="128px"
                 height="128px"
-                alt="Business Advocacy Group logo"
+                alt="Bittrees Research logo"
                 className="grayscale"
               />
             </div>
