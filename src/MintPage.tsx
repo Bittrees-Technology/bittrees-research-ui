@@ -73,13 +73,15 @@ function MintPage() {
               </a>
             </div>
             <div>
-              <img
-                src="/bittrees_logo_tree.png"
-                width="128px"
-                height="128px"
-                alt="Bittrees Research logo"
-                className="grayscale"
-              />
+              <a href="/" className="mx-auto">
+                <img
+                  src="/bittrees_logo_tree.png"
+                  width="128px"
+                  height="128px"
+                  alt="Bittrees Research logo"
+                  className="grayscale"
+                />
+              </a>
             </div>
           </footer>
         </div>
