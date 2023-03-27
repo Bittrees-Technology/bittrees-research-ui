@@ -53,7 +53,7 @@ export function Mint() {
   return (
     <>
       <div className="grid grid-cols-2 gap-6 justify-start">
-        <div className="text-right">Membership Mint Price:</div>
+        <div className="text-right">Minimum Donation:</div>
         <div className="text-left">{mintPrice} ETH</div>
         <div className="text-right">Add additional donation:</div>
         <div className="text-left">
