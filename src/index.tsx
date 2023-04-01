@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import MintPage from "./MintPage";
+import MembersPage from "./MembersPage";
 import reportWebVitals from "./reportWebVitals";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -29,7 +30,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Builders Advocacy Group",
+  appName: "Bittrees Research",
   chains,
 });
 
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
   {
     path: "/mint",
     element: <MintPage />,
+  },
+  {
+    path: "/members",
+    element: <MembersPage />,
   },
 ]);
 
