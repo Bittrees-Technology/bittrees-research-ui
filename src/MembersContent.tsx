@@ -53,13 +53,18 @@ export function MembersContent() {
   // const expired =  contract.isExpired('1');
 
   
-  let alchemyEndpoint = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN/getNFTs/?owner=" + address;
- 
-  // TESTING... Hardcoded the address 0x7435e7f3e6B5c656c33889a3d5EaFE1e17C033CD. 
-  //alchemyEndpoint = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN/getNFTs/?owner=0x7435e7f3e6B5c656c33889a3d5EaFE1e17C033CD";
-  console.log("alchemyEndpoint: " + alchemyEndpoint);
 
   useEffect(() => {
+    if (!address) {
+      setNFTOwner(false);
+      return;
+    }
+    let alchemyEndpoint = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN/getNFTs/?owner=" + address;
+ 
+    // TESTING... Hardcoded the address 0x7435e7f3e6B5c656c33889a3d5EaFE1e17C033CD. 
+    //alchemyEndpoint = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN/getNFTs/?owner=0x7435e7f3e6B5c656c33889a3d5EaFE1e17C033CD";
+    console.log("alchemyEndpoint: " + alchemyEndpoint);
+  
     fetch( alchemyEndpoint )
       .then(response => response.json())
       .then((usefulData) => {
@@ -92,9 +97,10 @@ export function MembersContent() {
       })
       .catch((e) => {
         console.error(`An error occurred: ${e}`)
+        setNFTOwner(false);
       });
 
-  }, []);
+  }, [address]);
 
 
   return (
