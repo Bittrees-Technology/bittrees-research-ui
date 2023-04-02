@@ -1,17 +1,8 @@
-import { useAccount, usePrepareContractWrite, useContractWrite } from "wagmi";
+import { useAccount, useContract, useContractRead } from "wagmi";
 import abi from "./abi.json";
 import { goerli, mainnet } from "wagmi/chains";
 import { ethers } from "ethers";
 import { useState, useEffect } from "react";
-
-//import { Network, Alchemy } from "alchemy-sdk";
-
-//const alchemyConfig = {
-//  apiKey: "MY6sRxkJ6Jeo6Pd_6XvgrmvXJFbrQE0w",
-//  network: Network.ETH_MAINNET,
-//};
-
-//const alchemy = new Alchemy(alchemyConfig);
 
 const CONTRACT_ADDRESS = "0xc8121e650bd797d8b9dad00227a9a77ef603a84a";
 const chainId =
@@ -20,10 +11,8 @@ const chainId =
 //console.info(`Contract: ${CONTRACT_ADDRESS}`);
 //console.info(`Chain ID: ${chainId}`);
 
-
 export function MembersContent() {
-
-  const [data, setData] = useState(null);
+  const [nftData, setNftData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isNFTOwner, setNFTOwner] = useState(false);
@@ -31,14 +20,37 @@ export function MembersContent() {
   const { address } = useAccount();
   console.info(`address: ${address}`);
 
+  const contract = useContract({
+    address: CONTRACT_ADDRESS,
+    abi: abi,
+  })
 
-    // alchemy.nft.getNftsForOwner({ssx.address()}`)
-    //   .then((nfts) => {
-    //     const ownENS = nfts.ownedNfts
-    //       .filter(({ contract }) => contract.address === CONTRACT_ADDRESS)?.length > 0;
-    //     console.log("It worked!");
-    //   };
+  console.log(contract);
 
+  // testing - results in error, should return boolean, there is a tokenId of 0x01
+  const contractRead = useContractRead({
+    address: CONTRACT_ADDRESS,
+    abi: abi,
+    functionName: 'isExpired',
+    chainId: chainId,
+    args: [ 1 ],
+    onSettled(data, error) {
+      console.log('Settled', { data, error })
+    },
+  })
+
+  // if (!isError) {
+  //console.log("data: "+ JSON.stringify(data));
+  // }
+
+
+  //0x01
+  //console.log(JSON.stringify(isError));
+
+  // const contractAddress = '0xc8121e650bd797d8b9dad00227a9a77ef603a84a'
+  // const provider =  new ethers.providers.JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN");
+  // const contract =  new ethers.Contract( contractAddress , abi , provider );
+  // const expired =  contract.isExpired('1');
 
   
   let alchemyEndpoint = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN/getNFTs/?owner=" + address;
@@ -64,8 +76,8 @@ export function MembersContent() {
               console.log(nftInfo.title);
               setNFTOwner(true);
               setLoading(false);
-              setData(nftInfo);
-              console.log(data);
+              setNftData(nftInfo);
+              console.log(nftData);
               break;
             } else {
               console.info("Not a Bittrees Research contract.")
@@ -108,7 +120,7 @@ export function MembersContent() {
             <br/>
             {CONTRACT_ADDRESS}
             <br/>
-            {JSON.stringify(data)}
+            {JSON.stringify(nftData)}
 
 
 
