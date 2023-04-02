@@ -26,6 +26,7 @@ export function MembersContent() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isNFTOwner, setNFTOwner] = useState(false);
  
   const { address } = useAccount();
   console.info(`address: ${address}`);
@@ -39,10 +40,15 @@ export function MembersContent() {
     //   };
 
 
-  // Hardcoded the address. Trying to get the address into the fetch url. 
+  
+  let alchemyEndpoint = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN/getNFTs/?owner=" + address;
+ 
+  // TESTING... Hardcoded the address 0x7435e7f3e6B5c656c33889a3d5EaFE1e17C033CD. 
+  //alchemyEndpoint = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN/getNFTs/?owner=0x7435e7f3e6B5c656c33889a3d5EaFE1e17C033CD";
+  console.log("alchemyEndpoint: " + alchemyEndpoint);
 
   useEffect(() => {
-    fetch("https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN/getNFTs/?owner=0x7435e7f3e6B5c656c33889a3d5EaFE1e17C033CD")
+    fetch( alchemyEndpoint )
       .then(response => response.json())
       .then((usefulData) => {
         if (usefulData.ownedNfts.length == 0) {
@@ -56,6 +62,7 @@ export function MembersContent() {
               console.log(nftInfo.id.tokenId);
               console.log(nftInfo.id.tokenMetadata);
               console.log(nftInfo.title);
+              setNFTOwner(true);
               setLoading(false);
               setData(nftInfo);
               console.log(data);
@@ -84,11 +91,12 @@ export function MembersContent() {
         {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
-        {loading && <p className="text-2xl mt-4">Loading...</p>}
+        {loading && isNFTOwner && <p className="text-2xl mt-4">Loading...</p>}
       </div>
 
 
-      {data && (
+
+      {isNFTOwner && (
           <div className="m-4 mx-auto max-w-xl">
             Members Content!!!
 
@@ -100,10 +108,17 @@ export function MembersContent() {
             <br/>
             {CONTRACT_ADDRESS}
             <br/>
-            { 
+            {JSON.stringify(data)}
 
-              
-            }
+
+
+
+          </div>
+        )}
+
+      {!isNFTOwner && (
+          <div className="m-4 mx-auto max-w-xl">
+            Please go mint your membership!
 
 
 
