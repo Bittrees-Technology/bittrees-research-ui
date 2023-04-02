@@ -23,6 +23,7 @@ interface OwnedNFT {
 }
 
 /**
+ * Checks if a membership is expired on a single token.
  *
  * @param tokenId - hex string such as 0x01
  * @returns boolean
@@ -34,6 +35,7 @@ async function isMembershipExpired(tokenId: string): Promise<boolean> {
 }
 
 /**
+ * Gets all tokenIds for a given wallet address that are owned by the contract.
  *
  * @param ownerAddress - wallet address
  * @param contractAddress
@@ -56,6 +58,7 @@ async function getMemberTokenIds(
 }
 
 /**
+ * Checks if a wallet address has an active membership.
  *
  * @param ownerAddress
  * @returns boolean
@@ -73,6 +76,10 @@ async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
   return hasActiveMembership;
 }
 
+/**
+ * MembersContent React component.
+ * 
+ */
 export function MembersContent() {
   const [loading, setLoading] = useState(true);
   const [hasValidMembership, setHasValidMembership] = useState(false);
