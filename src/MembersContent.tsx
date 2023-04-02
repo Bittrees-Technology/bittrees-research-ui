@@ -1,17 +1,11 @@
 import { useAccount } from "wagmi";
 import abi from "./abi.json";
-import { goerli, mainnet } from "wagmi/chains";
 import { ethers } from "ethers";
 import { useState, useEffect } from "react";
 
 const CONTRACT_ADDRESS = "0xc8121e650bd797d8b9dad00227a9a77ef603a84a";
 const RPC_URL =
   "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN";
-const chainId =
-  process.env.REACT_APP_ENABLE_TESTNETS === "true" ? goerli.id : mainnet.id;
-
-//console.info(`Contract: ${CONTRACT_ADDRESS}`);
-//console.info(`Chain ID: ${chainId}`);
 
 interface OwnedNFT {
   contract: {
@@ -70,15 +64,14 @@ async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
       return isMembershipExpired(tokenId);
     })
   );
-  const hasActiveMembership = isExpired.some((isExpired) => {
+  return isExpired.some((isExpired) => {
     return !isExpired;
   });
-  return hasActiveMembership;
 }
 
 /**
  * MembersContent React component.
- * 
+ *
  */
 export function MembersContent() {
   const [loading, setLoading] = useState(true);
