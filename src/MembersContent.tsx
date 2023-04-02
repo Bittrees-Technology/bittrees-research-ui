@@ -104,7 +104,7 @@ export function MembersContent() {
         {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
-        {loading && hasValidMembership && (
+        {loading && (
           <p className="text-2xl mt-4">Loading...</p>
         )}
       </div>
