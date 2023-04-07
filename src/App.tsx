@@ -30,7 +30,7 @@ function App() {
               </div>
             </Link>
           </div>
-          <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center">
+          <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center shadow-md shadow-gray-500 hover:shadow-black">
             <Link to="/members" className="flex flex-col items-center">
               <div className="text-xl">Members-only Services</div>
               <div className="mt-6">
