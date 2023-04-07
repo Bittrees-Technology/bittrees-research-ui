@@ -3,6 +3,8 @@ import "./index.css";
 import App from "./App";
 import MintPage from "./MintPage";
 import MembersPage from "./MembersPage";
+import CodeOfEthicsPage from "./CodeOfEthicsPage";
+import RoadmapPage from "./RoadmapPage";
 import reportWebVitals from "./reportWebVitals";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -55,6 +57,14 @@ const router = createBrowserRouter([
   {
     path: "/members",
     element: <MembersPage />,
+  },
+  {
+    path: "/codeofethics",
+    element: <CodeOfEthicsPage />,
+  },
+  {
+    path: "/roadmap",
+    element: <RoadmapPage />,
   },
 ]);
 
