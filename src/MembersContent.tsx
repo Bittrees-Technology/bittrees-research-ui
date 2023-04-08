@@ -59,13 +59,13 @@ async function getMemberTokenIds(
  */
 async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
   const tokenIds = await getMemberTokenIds(ownerAddress, CONTRACT_ADDRESS);
-  console.log("tokenId: " + tokenIds)
+  console.log("tokenId: " + tokenIds);
   const isExpired = await Promise.all(
     tokenIds.map((tokenId) => {
       return isMembershipExpired(tokenId);
     })
   );
-  console.log("isExpired: " + isExpired)
+  console.log("isExpired: " + isExpired);
   return isExpired.some((isExpired) => {
     return !isExpired;
   });
@@ -77,45 +77,41 @@ async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
  */
 export function MembersContent() {
   const [loading, setLoading] = useState(true);
-  const [hasValidMembership, setHasValidMembership] = useState(false); 
+  const [hasValidMembership, setHasValidMembership] = useState(false);
 
-  //const { address } = useAccount();
-  //const { address, isConnected, isConnecting, isDisconnected } = useAccount();
-  const account = useAccount({
+  const { address, isConnected, isConnecting } = useAccount({
     onConnect({ address, connector, isReconnected }) {
-      console.log('Connected', { address, connector, isReconnected })
+      console.log("Connected", { address, connector, isReconnected });
     },
-  })
+  });
 
   useEffect(() => {
-      console.log("account.isConnected: " + account.isConnected);
-      if (!account.address) {
-        setHasValidMembership(false);
-        return;
-      }
+    console.log("isConnected: " + isConnected);
+    if (!(address && isConnected)) {
+      setHasValidMembership(false);
+      return;
+    }
 
-      hasActiveMembership(account.address)
-        .then((hasActiveMembership) => {
-          setHasValidMembership(hasActiveMembership);
-        })
-        .catch((err) => {
-          console.error(err);
-          setHasValidMembership(false);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-  }, [account.address, account.isConnected]);
+    hasActiveMembership(address)
+      .then((hasActiveMembership) => {
+        setHasValidMembership(hasActiveMembership);
+      })
+      .catch((err) => {
+        console.error(err);
+        setHasValidMembership(false);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [address, isConnected]);
 
   return (
     <>
       <div className="mt-4">
-        {!account.address && (
+        {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
-        {loading && (
-          <p className="text-2xl mt-4">Loading...</p>
-        )}
+        {loading && isConnecting && <p className="text-2xl mt-4">Loading...</p>}
       </div>
 
       {hasValidMembership && (
@@ -127,21 +123,34 @@ export function MembersContent() {
             <div>
               <ul>
                 <li>Vision Statement</li>
-                <li><a href="/codeofethics">Code of Ethics</a></li>
+                <li>
+                  <a href="/codeofethics">Code of Ethics</a>
+                </li>
                 <li>Gift Membership </li>
                 <li>Mint Equity </li>
                 <li>Equity Contract </li>
                 <li>Membership Contract</li>
               </ul>
-
             </div>
             <div>
               <ul>
-                <li><a href="/roadmap">Roadmap</a></li>
-                <li><a href="https://docs.google.com/drawings/d/1_AYqj8boh7o8d_CrhSbSUtlvrs0fpTOUEIOxqGd_s58/">Org Chart Diagram</a></li>
+                <li>
+                  <a href="/roadmap">Roadmap</a>
+                </li>
+                <li>
+                  <a href="https://docs.google.com/drawings/d/1_AYqj8boh7o8d_CrhSbSUtlvrs0fpTOUEIOxqGd_s58/">
+                    Org Chart Diagram
+                  </a>
+                </li>
                 <li>Telegram</li>
-                <li><a href="https://twitter.com/BittreesR">Twitter</a></li>
-                <li><a href="https://paragraph.xyz/@bittrees_research">Paragraph</a></li>
+                <li>
+                  <a href="https://twitter.com/BittreesR">Twitter</a>
+                </li>
+                <li>
+                  <a href="https://paragraph.xyz/@bittrees_research">
+                    Paragraph
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
