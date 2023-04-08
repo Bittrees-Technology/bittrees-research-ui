@@ -25,7 +25,6 @@ interface OwnedNFT {
 async function isMembershipExpired(tokenId: string): Promise<boolean> {
   const provider = await new ethers.providers.JsonRpcProvider(RPC_URL);
   const contract = await new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
-  console.log("checking expiration status for", tokenId);
   return contract.isExpired(tokenId);
 }
 
@@ -40,12 +39,9 @@ async function getMemberTokenIds(
   ownerAddress: string,
   contractAddress: string
 ): Promise<string[]> {
-  console.log("ownerAddress", ownerAddress);
   const alchemyEndpoint = `${RPC_URL}/getNFTs/?owner=${ownerAddress}`;
-  console.log("alchemy endpoint", alchemyEndpoint);
   const response = await fetch(alchemyEndpoint);
   const data = await response.json();
-  console.log("alchemy data", data);
   const ownedNfts = data.ownedNfts as OwnedNFT[];
   const contractNfts = ownedNfts.filter((nft) => {
     return nft.contract.address === contractAddress;
@@ -63,13 +59,13 @@ async function getMemberTokenIds(
  */
 async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
   const tokenIds = await getMemberTokenIds(ownerAddress, CONTRACT_ADDRESS);
-  console.log("hasActiveMembership: tokenId: " + tokenIds);
+  console.log("tokenId: " + tokenIds)
   const isExpired = await Promise.all(
     tokenIds.map((tokenId) => {
       return isMembershipExpired(tokenId);
     })
   );
-  console.log("isExpired: " + isExpired);
+  console.log("isExpired: " + isExpired)
   return isExpired.some((isExpired) => {
     return !isExpired;
   });
@@ -81,76 +77,71 @@ async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
  */
 export function MembersContent() {
   const [loading, setLoading] = useState(true);
-  const [hasValidMembership, setHasValidMembership] = useState(false);
+  const [hasValidMembership, setHasValidMembership] = useState(false); 
 
-  const { address } = useAccount();
+  //const { address } = useAccount();
+  //const { address, isConnected, isConnecting, isDisconnected } = useAccount();
+  const account = useAccount({
+    onConnect({ address, connector, isReconnected }) {
+      console.log('Connected', { address, connector, isReconnected })
+    },
+  })
 
   useEffect(() => {
-    if (!address) {
-      setHasValidMembership(false);
-      return;
-    }
-
-    hasActiveMembership(address)
-      .then((hasActiveMembership) => {
-        setHasValidMembership(hasActiveMembership);
-      })
-      .catch((err) => {
-        console.error(err);
+      console.log("account.isConnected: " + account.isConnected);
+      if (!account.address) {
         setHasValidMembership(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [address]);
+        return;
+      }
+
+      hasActiveMembership(account.address)
+        .then((hasActiveMembership) => {
+          setHasValidMembership(hasActiveMembership);
+        })
+        .catch((err) => {
+          console.error(err);
+          setHasValidMembership(false);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+  }, [account.address, account.isConnected]);
 
   return (
     <>
       <div className="mt-4">
-        {!address && (
+        {!account.address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
-        {loading && <p className="text-2xl mt-4">Loading...</p>}
+        {loading && (
+          <p className="text-2xl mt-4">Loading...</p>
+        )}
       </div>
 
       {hasValidMembership && (
         <div className="m-4 mx-auto max-w-xl">
-          
-          <h2 className="text-xl font-bold">Member Services</h2>
+          Member Services
           <br />
           <br />
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-3">
             <div>
-              <ul className="space-x-6 space-y-6">
+              <ul>
                 <li>Vision Statement</li>
-                <li>
-                  <a href="/codeofethics">Code of Ethics</a>
-                </li>
-                <li>Gift Membership</li>
-                <li>Mint Equity</li>
-                <li>Equity Contract</li>
+                <li><a href="/codeofethics">Code of Ethics</a></li>
+                <li>Gift Membership </li>
+                <li>Mint Equity </li>
+                <li>Equity Contract </li>
                 <li>Membership Contract</li>
               </ul>
+
             </div>
             <div>
-              <ul className="space-x-6 space-y-6">
-                <li>
-                  <a href="/roadmap">Roadmap</a>
-                </li>
-                <li>
-                  <a href="https://docs.google.com/drawings/d/1_AYqj8boh7o8d_CrhSbSUtlvrs0fpTOUEIOxqGd_s58/">
-                    Org Chart Diagram
-                  </a>
-                </li>
+              <ul>
+                <li><a href="/roadmap">Roadmap</a></li>
+                <li><a href="https://docs.google.com/drawings/d/1_AYqj8boh7o8d_CrhSbSUtlvrs0fpTOUEIOxqGd_s58/">Org Chart Diagram</a></li>
                 <li>Telegram</li>
-                <li>
-                  <a href="https://twitter.com/BittreesR">Twitter</a>
-                </li>
-                <li>
-                  <a href="https://paragraph.xyz/@bittrees_research">
-                    Paragraph
-                  </a>
-                </li>
+                <li><a href="https://twitter.com/BittreesR">Twitter</a></li>
+                <li><a href="https://paragraph.xyz/@bittrees_research">Paragraph</a></li>
               </ul>
             </div>
           </div>
