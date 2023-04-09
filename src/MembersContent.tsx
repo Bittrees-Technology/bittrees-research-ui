@@ -25,7 +25,12 @@ interface OwnedNFT {
 async function isMembershipExpired(tokenId: string): Promise<boolean> {
   const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
   const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
-  return await contract.isExpired(tokenId);
+  try {
+    return await contract.isExpired(tokenId);
+  } catch (err) {
+    console.error("failure when calling contract.isExpired() due to", err);
+  }
+  return false;
 }
 
 /**
@@ -116,12 +121,12 @@ export function MembersContent() {
 
       {hasValidMembership && (
         <div className="m-4 mx-auto max-w-xl">
-          Member Services
+          <h2 className="text-xl font-bold">Member Services</h2>
           <br />
           <br />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-6">
             <div>
-              <ul>
+              <ul className="space-x-6 space-y-6">
                 <li>Vision Statement</li>
                 <li>
                   <a href="/codeofethics">Code of Ethics</a>
@@ -133,7 +138,7 @@ export function MembersContent() {
               </ul>
             </div>
             <div>
-              <ul>
+              <ul className="space-x-6 space-y-6">
                 <li>
                   <a href="/roadmap">Roadmap</a>
                 </li>
