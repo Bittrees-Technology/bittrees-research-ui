@@ -23,10 +23,14 @@ interface OwnedNFT {
  * @returns boolean
  */
 async function isMembershipExpired(tokenId: string): Promise<boolean> {
-  const provider = await new ethers.providers.JsonRpcProvider(RPC_URL);
-  const contract = await new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
-  console.log("checking expiration status for", tokenId);
-  return contract.isExpired(tokenId);
+  const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+  const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
+  try {
+    return await contract.isExpired(tokenId);
+  } catch (err) {
+    console.error("failure when calling contract.isExpired() due to", err);
+  }
+  return false;
 }
 
 /**
@@ -40,12 +44,9 @@ async function getMemberTokenIds(
   ownerAddress: string,
   contractAddress: string
 ): Promise<string[]> {
-  console.log("ownerAddress", ownerAddress);
   const alchemyEndpoint = `${RPC_URL}/getNFTs/?owner=${ownerAddress}`;
-  console.log("alchemy endpoint", alchemyEndpoint);
   const response = await fetch(alchemyEndpoint);
   const data = await response.json();
-  console.log("alchemy data", data);
   const ownedNfts = data.ownedNfts as OwnedNFT[];
   const contractNfts = ownedNfts.filter((nft) => {
     return nft.contract.address === contractAddress;
@@ -63,7 +64,7 @@ async function getMemberTokenIds(
  */
 async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
   const tokenIds = await getMemberTokenIds(ownerAddress, CONTRACT_ADDRESS);
-  console.log("hasActiveMembership: tokenId: " + tokenIds);
+  console.log("tokenId: " + tokenIds);
   const isExpired = await Promise.all(
     tokenIds.map((tokenId) => {
       return isMembershipExpired(tokenId);
@@ -83,10 +84,15 @@ export function MembersContent() {
   const [loading, setLoading] = useState(true);
   const [hasValidMembership, setHasValidMembership] = useState(false);
 
-  const { address } = useAccount();
+  const { address, isConnected, isConnecting } = useAccount({
+    onConnect({ address, connector, isReconnected }) {
+      console.log("Connected", { address, connector, isReconnected });
+    },
+  });
 
   useEffect(() => {
-    if (!address) {
+    console.log("isConnected: " + isConnected);
+    if (!(address && isConnected)) {
       setHasValidMembership(false);
       return;
     }
@@ -102,7 +108,7 @@ export function MembersContent() {
       .finally(() => {
         setLoading(false);
       });
-  }, [address]);
+  }, [address, isConnected]);
 
   return (
     <>
@@ -110,7 +116,7 @@ export function MembersContent() {
         {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
-        {loading && <p className="text-2xl mt-4">Loading...</p>}
+        {loading && isConnecting && <p className="text-2xl mt-4">Loading...</p>}
       </div>
 
       {hasValidMembership && (
@@ -125,9 +131,9 @@ export function MembersContent() {
                 <li>
                   <a href="/codeofethics">Code of Ethics</a>
                 </li>
-                <li>Gift Membership</li>
-                <li>Mint Equity</li>
-                <li>Equity Contract</li>
+                <li>Gift Membership </li>
+                <li>Mint Equity </li>
+                <li>Equity Contract </li>
                 <li>Membership Contract</li>
               </ul>
             </div>
