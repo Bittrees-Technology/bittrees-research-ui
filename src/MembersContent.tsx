@@ -23,9 +23,9 @@ interface OwnedNFT {
  * @returns boolean
  */
 async function isMembershipExpired(tokenId: string): Promise<boolean> {
-  const provider = await new ethers.providers.JsonRpcProvider(RPC_URL);
-  const contract = await new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
-  return contract.isExpired(tokenId);
+  const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+  const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
+  return await contract.isExpired(tokenId);
 }
 
 /**
