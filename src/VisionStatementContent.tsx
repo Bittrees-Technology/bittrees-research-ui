@@ -80,7 +80,7 @@ async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
  * MembersContent React component.
  *
  */
-export function MembersContent() {
+export function VisionStatementContent() {
   const [loading, setLoading] = useState(true);
   const [hasValidMembership, setHasValidMembership] = useState(false);
 
@@ -121,57 +121,21 @@ export function MembersContent() {
 
       {hasValidMembership && (
         <div className="m-4 mx-auto max-w-xl">
-          <h2 className="text-xl font-bold">Member Services</h2>
+          <h2 className="text-xl font-bold text-left">Vision Statement</h2>
           <br />
-          <div className="grid grid-cols-2 gap-6">
-            <div className="text-left">
-              <ul className="max-w-md space-y-1 text-gray-400 list-disc list-inside dark:text-gray-400 ">
-                <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
-                    href="/visionstatement">Vision Statement</a>
-                </li>
-                <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
-                    href="/codeofethics">Code of Ethics</a>
-                </li>
-                <li>Gift Membership </li>
-                <li>Mint Equity </li>
-                <li>Equity Contract </li>
-                <li>Membership Contract</li>
-              </ul>
-            </div>
-            <div className="text-left">
-              
-            <ul className="max-w-md space-y-1 text-gray-400 list-disc list-inside dark:text-gray-400 ">
-                <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
-                    href="/roadmap">Roadmap</a>
-                </li>
-                <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    href="https://docs.google.com/drawings/d/1_AYqj8boh7o8d_CrhSbSUtlvrs0fpTOUEIOxqGd_s58/">
-                    Org Chart Diagram
-                  </a>
-                </li>
-                <li>Telegram</li>
-                <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    href="https://twitter.com/BittreesR">Twitter</a>
-                </li>
-                <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    href="https://paragraph.xyz/@bittrees_research">
-                    Paragraph
-                  </a>
-                </li>
-              </ul>
-            </div>
+          <div className="text-l font-kalam text-left">
+            Dear reader,
+            <br/><br/>
+            At Bittrees Research, we are a purpose-driven organization that exists to advance society towards a more just and equitable future by funding public goods and promoting research in emerging technologies and systems innovation. We recognize the importance of historical and contextual relevance in our work, and strive to create new knowledge, tools, and systems that have a positive impact in the metaverse and beyond.
+            <br/><br/>
+            Our organization is made up of a diverse group of individuals who are passionate about using their expertise and resources to create a better world. We bring together researchers, innovators, creatives, and community members to collaborate on cutting-edge projects that contribute to our shared vision of a more equitable and sustainable society.
+            <br/><br/>
+            Our goals are to generate insights that can inform policy, strategy, and decision-making processes, to fund public goods that benefit humankind, and to foster innovation with a human-centric focus. We are committed to staying true to our values of transparency, accountability, and community-driven decision making in all aspects of our work.
+            <br/><br/>
+            If you share our vision and want to be a part of this important work, we invite you to join us. Together, we can make a meaningful difference in the world.
+            <br/><br/>
+            Thanks,<br/>
+            Jonathan
           </div>
         </div>
       )}
