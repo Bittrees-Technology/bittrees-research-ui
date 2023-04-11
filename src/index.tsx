@@ -5,6 +5,7 @@ import MintPage from "./MintPage";
 import MembersPage from "./MembersPage";
 import CodeOfEthicsPage from "./CodeOfEthicsPage";
 import RoadmapPage from "./RoadmapPage";
+import VisionStatementPage from "./VisionStatementPage";
 import reportWebVitals from "./reportWebVitals";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -61,6 +62,10 @@ const router = createBrowserRouter([
   {
     path: "/codeofethics",
     element: <CodeOfEthicsPage />,
+  },
+  {
+    path: "/visionstatement",
+    element: <VisionStatementPage />,
   },
   {
     path: "/roadmap",
