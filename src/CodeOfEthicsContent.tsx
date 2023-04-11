@@ -116,9 +116,7 @@ export function CodeOfEthicsContent() {
         {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
-        {loading && (
-          <p className="text-2xl mt-4">Loading...</p>
-        )}
+        {loading && isConnecting && <p className="text-2xl mt-4">Loading...</p>}
       </div>
 
       {hasValidMembership && (
