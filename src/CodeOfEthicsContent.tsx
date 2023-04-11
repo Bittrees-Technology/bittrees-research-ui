@@ -23,9 +23,14 @@ interface OwnedNFT {
  * @returns boolean
  */
 async function isMembershipExpired(tokenId: string): Promise<boolean> {
-  const provider = await new ethers.providers.JsonRpcProvider(RPC_URL);
-  const contract = await new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
-  return contract.isExpired(tokenId);
+  try {
+    const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, abi, provider);
+    return await contract.isExpired(tokenId);
+  } catch (err) {
+    console.error("failure when calling contract.isExpired() due to", err);
+  }
+  return false;
 }
 
 /**
@@ -59,28 +64,35 @@ async function getMemberTokenIds(
  */
 async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
   const tokenIds = await getMemberTokenIds(ownerAddress, CONTRACT_ADDRESS);
+  console.log("tokenId: " + tokenIds);
   const isExpired = await Promise.all(
     tokenIds.map((tokenId) => {
       return isMembershipExpired(tokenId);
     })
   );
+  console.log("isExpired: " + isExpired);
   return isExpired.some((isExpired) => {
     return !isExpired;
   });
 }
 
 /**
- * MembersContent React component.
+ * CodeOfEthicsContent React component.
  *
  */
 export function CodeOfEthicsContent() {
   const [loading, setLoading] = useState(true);
   const [hasValidMembership, setHasValidMembership] = useState(false);
 
-  const { address } = useAccount();
+  const { address, isConnected, isConnecting } = useAccount({
+    onConnect({ address, connector, isReconnected }) {
+      console.log("Connected", { address, connector, isReconnected });
+    },
+  });
 
   useEffect(() => {
-    if (!address) {
+    console.log("isConnected: " + isConnected);
+    if (!(address && isConnected)) {
       setHasValidMembership(false);
       return;
     }
@@ -96,7 +108,7 @@ export function CodeOfEthicsContent() {
       .finally(() => {
         setLoading(false);
       });
-  }, [address]);
+  }, [address, isConnected]);
 
   return (
     <>
@@ -110,12 +122,11 @@ export function CodeOfEthicsContent() {
       </div>
 
       {hasValidMembership && (
-        <div className="m-4 mx-auto max-w-xl">
-          Code Of Ethics
+        <div className="m-4 mx-auto max-w-xl text-left">
+          
+          <h2 className="text-xl font-bold">Code Of Ethics</h2>
           <br />
-          <br />
-
-          <ol>
+          <ol className="max-w-md space-y-1 text-gray-600 list-decimal list-outside dark:text-gray-600 ">
             <li><b>Honesty:</b> We will be truthful and transparent in our actions and communications, and we will not deceive or mislead others.</li>
 
             <li><b>Fairness:</b> We will treat all community members with respect and fairness, and we will not discriminate on the basis of race, gender, religion, or any other factor.</li>

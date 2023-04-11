@@ -1,7 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { CodeOfEthicsContent } from "./CodeOfEthicsContent";
+import { VisionStatementContent } from "./VisionStatementContent";
 
-function CodeOfEthicsPage() {
+function VisionStatementPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <header className="bg-[#dedede] border-b-2 border-gray-500">
@@ -34,7 +34,7 @@ function CodeOfEthicsPage() {
           </div>
 
           <div className="mt-4">
-            <CodeOfEthicsContent />
+            <VisionStatementContent />
           </div>
 
           <footer className="flex flex-col gap-6 mx-auto mt-4">
@@ -66,4 +66,4 @@ function CodeOfEthicsPage() {
   );
 }
 
-export default CodeOfEthicsPage;
+export default VisionStatementPage;

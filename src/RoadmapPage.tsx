@@ -40,6 +40,7 @@ function RoadmapPage() {
           <footer className="flex flex-col gap-6 mx-auto mt-4">
             <div className="underline">
               <a
+                className="hover:text-green-700"
                 href="https://twitter.com/BittreesR"
                 target="_blank"
                 rel="noreferrer"
@@ -54,7 +55,7 @@ function RoadmapPage() {
                   width="128px"
                   height="128px"
                   alt="Bittrees Research logo"
-                  className="grayscale"
+                  className="grayscale max-w-xs transition duration-300 ease-in-out hover:scale-110"
                 />
               </a>
             </div>
