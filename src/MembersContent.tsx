@@ -2,10 +2,10 @@ import { useAccount } from "wagmi";
 import abi from "./abi.json";
 import { ethers } from "ethers";
 import { useState, useEffect } from "react";
+import { Alchemy, Network } from "alchemy-sdk";
 
 const CONTRACT_ADDRESS = "0xc8121e650bd797d8b9dad00227a9a77ef603a84a";
-const RPC_URL =
-  "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN";
+const RPC_URL = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN";
 
 interface OwnedNFT {
   contract: {
@@ -14,6 +14,10 @@ interface OwnedNFT {
   id: {
     tokenId: string;
   };
+}
+
+interface MyNFT {
+  tokenId: string;
 }
 
 /**
@@ -31,6 +35,29 @@ async function isMembershipExpired(tokenId: string): Promise<boolean> {
     console.error("failure when calling contract.isExpired() due to", err);
   }
   return false;
+}
+
+/**
+ * Gets all tokenIds for a given wallet address that are owned by the contract.
+ *
+ * @param ownerAddress - wallet address
+ * @param contractAddress
+ * @returns string[] - array of tokenIds
+ */
+async function getMemberTokenIdsViaAlchemySDK(
+  ownerAddress: string,
+  contractAddress: string
+): Promise<string[]> {  
+  const settings = {
+    apiKey: "g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN", 
+    network: Network.ETH_MAINNET, 
+  };
+  const alchemy = new Alchemy(settings);
+  const response = await alchemy.nft.getNftsForOwner( ownerAddress, { contractAddresses: [ contractAddress ] });
+  const ownedNfts = response.ownedNfts as MyNFT[];
+  return ownedNfts.map((nft) => {
+    return nft.tokenId;
+  });
 }
 
 /**
@@ -63,7 +90,8 @@ async function getMemberTokenIds(
  * @returns boolean
  */
 async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
-  const tokenIds = await getMemberTokenIds(ownerAddress, CONTRACT_ADDRESS);
+  //const tokenIds = await getMemberTokenIds(ownerAddress, CONTRACT_ADDRESS);
+  const tokenIds = await getMemberTokenIdsViaAlchemySDK(ownerAddress, CONTRACT_ADDRESS);
   console.log("tokenId: " + tokenIds);
   const isExpired = await Promise.all(
     tokenIds.map((tokenId) => {
