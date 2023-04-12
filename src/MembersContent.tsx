@@ -153,49 +153,67 @@ export function MembersContent() {
 
       {hasValidMembership && (
         <div className="m-4 mx-auto max-w-xl">
-          <h2 className="text-xl font-bold">Member Services</h2>
+          <h2 className="text-xl font-newtimesroman font-bold">Member Services</h2>
           <br />
           <div className="grid grid-cols-2 gap-6">
-            <div className="text-left">
+            <div className="text-left font-newtimesroman">
               <ul className="max-w-md space-y-1 text-gray-400 list-disc list-inside dark:text-gray-400 ">
                 <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
+                  <a className="text-black no-underline hover:underline hover:text-green-700" 
                     href="/visionstatement">Vision Statement</a>
                 </li>
                 <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
+                  <a className="text-black no-underline hover:underline hover:text-green-700" 
                     href="/codeofethics">Code of Ethics</a>
                 </li>
                 <li>Gift Membership </li>
                 <li>Mint Equity </li>
                 <li>Equity Contract </li>
-                <li>Membership Contract</li>
+                <li>
+                  <a className="text-black no-underline hover:underline hover:text-green-700" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    href="https://etherscan.io/token/0xc8121e650bd797d8b9dad00227a9a77ef603a84a">
+                    Membership Contract
+                  </a>
+                </li>
               </ul>
             </div>
-            <div className="text-left">
+            <div className="text-left font-newtimesroman">
               
             <ul className="max-w-md space-y-1 text-gray-400 list-disc list-inside dark:text-gray-400 ">
                 <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
-                    href="/roadmap">Roadmap</a>
+                  <a className="text-black no-underline hover:underline hover:text-green-700" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    href="https://docs.google.com/document/d/1ncY1zhrYFzpAh9hrSqCmO6z3dftXTfWV1RXHGHrTwlQ/edit">
+                    Roadmap
+                  </a>  
                 </li>
                 <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
+                  <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"
                     href="https://docs.google.com/drawings/d/1_AYqj8boh7o8d_CrhSbSUtlvrs0fpTOUEIOxqGd_s58/">
                     Org Chart Diagram
                   </a>
                 </li>
-                <li>Telegram</li>
                 <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
+                  <a className="text-black no-underline hover:underline hover:text-green-700" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    href="https://guild.xyz/bittrees-research">
+                    Telegram
+                  </a>
+                </li>
+                <li>
+                  <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"
                     href="https://twitter.com/BittreesR">Twitter</a>
                 </li>
                 <li>
-                  <a className="text-gray-600 no-underline hover:underline hover:text-green-700" 
+                  <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"
                     href="https://paragraph.xyz/@bittrees_research">

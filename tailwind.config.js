@@ -5,7 +5,7 @@ module.exports = {
   ],
   theme: {
     fontFamily: {
-      kalam: ["Kalam", "cursive"],
+      newtimesroman: ["Tinos", "serif"],
     },
     extend: {},
   }, 

@@ -144,7 +144,7 @@ export function VisionStatementContent() {
 
   return (
     <>
-      <div className="mt-4">
+      <div className="mt-4 font-newtimesroman">
         {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
@@ -153,9 +153,9 @@ export function VisionStatementContent() {
 
       {hasValidMembership && (
         <div className="m-4 mx-auto max-w-xl">
-          <h2 className="text-xl font-bold text-left">Vision Statement</h2>
+          <h2 className="text-xl font-bold font-newtimesroman text-left">Vision Statement</h2>
           <br />
-          <div className="text-l font-kalam text-left">
+          <div className="text-l font-newtimesroman text-left">
             Dear reader,
             <br/><br/>
             At Bittrees Research, we are a purpose-driven organization that exists to advance society towards a more just and equitable future by funding public goods and promoting research in emerging technologies and systems innovation. We recognize the importance of historical and contextual relevance in our work, and strive to create new knowledge, tools, and systems that have a positive impact in the metaverse and beyond.
@@ -173,7 +173,7 @@ export function VisionStatementContent() {
       )}
 
       {!hasValidMembership && (
-        <div className="m-4 mx-auto max-w-xl">
+        <div className="m-4 mx-auto max-w-xl font-newtimesroman">
           <a href="/mint">Please go mint your membership!</a>
         </div>
       )}
