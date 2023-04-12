@@ -144,7 +144,7 @@ export function RoadmapContent() {
 
   return (
     <>
-      <div className="mt-4">
+      <div className="mt-4 font-newtimesroman">
         {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
@@ -152,7 +152,7 @@ export function RoadmapContent() {
       </div>
 
       {hasValidMembership && (
-        <div className="m-4 mx-auto max-w-xl text-left">
+        <div className="m-4 mx-auto max-w-xl font-newtimesroman text-left">
           <div className="inline-flex items-center justify-center w-full">
               <hr className="w-full h-px my-8 bg-gray-500 border-0 dark:bg-gray-700" />
               <span className="absolute px-3 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2 dark:text-white dark:bg-gray-900">Bittrees Research [BR]</span>

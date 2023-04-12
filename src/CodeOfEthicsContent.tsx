@@ -144,7 +144,7 @@ export function CodeOfEthicsContent() {
 
   return (
     <>
-      <div className="mt-4">
+      <div className="mt-4 font-newtimesroman">
         {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
@@ -152,7 +152,7 @@ export function CodeOfEthicsContent() {
       </div>
 
       {hasValidMembership && (
-        <div className="m-4 mx-auto max-w-xl text-left">
+        <div className="m-4 mx-auto max-w-xl text-left font-newtimesroman">
           
           <h2 className="text-xl font-bold">Code Of Ethics</h2>
           <br />
@@ -181,7 +181,7 @@ export function CodeOfEthicsContent() {
       )}
 
       {!hasValidMembership && (
-        <div className="m-4 mx-auto max-w-xl">
+        <div className="m-4 mx-auto max-w-xl font-newtimesroman">
           <a href="/mint">Please go mint your membership!</a>
         </div>
       )}
