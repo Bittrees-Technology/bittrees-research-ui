@@ -7,6 +7,7 @@ import { Alchemy, Network } from "alchemy-sdk";
 const CONTRACT_ADDRESS = "0xc8121e650bd797d8b9dad00227a9a77ef603a84a";
 const RPC_URL = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN";
 
+/*
 interface OwnedNFT {
   contract: {
     address: string;
@@ -15,6 +16,7 @@ interface OwnedNFT {
     tokenId: string;
   };
 }
+*/
 
 interface MyNFT {
   tokenId: string;
@@ -67,6 +69,7 @@ async function getMemberTokenIdsViaAlchemySDK(
  * @param contractAddress
  * @returns string[] - array of tokenIds
  */
+/*
 async function getMemberTokenIds(
   ownerAddress: string,
   contractAddress: string
@@ -82,6 +85,7 @@ async function getMemberTokenIds(
     return nft.id.tokenId;
   });
 }
+*/
 
 /**
  * Checks if a wallet address has an active membership.
