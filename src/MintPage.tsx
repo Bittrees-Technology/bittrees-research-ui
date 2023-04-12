@@ -34,7 +34,7 @@ function MintPage() {
           <div>
             <ConnectButton />
           </div>
-          <div className="space-y-5 mt-8">
+          <div className="space-y-5 mt-8 font-newtimesroman">
             <div className="md:px-8">
               <hr className="border-gray-500" />
             </div>
