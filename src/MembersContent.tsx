@@ -3,6 +3,7 @@ import abi from "./abi.json";
 import { ethers } from "ethers";
 import { useState, useEffect } from "react";
 import { Alchemy, Network } from "alchemy-sdk";
+import { useCookies } from 'react-cookie';
 
 const CONTRACT_ADDRESS = "0xc8121e650bd797d8b9dad00227a9a77ef603a84a";
 const RPC_URL = "https://eth-mainnet.g.alchemy.com/v2/g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN";
@@ -115,6 +116,7 @@ async function hasActiveMembership(ownerAddress: string): Promise<boolean> {
 export function MembersContent() {
   const [loading, setLoading] = useState(true);
   const [hasValidMembership, setHasValidMembership] = useState(false);
+  const [cookies, setCookie] = useCookies([CONTRACT_ADDRESS]);
 
   const { address, isConnected, isConnecting } = useAccount({
     onConnect({ address, connector, isReconnected }) {
@@ -123,23 +125,42 @@ export function MembersContent() {
   });
 
   useEffect(() => {
-    console.log("isConnected: " + isConnected);
-    if (!(address && isConnected)) {
-      setHasValidMembership(false);
-      return;
-    }
+    let token = cookies[CONTRACT_ADDRESS];
+    if (!token) {
 
-    hasActiveMembership(address)
-      .then((hasActiveMembership) => {
-        setHasValidMembership(hasActiveMembership);
-      })
-      .catch((err) => {
-        console.error(err);
+      console.log("isConnected: " + isConnected);
+      if (!(address && isConnected)) {
         setHasValidMembership(false);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+        return;
+      }
+  
+      hasActiveMembership(address)
+        .then((hasActiveMembership) => {
+          if (hasActiveMembership) {
+            let date = new Date();
+            // 60 minutes
+            date.setTime(date.getTime()+(3600*1000));
+            //24 hours
+            //date.setTime(date.getTime()+(86400*1000));
+            setCookie(CONTRACT_ADDRESS, address, {
+              path: '/',
+              expires: date,
+            });
+          } 
+          setHasValidMembership(hasActiveMembership);
+        })
+        .catch((err) => {
+          console.error(err);
+          setHasValidMembership(false);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+
+    } else {
+      setHasValidMembership(true);
+      setLoading(false);
+    }
   }, [address, isConnected]);
 
   return (
