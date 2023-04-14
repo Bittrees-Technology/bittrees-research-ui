@@ -118,6 +118,8 @@ export function MembersContent() {
   const [hasValidMembership, setHasValidMembership] = useState(false);
   const [cookies, setCookie] = useCookies([CONTRACT_ADDRESS]);
 
+  const [value] = useState("value");
+
   const { address, isConnected, isConnecting } = useAccount({
     onConnect({ address, connector, isReconnected }) {
       console.log("Connected", { address, connector, isReconnected });
@@ -161,7 +163,7 @@ export function MembersContent() {
       setHasValidMembership(true);
       setLoading(false);
     }
-  }, [address, isConnected]);
+  }, [address, isConnected, cookies]);
 
   return (
     <>
