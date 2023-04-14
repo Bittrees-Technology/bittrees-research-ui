@@ -161,7 +161,7 @@ export function VisionStatementContent() {
       setHasValidMembership(true);
       setLoading(false);
     }
-  }, [address, isConnected]);
+  }, [address, isConnected, cookies, setCookie]);
 
   return (
     <>
