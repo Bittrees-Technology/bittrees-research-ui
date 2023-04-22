@@ -52,7 +52,7 @@ export function Mint() {
 
   return (
     <>
-      <div className="grid grid-cols-2 gap-6 justify-start">
+      <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
         <div className="text-right">Minimum Donation:</div>
         <div className="text-left">{mintPrice} ETH</div>
         <div className="text-right">Add additional donation:</div>
@@ -73,13 +73,13 @@ export function Mint() {
         </div>
       </div>
       {error && (
-        <div className="m-4 mx-auto max-w-xl">
+        <div className="m-4 mx-auto max-w-xl font-newtimesroman">
           An error occurred preparing the transaction:{" "}
           {displayFriendlyError(error.message)}
         </div>
       )}
 
-      <div className="mt-4">
+      <div className="mt-4 font-newtimesroman">
         <button
           className="btn btn-primary"
           onClick={onClick}

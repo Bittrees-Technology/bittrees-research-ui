@@ -20,35 +20,20 @@ function MembersPage() {
 
       <main className="text-center bg-[#dedede]">
         <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
-          <div className="mx-auto flex flex-col items-center max-w-md">
-            <img
-              src="/bittrees-membership-card.png"
-              width="1400px"
-              height="800px"
-              alt="Bittrees Research Membership Card"
-            />
-          </div>
 
-          <div>
-            <ConnectButton />
-          </div>
 
           <div className="mt-4">
             <MembersContent />
           </div>
 
           <footer className="flex flex-col gap-6 mx-auto mt-4">
-            <div className="underline">
-              <a
-                className="hover:text-green-700"
-                href="https://twitter.com/BittreesR"
-                target="_blank"
-                rel="noreferrer"
-              >
-                @BittreesR
-              </a>
-            </div>
+            <span>
             <div>
+              <ConnectButton />
+            </div>
+            </span>
+
+            <div className="flex w-full justify-center items-center">
               <a href="/" className="mx-auto">
                 <img
                   src="/bittrees_logo_tree.png"

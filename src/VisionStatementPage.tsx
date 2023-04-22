@@ -20,35 +20,24 @@ function VisionStatementPage() {
 
       <main className="text-center bg-[#dedede]">
         <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
-          <div className="mx-auto flex flex-col items-center max-w-md">
-            <img
-              src="/bittrees-membership-card.png"
-              width="1400px"
-              height="800px"
-              alt="Bittrees Research Membership Card"
-            />
-          </div>
-
-          <div>
-            <ConnectButton />
-          </div>
-
+                    
           <div className="mt-4">
             <VisionStatementContent />
           </div>
 
           <footer className="flex flex-col gap-6 mx-auto mt-4">
-            <div className="underline">
-              <a
-                className="hover:text-green-700"
-                href="https://twitter.com/BittreesR"
-                target="_blank"
-                rel="noreferrer"
-              >
-                @BittreesR
+            <span>
+              <a className="hover:text-green-700" href="/members">
+                <span className="inline-block align-middle pr-1"><svg className="h-4 w-4 hover:text-green-700"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round">  <circle cx="12" cy="12" r="10" />  <polyline points="12 8 8 12 12 16" />  <line x1="16" y1="12" x2="8" y2="12" /></svg></span>
+                <span className="inline-block align-middle underline font-bold font-newtimesroman">Member Services</span>
               </a>
-            </div>
-            <div>
+            </span>
+            <span>
+              <div>
+                <ConnectButton />
+              </div>
+            </span>
+            <div className="flex w-full justify-center items-center">
               <a href="/" className="mx-auto">
                 <img
                   src="/bittrees_logo_tree.png"
