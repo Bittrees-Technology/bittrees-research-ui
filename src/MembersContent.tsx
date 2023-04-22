@@ -179,18 +179,18 @@ export function MembersContent() {
           <div className="grid grid-cols-2 gap-6">
             <div className="text-left font-newtimesroman">
               <ul className="max-w-md space-y-1 text-gray-400 list-disc list-inside dark:text-gray-400 ">
-                <li>
+                <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     href="/visionstatement">Vision Statement</a>
                 </li>
-                <li>
+                <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     href="/codeofethics">Code of Ethics</a>
                 </li>
-                <li>Gift Membership </li>
-                <li>Mint Equity </li>
-                <li>Equity Contract </li>
-                <li>
+                <li className="p-2">Gift Membership </li>
+                <li className="p-2">Mint Equity </li>
+                <li className="p-2">Equity Contract </li>
+                <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"
@@ -203,7 +203,7 @@ export function MembersContent() {
             <div className="text-left font-newtimesroman">
               
             <ul className="max-w-md space-y-1 text-gray-400 list-disc list-inside dark:text-gray-400 ">
-                <li>
+                <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"
@@ -211,7 +211,7 @@ export function MembersContent() {
                     Roadmap
                   </a>  
                 </li>
-                <li>
+                <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"
@@ -219,7 +219,7 @@ export function MembersContent() {
                     Org Chart Diagram
                   </a>
                 </li>
-                <li>
+                <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"
@@ -227,13 +227,13 @@ export function MembersContent() {
                     Telegram
                   </a>
                 </li>
-                <li>
+                <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"
                     href="https://twitter.com/BittreesR">Twitter</a>
                 </li>
-                <li>
+                <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
                     rel="noreferrer"

@@ -137,14 +137,8 @@ export function CodeOfEthicsContent() {
       hasActiveMembership(address)
         .then((hasActiveMembership) => {
           if (hasActiveMembership) {
-            let date = new Date();
-            // 60 minutes
-            date.setTime(date.getTime()+(3600*1000));
-            //24 hours
-            //date.setTime(date.getTime()+(86400*1000));
             setCookie(CONTRACT_ADDRESS, address, {
               path: '/',
-              expires: date,
             });
           } 
           setHasValidMembership(hasActiveMembership);
