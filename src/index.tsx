@@ -4,18 +4,13 @@ import App from "./App";
 import MintPage from "./MintPage";
 import MembersPage from "./MembersPage";
 import CodeOfEthicsPage from "./CodeOfEthicsPage";
-import RoadmapPage from "./RoadmapPage";
 import VisionStatementPage from "./VisionStatementPage";
 import reportWebVitals from "./reportWebVitals";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-
 import { EthereumClient } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
-
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -66,10 +61,6 @@ const router = createBrowserRouter([
   {
     path: "/visionstatement",
     element: <VisionStatementPage />,
-  },
-  {
-    path: "/roadmap",
-    element: <RoadmapPage />,
   },
 ]);
 
