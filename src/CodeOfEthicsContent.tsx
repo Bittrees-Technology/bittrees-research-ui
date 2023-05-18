@@ -65,7 +65,7 @@ export function CodeOfEthicsContent() {
           
           <h2 className="text-xl font-bold">Code Of Ethics</h2>
           <br />
-          <ol className="max-w-md space-y-1 text-gray-600 list-decimal list-outside dark:text-gray-600 ">
+          <ol className="max-w-md space-y-1 text-gray-600 list-decimal list-outside ms-4 dark:text-gray-600 ">
             <li><b>Honesty:</b> We will be truthful and transparent in our actions and communications, and we will not deceive or mislead others.</li>
 
             <li><b>Fairness:</b> We will treat all community members with respect and fairness, and we will not discriminate on the basis of race, gender, religion, or any other factor.</li>
