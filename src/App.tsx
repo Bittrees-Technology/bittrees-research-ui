@@ -4,7 +4,7 @@ function App() {
   return (
     <div className="max-w-4xl mx-auto">
       
-      <main className="text-center bg-[#dedede]">
+      <main className="text-center bg-[#dedede] h-screen">
         <div className="flex flex-col gap-6 p-6">
           <div className="mx-auto border border-black p-4 w-80 h-64 shadow-md shadow-gray-500 hover:shadow-black">
             <Link to="/mint" className="flex flex-col items-center">
