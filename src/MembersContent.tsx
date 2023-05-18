@@ -66,7 +66,7 @@ export function MembersContent() {
           <br />
           <div className="grid grid-cols-2 gap-6">
             <div className="text-left font-newtimesroman">
-              <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-2 dark:text-gray-400 ">
+              <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-4 dark:text-gray-400 ">
                 <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     href="/visionstatement">Vision Statement</a>
@@ -90,7 +90,7 @@ export function MembersContent() {
             </div>
             <div className="text-left font-newtimesroman">
               
-            <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-2 dark:text-gray-400 ">
+            <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-4 dark:text-gray-400 ">
                 <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
