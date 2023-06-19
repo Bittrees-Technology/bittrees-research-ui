@@ -66,8 +66,31 @@ export function MembersContent() {
           <br />
           <div className="grid grid-cols-2 gap-6">
             <div className="text-left font-newtimesroman">
-              <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-4 dark:text-gray-400 ">
+            <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-4 dark:text-gray-400 ">
                 <li className="p-2">
+                  Gift Membership
+                </li>
+                <li className="p-2">
+                <a className="text-black no-underline hover:underline hover:text-green-700" 
+                    target="_blank" 
+                    rel="noreferrer"
+                    href="https://etherscan.io/token/0xc8121e650bd797d8b9dad00227a9a77ef603a84a#code">Membership Contract</a>
+                </li>
+                <li className="p-2"><a className="text-black no-underline hover:underline hover:text-green-700" 
+                    href="/mintBRGOV">Mint BRGOV</a></li>
+                <li className="p-2">BRGOV Contract </li>
+                <li className="p-2">Mint BRTC</li>
+                <li className="p-2">
+                    Stake BRTC
+                </li>
+                <li className="p-2">Burn BRTC</li>
+              </ul>
+
+            </div>
+            <div className="text-left font-newtimesroman">
+              
+            <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-4 dark:text-gray-400 ">
+            <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     href="/visionstatement">Vision Statement</a>
                 </li>
@@ -75,22 +98,6 @@ export function MembersContent() {
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     href="/codeofethics">Code of Ethics</a>
                 </li>
-                <li className="p-2">Gift Membership </li>
-                <li className="p-2">Mint Equity </li>
-                <li className="p-2">Equity Contract </li>
-                <li className="p-2">
-                  <a className="text-black no-underline hover:underline hover:text-green-700" 
-                    target="_blank" 
-                    rel="noreferrer"
-                    href="https://etherscan.io/token/0xc8121e650bd797d8b9dad00227a9a77ef603a84a">
-                    Membership Contract
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div className="text-left font-newtimesroman">
-              
-            <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-4 dark:text-gray-400 ">
                 <li className="p-2">
                   <a className="text-black no-underline hover:underline hover:text-green-700" 
                     target="_blank" 
