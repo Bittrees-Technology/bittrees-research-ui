@@ -2,6 +2,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import MintPage from "./MintPage";
+import MintBRGOVPage from "./MintBRGOVPage";
 import MembersPage from "./MembersPage";
 import CodeOfEthicsPage from "./CodeOfEthicsPage";
 import VisionStatementPage from "./VisionStatementPage";
@@ -49,6 +50,10 @@ const router = createBrowserRouter([
   {
     path: "/mint",
     element: <MintPage />,
+  },
+  {
+    path: "/mintBRGOV",
+    element: <MintBRGOVPage />,
   },
   {
     path: "/members",
