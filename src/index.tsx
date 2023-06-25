@@ -16,7 +16,7 @@ import App from "./App";
 import CodeOfEthicsPage from "./CodeOfEthicsPage";
 import "./index.css";
 import MembersPage from "./MembersPage";
-import MintBRGOVPage from "./MintBRGOVPage";
+import MintBRGOVPage from "./BRGOV/MintBRGOVPage";
 import MintPage from "./MintPage";
 import reportWebVitals from "./reportWebVitals";
 import VisionStatementPage from "./VisionStatementPage";
