@@ -6,9 +6,9 @@ function MintBRGOVPage() {
     <div className="max-w-4xl mx-auto">
       <header className="border-2 border-b-0 bg-white">
         <div className="w-full">
-          <a href="./" className="mx-auto">
+          <a href="/mint/brgov" className="mx-auto">
             <div className="font-newtimesroman pt-10 pb-6 text-4xl sm:text-6xl text-center font-bold tracking-wider">
-              Bittrees, Inc
+              Bittrees Research
             </div>
           </a>
         </div>
@@ -21,7 +21,7 @@ function MintBRGOVPage() {
               src="/bgov-cert-sm.png"
               width="1000px"
               height="566px"
-              alt="BGOV Certificate of Stock"
+              alt="BRGOV Certificate of Stock"
             />
           </div>
           <div className="mt-4">
@@ -30,41 +30,75 @@ function MintBRGOVPage() {
           <div>
             <ConnectButton />
           </div>
-          <div className="space-y-5 mt-8 font-newtimesroman">
-            <div className="md:px-8">
+          <div className="space-y-5 mt-8 text-left mx-8 font-newtimesroman">
+            <div>
               <hr className="border-gray-500" />
             </div>
-            <p className="md:px-12 text-justify">
-              Disclaimer:
+            <p className="font-bold">
+              Disclaimer for BRGOV Tokens:
               <br />
               <br />
-              BGOV tokens are a form of equity in Bittrees, Inc. and represent
-              ownership in the organization. As a result, owning BGOV tokens
-              gives the holder certain rights and privileges, such as voting on
-              important company decisions and receiving a portion of profits
-              through dividends. However, please note that owning BGOV tokens
-              also involves certain risks, and that the value of the tokens may
-              fluctuate based on a variety of factors, including market
-              conditions and the performance of the company. It is important to
-              carefully consider these risks before minting BGOV tokens.
-              <br />
-              <br />
-              Additionally, BGOV tokens are subject to different holding levels
-              for different levels of ownership, influence, and rewards in the
-              company. To become a Partner of Bittrees, Inc., a holder must own
-              at least 420 BGOV tokens, which represents a significant ownership
-              stake in the organization. Junior Partners must hold at least 210
-              BGOV tokens, and Associates must hold at least 69 BGOV tokens.
-              These holding levels are not subject to change and are designed to
-              ensure that ownership and influence in the company are distributed
-              fairly among stakeholders.
-              <br />
-              <br />
-              Please note that Bittrees, Inc. does not provide investment advice
-              and is not responsible for any investment decisions made by
-              individuals. It is recommended that potential investors conduct
-              thorough research and seek professional advice before investing in
-              BGOV tokens.
+              Please read this disclaimer carefully before purchasing or
+              acquiring BRGOV tokens. By purchasing or acquiring BRGOV tokens,
+              you acknowledge and agree to the following:
+            </p>
+            <p>
+              <span className="font-bold">Nature of BRGOV Tokens:</span> BRGOV
+              tokens are non-fungible tokens (NFTs) issued by Bittrees Research.
+              These tokens represent preferred stock certificates in Bittrees
+              Research and entitle the holders to limited voting rights as
+              outlined in this disclaimer. BRGOV tokens do not grant any
+              ownership rights or equity in Bittrees Research beyond the
+              specified limited voting rights.
+            </p>
+            <p>
+              <span className="font-bold">Voting Rights:</span> Holders of BRGOV
+              tokens are granted voting rights solely for the purpose of
+              approving budget proposals submitted by members of Bittrees
+              Research. These voting rights are limited to the budget approval
+              process and do not extend to other aspects of the organization or
+              its governance.
+            </p>
+            <p>
+              <span className="font-bold">Purchase Price:</span> BRGOV tokens
+              can be acquired by exchanging 1000 BTREE tokens or 0.001 WBTC
+              tokens. The purchase price is fixed and non-negotiable.
+            </p>
+            <p>
+              <span className="font-bold">Non-Expiry:</span> BRGOV tokens do not
+              have an expiration date. Once acquired, they will remain in your
+              possession indefinitely.
+            </p>
+            <p>
+              <span className="font-bold">Dividends:</span> BRGOV token holders
+              should not expect any dividends or profit-sharing arrangements
+              from Bittrees Research. BRGOV tokens do not confer any entitlement
+              to dividends or profits generated by Bittrees Research.
+            </p>
+            <p>
+              <span className="font-bold">Risks:</span> The purchase and
+              ownership of BRGOV tokens involve certain risks. The value of
+              BRGOV tokens may fluctuate based on various factors, including
+              market conditions and the performance of Bittrees Research. It is
+              important to carefully consider these risks and to conduct your
+              own research before acquiring BRGOV tokens.
+            </p>
+            <p>
+              <span className="font-bold">No Guarantee of Outcome:</span>{" "}
+              Bittrees Research makes no guarantees or representations regarding
+              the outcome, success, or future performance of the organization or
+              its projects. The acquisition of BRGOV tokens does not guarantee
+              any specific benefits or returns.
+            </p>
+
+            <p>
+              <span className="font-bold">
+                By proceeding with the acquisition of BRGOV tokens, you
+                acknowledge that you have read, understood, and agreed to the
+                terms and conditions set forth in this disclaimer. If you do not
+                agree with any part of this disclaimer, you should refrain from
+                acquiring BRGOV tokens.
+              </span>
             </p>
           </div>
           <footer className="flex flex-col gap-6 mx-auto mt-4">
