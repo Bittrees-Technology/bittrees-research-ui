@@ -2,16 +2,16 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import MintPage from "./MintPage";
+import MintBRGOVPage from "./MintBRGOVPage";
+import MembersPage from "./MembersPage";
+import CodeOfEthicsPage from "./CodeOfEthicsPage";
+import VisionStatementPage from "./VisionStatementPage";
 import reportWebVitals from "./reportWebVitals";
-
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-
 import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
-
 import { EthereumClient } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
-
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { mainnet, goerli } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
@@ -29,7 +29,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "Builders Advocacy Group",
+  appName: "Bittrees Research",
   chains,
 });
 
@@ -50,6 +50,22 @@ const router = createBrowserRouter([
   {
     path: "/mint",
     element: <MintPage />,
+  },
+  {
+    path: "/mintBRGOV",
+    element: <MintBRGOVPage />,
+  },
+  {
+    path: "/members",
+    element: <MembersPage />,
+  },
+  {
+    path: "/codeofethics",
+    element: <CodeOfEthicsPage />,
+  },
+  {
+    path: "/visionstatement",
+    element: <VisionStatementPage />,
   },
 ]);
 

@@ -1,7 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { Mint } from "./Mint";
+import { MintBRGOV } from "./MintBRGOV";
 
-function MintPage() {
+function MintBRGOVPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <header className="bg-[#dedede] border-b-2 border-gray-500">
@@ -21,15 +21,10 @@ function MintPage() {
       <main className="text-center bg-[#dedede]">
         <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
           <div className="mx-auto flex flex-col items-center max-w-md">
-            <img
-              src="/bittrees-membership-card.png"
-              width="1400px"
-              height="800px"
-              alt="Bittrees Research Membership Card"
-            />
+            BRGOV
           </div>
           <div className="mt-4">
-            <Mint />
+            <MintBRGOV />
           </div>
           <div>
             <ConnectButton />
@@ -81,4 +76,4 @@ function MintPage() {
   );
 }
 
-export default MintPage;
+export default MintBRGOVPage;
