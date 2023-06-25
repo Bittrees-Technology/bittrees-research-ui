@@ -24,7 +24,7 @@ function displayFriendlyError(message: string | undefined): string {
   return message;
 }
 
-export function Mint() {
+export function MintBRGOV() {
   const [total, setTotal] = useState(mintPrice);
 
   function calcTotal(donation: string) {
@@ -67,7 +67,7 @@ export function Mint() {
           />{" "}
           <span>ETH</span>
         </div>
-        <div className="text-right">Total price:</div>
+        <div className="text-right">Total Price WBTC:</div>
         <div className="text-left">
           {total} <span>ETH</span>
         </div>
