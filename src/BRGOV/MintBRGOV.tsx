@@ -1,22 +1,21 @@
 import { useAccount, usePrepareContractWrite, useContractWrite } from "wagmi";
 import abi from "../abi.json";
 import {
-  // goerli,
-  mainnet,
+  goerli,
+  // mainnet,
 } from "wagmi/chains";
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import { useBtreeInformation } from "./useBtreeInformation";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
-const CONTRACT_ADDRESS = "0x6573248d7a8e18807cbbc6d574c9c21c044c84d1";
-const BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436";
+const CONTRACT_ADDRESS = "0x873ac694efeb2ee5918aace9699b4e3f3732514e"; // goerli
+const BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f"; // goerli
+// const BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436"; // mainnet
 
-// const chainId =
-//   process.env.REACT_APP_ENABLE_TESTNETS === "true" ? goerli.id : mainnet.id;
-const chainId = mainnet.id;
+const chainId = goerli.id; //mainnet.id;
 
-console.info(`BGOV contract: ${CONTRACT_ADDRESS}`);
+console.info(`BRGOV contract: ${CONTRACT_ADDRESS}`);
 console.info(`BTREE contract: ${BTREE_CONTRACT_ADDRESS}`);
 console.info(`Chain ID: ${chainId}`);
 
@@ -151,6 +150,11 @@ export function MintBRGOV() {
   if (mintState === MintState.NotConnected) {
     return (
       <div>
+        {chainId === goerli.id && (
+          <div className="text-2xl text-red-500 p-4">
+            This site is on testnet. Real BRGOV tokens are not mintable yet.
+          </div>
+        )}
         <p className="text-2xl mt-4">Please connect your wallet.</p>
       </div>
     );
@@ -158,8 +162,13 @@ export function MintBRGOV() {
 
   return (
     <>
+      {chainId === goerli.id && (
+        <div className="text-2xl text-red-500 p-4">
+          This site is on testnet. Real BRGOV tokens are not mintable yet.{" "}
+        </div>
+      )}
       <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
-        <div className="text-right">Cost per BGOV token:</div>
+        <div className="text-right">Cost per BRGOV token:</div>
         <div className="text-left">{displayMintPrice} BTREE</div>
         <div className="text-right">Number of tokens to mint:</div>
         <div className="text-left">
@@ -190,7 +199,7 @@ export function MintBRGOV() {
             {notEnoughBtreeToMint && (
               <span className="font-bold text-red-500">
                 Note that your wallet does not have enough BTREE tokens to mint{" "}
-                {mintCount} BGOV token{mintCount > 0 ? "s" : ""}.
+                {mintCount} BRGOV token{mintCount > 0 ? "s" : ""}.
               </span>
             )}
           </p>
@@ -242,7 +251,7 @@ export function MintBRGOV() {
               mintComplete
             }
           >
-            Step 2: Mint BGOV
+            Step 2: Mint BRGOV
           </button>
         )}
 
@@ -258,7 +267,7 @@ export function MintBRGOV() {
             </div>
             <p className="text-2xl mt-2 font-bold">
               Granting BTREE allowance. After you accept transaction, soon this
-              button will change to the Mint BGOV step once allowance has
+              button will change to the Mint BRGOV step once allowance has
               completed...
             </p>
           </div>
@@ -275,7 +284,7 @@ export function MintBRGOV() {
               </span>
             </div>
             <p className="text-2xl mt-2 font-bold">
-              Minting BGOV. After wallet pops up and you accept transaction,
+              Minting BRGOV. After wallet pops up and you accept transaction,
               please be patient while minting...
             </p>
           </div>
