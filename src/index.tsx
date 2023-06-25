@@ -1,21 +1,25 @@
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import App from "./App";
-import MintPage from "./MintPage";
-import MintBRGOVPage from "./MintBRGOVPage";
-import MembersPage from "./MembersPage";
-import CodeOfEthicsPage from "./CodeOfEthicsPage";
-import VisionStatementPage from "./VisionStatementPage";
-import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import "@rainbow-me/rainbowkit/styles.css";
 import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import "@rainbow-me/rainbowkit/styles.css";
 import { EthereumClient } from "@web3modal/ethereum";
 import { Web3Modal } from "@web3modal/react";
+import ReactDOM from "react-dom/client";
+import {
+  createBrowserRouter,
+  Navigate,
+  RouterProvider,
+} from "react-router-dom";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { mainnet, goerli } from "wagmi/chains";
+import { goerli, mainnet } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
+import App from "./App";
+import CodeOfEthicsPage from "./CodeOfEthicsPage";
+import "./index.css";
+import MembersPage from "./MembersPage";
+import MintBRGOVPage from "./MintBRGOVPage";
+import MintPage from "./MintPage";
+import reportWebVitals from "./reportWebVitals";
+import VisionStatementPage from "./VisionStatementPage";
 
 const myChain =
   process.env.REACT_APP_ENABLE_TESTNETS === "true" ? goerli : mainnet;
@@ -49,10 +53,14 @@ const router = createBrowserRouter([
   },
   {
     path: "/mint",
+    element: <Navigate to="/mint/membership" />,
+  },
+  {
+    path: "/mint/membership",
     element: <MintPage />,
   },
   {
-    path: "/mintBRGOV",
+    path: "/mint/brgov",
     element: <MintBRGOVPage />,
   },
   {
