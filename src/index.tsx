@@ -34,6 +34,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 
 const { connectors } = getDefaultWallets({
   appName: "Bittrees Research",
+  projectId: "8971e0de563ab27ccfff96c91ac1c3c3",
   chains,
 });
 
@@ -89,7 +90,7 @@ root.render(
     </WagmiConfig>
 
     <Web3Modal
-      projectId="726b46a4ea5d9eaede5a7dc8a558c196"
+      projectId="8971e0de563ab27ccfff96c91ac1c3c3"
       ethereumClient={ethereumClient}
     />
   </>
