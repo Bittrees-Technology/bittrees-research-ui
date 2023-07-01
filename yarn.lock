@@ -2157,7 +2157,7 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
-"@rainbow-me/rainbowkit@^0.12.7":
+"@rainbow-me/rainbowkit@^0.12.16":
   version "0.12.16"
   resolved "https://registry.yarnpkg.com/@rainbow-me/rainbowkit/-/rainbowkit-0.12.16.tgz#42152e87f867c1921a59f605a080878f549f834d"
   integrity sha512-4uuJIOJaBjPVM/8HqM1kNf2Yqb52lNYkQD1m8p8e7zcIK2K3nml6BfG5r04f4kqUWRmT3yosZOz2+AYL1zFqdA==
@@ -11199,7 +11199,7 @@ w3c-xmlserializer@^2.0.0:
   dependencies:
     xml-name-validator "^3.0.0"
 
-wagmi@^0.12.10:
+wagmi@^0.12.18:
   version "0.12.18"
   resolved "https://registry.yarnpkg.com/wagmi/-/wagmi-0.12.18.tgz#36053a2f104d8223112d6b2f2d0936da4104add9"
   integrity sha512-Ci0cy1R6NXmwVjRF4ukjBdOor7ZH3SDBSXPZetlkm6mey9RJq5yEHEZYdcPgtLWANqRRzFD5TxXtrmZJkhhs3w==
