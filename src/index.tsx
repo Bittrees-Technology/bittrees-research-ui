@@ -34,6 +34,7 @@ const { chains, provider, webSocketProvider } = configureChains(
 
 const { connectors } = getDefaultWallets({
   appName: "Bittrees Research",
+  projectId: "726b46a4ea5d9eaede5a7dc8a558c196",
   chains,
 });
 
