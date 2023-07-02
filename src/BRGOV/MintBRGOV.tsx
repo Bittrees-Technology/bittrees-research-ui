@@ -44,7 +44,24 @@ enum MintState {
   MintComplete,
 }
 
-export function MintBRGOV() {
+export enum Denomination {
+  One = "1",
+  Ten = "10",
+  Hundred = "100",
+}
+
+export enum PurchaseToken {
+  WBTC = "WBTC",
+  BTREE = "BTREE",
+}
+
+export interface MintBRGOVProps {
+  denomination: Denomination;
+  purchaseToken: PurchaseToken;
+}
+
+export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
+  console.log({ denomination, purchaseToken });
   const [mintCount, setMintcount] = useState(1);
   const [total, setTotal] = useState<bigint>(mintPrice);
   const { address } = useAccount();
