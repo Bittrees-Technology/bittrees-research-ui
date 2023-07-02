@@ -1,5 +1,5 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { MintBRGOV } from "./MintBRGOV";
+import { MintBRGOVSelection } from "./MintBRGOVSelection";
 
 function MintBRGOVPage() {
   return (
@@ -24,8 +24,8 @@ function MintBRGOVPage() {
               alt="BRGOV Certificate of Stock"
             />
           </div>
-          <div className="mt-4">
-            <MintBRGOV />
+          <div className="mt-4 mb-4">
+            <MintBRGOVSelection />
           </div>
           <div>
             <ConnectButton />
