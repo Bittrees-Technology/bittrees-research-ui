@@ -46,12 +46,33 @@ export interface MintBRGOVProps {
   purchaseToken: PurchaseToken;
 }
 
+const pricePerDenomination = {
+  [PurchaseToken.WBTC]: {
+    [Denomination.One]: "0.001",
+    [Denomination.Ten]: "0.01",
+    [Denomination.Hundred]: "0.1",
+  },
+  [PurchaseToken.BTREE]: {
+    [Denomination.One]: "1000",
+    [Denomination.Ten]: "10000",
+    [Denomination.Hundred]: "100000",
+  },
+};
+
+function getMintPrice(
+  denomination: Denomination,
+  purchaseToken: PurchaseToken
+): string {
+  return pricePerDenomination[purchaseToken][denomination];
+}
+
 export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const isBTREE = purchaseToken === PurchaseToken.BTREE;
   const mintPrice = ethers.utils
-    .parseUnits(isBTREE ? "1000.0" : "0.001", "ether") // TODO: Support 3 different certifcate types/prices
+    .parseUnits(getMintPrice(denomination, purchaseToken), "ether") // TODO: Support 3 different certifcate types/prices
     .toBigInt();
   const currencySymbol = isBTREE ? "BTREE" : "WBTC";
+  const denominationSymbol = `BRGOV-${denomination}`;
 
   const [mintCount, setMintcount] = useState(1);
   const [total, setTotal] = useState<bigint>(mintPrice);
@@ -123,19 +144,17 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
     setAllowanceInProgress(false);
   }, [allowanceTransactionResult, allowance, total]);
 
-  const displayMintPrice = parseInt(
-    ethers.utils.formatEther(mintPrice),
-    10
-  ).toLocaleString();
-  const displayTotalPrice = parseInt(
-    ethers.utils.formatEther(total),
-    10
-  ).toLocaleString();
-  const displayBtreeBalance = parseInt(
+  const displayMintPrice = isBTREE
+    ? parseInt(ethers.utils.formatEther(mintPrice), 10).toLocaleString()
+    : ethers.utils.formatEther(mintPrice);
+  const displayTotalPrice = isBTREE
+    ? parseInt(ethers.utils.formatEther(total), 10).toLocaleString()
+    : ethers.utils.formatEther(total);
+  const displayErc20Balance = parseInt(
     ethers.utils.formatEther(balance),
     10
   ).toLocaleString();
-  const displayBtreeAllowance = parseInt(
+  const displayErc20Allowance = parseInt(
     ethers.utils.formatEther(allowance),
     10
   ).toLocaleString();
@@ -145,7 +164,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   ).toLocaleString();
 
   const enoughAllowanceToMint = Boolean(allowance >= total);
-  const notEnoughBtreeToMint = Boolean(balance < total);
+  const notEnoughErc20ToMint = Boolean(balance < total);
 
   let mintState = MintState.NotConnected;
   if (address) {
@@ -183,6 +202,8 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
         </div>
       )}
       <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
+        <div className="text-right">Certificate Denomination:</div>
+        <div className="text-left">{denominationSymbol}</div>
         <div className="text-right">Cost per BRGOV token:</div>
         <div className="text-left">
           {displayMintPrice} {currencySymbol}
@@ -212,8 +233,8 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
         <div className="mt-6 font-newtimesroman w-1/2 mx-auto">
           <p className="text-xl underline">Your {currencySymbol} Holdings</p>
           <p className="mt-2">
-            Your {currencySymbol} holdings are {displayBtreeBalance}.{" "}
-            {notEnoughBtreeToMint && (
+            Your {currencySymbol} holdings are {displayErc20Balance}.{" "}
+            {notEnoughErc20ToMint && (
               <span className="font-bold text-red-500">
                 Note that your wallet does not have enough {currencySymbol}{" "}
                 tokens to mint {mintCount} BRGOV token{mintCount > 0 ? "s" : ""}
@@ -223,7 +244,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
           </p>
           <p className="mt-2">
             The allowance of {currencySymbol} you've granted for minting is{" "}
-            {displayBtreeAllowance}.
+            {displayErc20Allowance}.
           </p>
         </div>
       )}
@@ -239,7 +260,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       </div>
 
       {/* only display error if there is enough btree, but something else went wrong */}
-      {/* {mintState === MintState.MintStep && error && !notEnoughBtreeToMint && (
+      {/* {mintState === MintState.MintStep && error && !notEnoughErc20ToMint && (
         <div className="m-4 mx-auto max-w-xl font-newtimesroman font-bold text-lg text-red-500">
           An error occurred preparing the transaction:{" "}
           {displayFriendlyError(error.message)}
@@ -264,7 +285,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
             onClick={onClick}
             disabled={
               !Boolean(write) ||
-              notEnoughBtreeToMint ||
+              notEnoughErc20ToMint ||
               mintInProgress ||
               mintComplete
             }
