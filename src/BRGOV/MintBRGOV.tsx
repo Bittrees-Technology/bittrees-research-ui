@@ -1,39 +1,25 @@
-import { useAccount, usePrepareContractWrite, useContractWrite } from "wagmi";
-import abi from "../abi.json";
-import {
-  goerli,
-  // mainnet,
-} from "wagmi/chains";
-import { useState, useEffect } from "react";
 import { ethers } from "ethers";
-import { useBtreeInformation } from "./useBtreeInformation";
+import { useEffect, useState } from "react";
+import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
+import { goerli } from "wagmi/chains";
+import abi from "../abi.json";
+import btreeAbi from "./abi-btree.json";
+import wbtcAbi from "./abi-wbtc.json";
+import { useERC20TokenInformation } from "./useERC20TokenInformation";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
 const CONTRACT_ADDRESS = "0x873ac694efeb2ee5918aace9699b4e3f3732514e"; // goerli
 const BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f"; // goerli
 // const BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436"; // mainnet
+const WBTC_CONTRACT_ADDRESS = "0x26bE8Ef5aBf9109384856dD25ce1b4344aFd88b0"; // goerli
+// const WBTC_CONTRACT_ADDRESS = "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"; // mainnet
 
 const chainId = goerli.id; //mainnet.id;
 
 console.info(`BRGOV contract: ${CONTRACT_ADDRESS}`);
 console.info(`BTREE contract: ${BTREE_CONTRACT_ADDRESS}`);
+console.info(`WBTC contract: ${WBTC_CONTRACT_ADDRESS}`);
 console.info(`Chain ID: ${chainId}`);
-
-const mintPrice = ethers.utils.parseUnits("1000.0", "ether").toBigInt();
-
-// function displayFriendlyError(message: string | undefined): string {
-//   if (!message) return "";
-
-//   if (message.startsWith("insufficient funds for intrinsic transaction cost")) {
-//     return "insufficient funds for intrinsic transaction cost.";
-//   }
-
-//   if (message.includes("Insufficient allowance")) {
-//     return "insufficient allowance. This wallet hasn't granted permissions to the contract to transfer BTREE tokens.";
-//   }
-
-//   return message;
-// }
 
 enum MintState {
   NotConnected,
@@ -61,7 +47,12 @@ export interface MintBRGOVProps {
 }
 
 export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
-  console.log({ denomination, purchaseToken });
+  const isBTREE = purchaseToken === PurchaseToken.BTREE;
+  const mintPrice = ethers.utils
+    .parseUnits(isBTREE ? "1000.0" : "0.001", "ether") // TODO: Support 3 different certifcate types/prices
+    .toBigInt();
+  const currencySymbol = isBTREE ? "BTREE" : "WBTC";
+
   const [mintCount, setMintcount] = useState(1);
   const [total, setTotal] = useState<bigint>(mintPrice);
   const { address } = useAccount();
@@ -69,10 +60,12 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const [mintInProgress, setMintInProgress] = useState(false);
   const [mintComplete, setMintComplete] = useState(false);
 
-  const { btreeAllowance, btreeBalance, btreeIsLoading } = useBtreeInformation({
+  const { allowance, balance, isLoading } = useERC20TokenInformation({
     walletAddress: address,
     CONTRACT_ADDRESS,
-    BTREE_CONTRACT_ADDRESS,
+    ERC20_CONTRACT_ADDRESS: isBTREE
+      ? BTREE_CONTRACT_ADDRESS
+      : WBTC_CONTRACT_ADDRESS,
   });
 
   function calcTotal(count: string) {
@@ -81,13 +74,16 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
     setTotal(totalEther);
   }
 
-  // const { config, error } = usePrepareContractWrite({
   const { config } = usePrepareContractWrite({
     address: CONTRACT_ADDRESS,
     abi,
     functionName: "mint",
     chainId,
-    args: [0x0, address, mintCount], // 0x0 is BTREE
+    args: [
+      isBTREE ? 0x0 : 0x1, // 0x0 is BTREE. 0x1 is WBTC.
+      address,
+      mintCount,
+    ],
   });
   const { write } = useContractWrite(config);
 
@@ -101,10 +97,12 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   const { sendAllowance, allowanceTransactionResult } =
     useManageAllowanceTransaction({
-      BTREE_CONTRACT_ADDRESS,
+      ERC20_CONTRACT_ADDRESS: BTREE_CONTRACT_ADDRESS,
+      erc20Abi: isBTREE ? btreeAbi : wbtcAbi,
+      erc20FunctionName: isBTREE ? "increaseAllowance" : "increaseApproval",
       CONTRACT_ADDRESS,
       chainId,
-      amount: total - btreeAllowance < 0 ? BigInt(0) : total - btreeAllowance,
+      amount: total - allowance < 0 ? BigInt(0) : total - allowance,
     });
 
   function onClickAllowance() {
@@ -118,12 +116,12 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       allowanceTransactionResult,
       "plus",
       {
-        btreeAllowance,
+        allowance,
         total,
       }
     );
     setAllowanceInProgress(false);
-  }, [allowanceTransactionResult, btreeAllowance, total]);
+  }, [allowanceTransactionResult, allowance, total]);
 
   const displayMintPrice = parseInt(
     ethers.utils.formatEther(mintPrice),
@@ -134,20 +132,20 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
     10
   ).toLocaleString();
   const displayBtreeBalance = parseInt(
-    ethers.utils.formatEther(btreeBalance),
+    ethers.utils.formatEther(balance),
     10
   ).toLocaleString();
   const displayBtreeAllowance = parseInt(
-    ethers.utils.formatEther(btreeAllowance),
+    ethers.utils.formatEther(allowance),
     10
   ).toLocaleString();
   const displayAllowanceToCreate = parseInt(
-    ethers.utils.formatEther(total - btreeAllowance),
+    ethers.utils.formatEther(total - allowance),
     10
   ).toLocaleString();
 
-  const enoughAllowanceToMint = Boolean(btreeAllowance >= total);
-  const notEnoughBtreeToMint = Boolean(btreeBalance < total);
+  const enoughAllowanceToMint = Boolean(allowance >= total);
+  const notEnoughBtreeToMint = Boolean(balance < total);
 
   let mintState = MintState.NotConnected;
   if (address) {
@@ -186,7 +184,9 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       )}
       <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
         <div className="text-right">Cost per BRGOV token:</div>
-        <div className="text-left">{displayMintPrice} BTREE</div>
+        <div className="text-left">
+          {displayMintPrice} {currencySymbol}
+        </div>
         <div className="text-right">Number of tokens to mint:</div>
         <div className="text-left">
           <input
@@ -200,28 +200,29 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
         </div>
         <div className="text-right">Total price:</div>
         <div className="text-left">
-          {displayTotalPrice} <span>BTREE</span>
+          {displayTotalPrice} <span>{currencySymbol}</span>
         </div>
       </div>
-      {btreeIsLoading && (
+      {isLoading && (
         <div className="mt-2 font-newtimesroman">
-          Loading your BTREE holdings and allowance information...
+          Loading your {currencySymbol} holdings and allowance information...
         </div>
       )}
-      {!btreeIsLoading && (
+      {!isLoading && (
         <div className="mt-6 font-newtimesroman w-1/2 mx-auto">
-          <p className="text-xl underline">Your BTREE Holdings</p>
+          <p className="text-xl underline">Your {currencySymbol} Holdings</p>
           <p className="mt-2">
-            Your BTREE holdings are {displayBtreeBalance}.{" "}
+            Your {currencySymbol} holdings are {displayBtreeBalance}.{" "}
             {notEnoughBtreeToMint && (
               <span className="font-bold text-red-500">
-                Note that your wallet does not have enough BTREE tokens to mint{" "}
-                {mintCount} BRGOV token{mintCount > 0 ? "s" : ""}.
+                Note that your wallet does not have enough {currencySymbol}{" "}
+                tokens to mint {mintCount} BRGOV token{mintCount > 0 ? "s" : ""}
+                .
               </span>
             )}
           </p>
           <p className="mt-2">
-            The allowance of BTREE you've granted for minting is{" "}
+            The allowance of {currencySymbol} you've granted for minting is{" "}
             {displayBtreeAllowance}.
           </p>
         </div>
@@ -230,10 +231,10 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       <div className="m-4 mt-8 mx-auto max-w-xl font-newtimesroman">
         <p className="text-xl underline">What's required for minting?</p>
         <p className="mt-2">
-          To transfer BTREE tokens, you'll need ETH in your wallet. There will
-          also be two transactions. The first to grant permissions for our
-          contract to transfer BTREE tokens on your behalf, the second to do the
-          transfer and mint your equity tokens.
+          To transfer {currencySymbol} tokens, you'll need ETH in your wallet.
+          There will also be two transactions. The first to grant permissions
+          for our contract to transfer {currencySymbol} tokens on your behalf,
+          the second to do the transfer and mint your equity tokens.
         </p>
       </div>
 
@@ -253,7 +254,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
             // disabled={dataForAllowanceTransaction}
           >
             Step 1: Grant permission to transfer {displayAllowanceToCreate}{" "}
-            BTREE
+            {currencySymbol}
           </button>
         )}
 
@@ -283,9 +284,9 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
               </span>
             </div>
             <p className="text-2xl mt-2 font-bold">
-              Granting BTREE allowance. After you accept transaction, soon this
-              button will change to the Mint BRGOV step once allowance has
-              completed...
+              Granting {currencySymbol} allowance. After you accept transaction,
+              soon this button will change to the Mint BRGOV step once allowance
+              has completed...
             </p>
           </div>
         )}

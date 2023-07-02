@@ -1,27 +1,30 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
-  usePrepareContractWrite,
-  useContractWrite,
-  useWaitForTransaction,
   Address,
+  useContractWrite,
+  usePrepareContractWrite,
+  useWaitForTransaction,
 } from "wagmi";
-import btreeAbi from "./abi-btree.json";
 
 export function useManageAllowanceTransaction({
-  BTREE_CONTRACT_ADDRESS,
+  ERC20_CONTRACT_ADDRESS,
+  erc20FunctionName,
+  erc20Abi,
   CONTRACT_ADDRESS,
   chainId,
   amount,
 }: {
-  BTREE_CONTRACT_ADDRESS: Address;
+  ERC20_CONTRACT_ADDRESS: Address;
+  erc20FunctionName: "increaseAllowance" | "increaseApproval";
+  erc20Abi: any;
   CONTRACT_ADDRESS: Address;
   chainId: number;
   amount: bigint;
 }) {
   const { config: configAllowance } = usePrepareContractWrite({
-    address: BTREE_CONTRACT_ADDRESS,
-    abi: btreeAbi,
-    functionName: "increaseAllowance",
+    address: ERC20_CONTRACT_ADDRESS,
+    abi: erc20Abi,
+    functionName: erc20FunctionName,
     chainId,
     args: [CONTRACT_ADDRESS, amount.toString()],
   });
