@@ -8,7 +8,7 @@ import wbtcAbi from "./abi-wbtc.json";
 import { useERC20TokenInformation } from "./useERC20TokenInformation";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
-const CONTRACT_ADDRESS = "0x873ac694efeb2ee5918aace9699b4e3f3732514e"; // goerli
+const CONTRACT_ADDRESS = "0x80DB9814adce297a0aF958387E7e02D543A36B78"; // goerli
 const BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f"; // goerli
 // const BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436"; // mainnet
 const WBTC_CONTRACT_ADDRESS = "0x26bE8Ef5aBf9109384856dD25ce1b4344aFd88b0"; // goerli
