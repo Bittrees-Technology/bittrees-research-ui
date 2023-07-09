@@ -81,7 +81,7 @@ export function MembersContent() {
                 <li className="p-2">
                   <a
                     className="text-black no-underline hover:underline hover:text-green-700"
-                    href="/mint/brgov"
+                    href="/mint-brgov"
                   >
                     Mint BRGOV (test version on Goerli)
                   </a>

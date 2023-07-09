@@ -54,14 +54,14 @@ const router = createBrowserRouter([
   },
   {
     path: "/mint",
-    element: <Navigate to="/mint/membership" />,
+    element: <Navigate to="/mint-membership" />,
   },
   {
-    path: "/mint/membership",
+    path: "/mint-membership",
     element: <MintPage />,
   },
   {
-    path: "/mint/brgov",
+    path: "/mint-brgov",
     element: <MintBRGOVPage />,
   },
   {
