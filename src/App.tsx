@@ -6,7 +6,7 @@ function App() {
       <main className="bg-[#dedede] flex flex-col h-screen justify-center items-center">
         <div className="flex flex-col gap-6 p-6">
           <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center shadow-md shadow-gray-500 hover:shadow-black">
-            <Link to="/mint/membership" className="flex flex-col items-center">
+            <Link to="/mint" className="flex flex-col items-center">
               <div className="text-xl">Become a Member</div>
             </Link>
           </div>
