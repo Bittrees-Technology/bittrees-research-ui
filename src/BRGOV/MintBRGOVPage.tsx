@@ -6,7 +6,7 @@ function MintBRGOVPage() {
     <div className="max-w-4xl mx-auto">
       <header className="border-2 border-b-0 bg-white">
         <div className="w-full">
-          <a href="/mint/brgov" className="mx-auto">
+          <a href="/mint-brgov" className="mx-auto">
             <div className="font-newtimesroman pt-10 pb-6 text-4xl sm:text-6xl text-center font-bold tracking-wider">
               Bittrees Research
             </div>
