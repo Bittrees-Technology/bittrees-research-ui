@@ -26,7 +26,7 @@ export function MintBRGOVSelection() {
             </p>
             <p className="mt-4">
               When you mint in the next step, you'll be able to select a
-              quantity for choosen denomination.
+              quantity for your choosen denomination.
             </p>
             <hr className="mt-4" />
           </div>
