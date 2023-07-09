@@ -79,12 +79,12 @@ export function MembersContent() {
                   </a>
                 </li>
                 <li className="p-2">
-                  {/* <a
+                  <a
                     className="text-black no-underline hover:underline hover:text-green-700"
                     href="/mint/brgov"
-                  > */}
-                  Mint BRGOV
-                  {/* </a> */}
+                  >
+                    Mint BRGOV (test version on Goerli)
+                  </a>
                 </li>
                 <li className="p-2">BRGOV Contract </li>
                 <li className="p-2">Mint BRTC</li>
