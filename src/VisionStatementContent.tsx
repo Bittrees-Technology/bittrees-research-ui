@@ -107,7 +107,7 @@ export function VisionStatementContent() {
 
       {!hasValidMembership && (
         <div className="m-4 mx-auto max-w-xl font-newtimesroman">
-          <a href="/mint/membership">Please go mint your membership!</a>
+          <a href="/mint">Please go mint your membership!</a>
         </div>
       )}
     </>
