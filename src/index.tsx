@@ -21,11 +21,11 @@ import MintPage from "./MintPage";
 import reportWebVitals from "./reportWebVitals";
 import VisionStatementPage from "./VisionStatementPage";
 
-const myChain =
-  process.env.REACT_APP_ENABLE_TESTNETS === "true" ? goerli : mainnet;
+// const myChain =
+//   process.env.REACT_APP_ENABLE_TESTNETS === "true" ? goerli : mainnet;
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [myChain],
+  [goerli, mainnet],
   [
     alchemyProvider({ apiKey: "MY6sRxkJ6Jeo6Pd_6XvgrmvXJFbrQE0w" }),
     publicProvider(),
