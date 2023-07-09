@@ -2,13 +2,14 @@ import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
 import { goerli } from "wagmi/chains";
-import abi from "../abi.json";
+import abi from "./abi-brgov.json";
 import btreeAbi from "./abi-btree.json";
 import wbtcAbi from "./abi-wbtc.json";
+import wbtcTestAbi from "./abi-wbtc-test.json";
 import { useERC20TokenInformation } from "./useERC20TokenInformation";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
-const CONTRACT_ADDRESS = "0x80DB9814adce297a0aF958387E7e02D543A36B78"; // goerli
+const CONTRACT_ADDRESS = "0x14dBB93a78B5e89540e902d1E6Ee26C989e08ef0"; // goerli
 const BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f"; // goerli
 // const BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436"; // mainnet
 const WBTC_CONTRACT_ADDRESS = "0x26bE8Ef5aBf9109384856dD25ce1b4344aFd88b0"; // goerli
@@ -59,6 +60,12 @@ const pricePerDenomination = {
   },
 };
 
+const mintMethod = {
+  [Denomination.One]: "mint",
+  [Denomination.Ten]: "mintTen",
+  [Denomination.Hundred]: "mintHundred",
+};
+
 function getMintPrice(
   denomination: Denomination,
   purchaseToken: PurchaseToken
@@ -98,7 +105,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const { config } = usePrepareContractWrite({
     address: CONTRACT_ADDRESS,
     abi,
-    functionName: "mint",
+    functionName: mintMethod[denomination],
     chainId,
     args: [
       isBTREE ? 0x0 : 0x1, // 0x0 is BTREE. 0x1 is WBTC.
@@ -118,9 +125,19 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   const { sendAllowance, allowanceTransactionResult } =
     useManageAllowanceTransaction({
-      ERC20_CONTRACT_ADDRESS: BTREE_CONTRACT_ADDRESS,
-      erc20Abi: isBTREE ? btreeAbi : wbtcAbi,
-      erc20FunctionName: isBTREE ? "increaseAllowance" : "increaseApproval",
+      ERC20_CONTRACT_ADDRESS: isBTREE
+        ? BTREE_CONTRACT_ADDRESS
+        : WBTC_CONTRACT_ADDRESS,
+      erc20Abi: isBTREE
+        ? btreeAbi
+        : chainId === goerli.id
+        ? wbtcTestAbi
+        : wbtcAbi,
+      erc20FunctionName: isBTREE
+        ? "increaseAllowance"
+        : chainId === goerli.id
+        ? "increaseAllowance"
+        : "increaseApproval",
       CONTRACT_ADDRESS,
       chainId,
       amount: total - allowance < 0 ? BigInt(0) : total - allowance,
@@ -150,18 +167,15 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const displayTotalPrice = isBTREE
     ? parseInt(ethers.utils.formatEther(total), 10).toLocaleString()
     : ethers.utils.formatEther(total);
-  const displayErc20Balance = parseInt(
-    ethers.utils.formatEther(balance),
-    10
-  ).toLocaleString();
-  const displayErc20Allowance = parseInt(
-    ethers.utils.formatEther(allowance),
-    10
-  ).toLocaleString();
-  const displayAllowanceToCreate = parseInt(
-    ethers.utils.formatEther(total - allowance),
-    10
-  ).toLocaleString();
+  const displayErc20Balance = isBTREE
+    ? parseInt(ethers.utils.formatEther(balance), 10).toLocaleString()
+    : ethers.utils.formatEther(balance);
+  const displayErc20Allowance = isBTREE
+    ? parseInt(ethers.utils.formatEther(allowance), 10).toLocaleString()
+    : ethers.utils.formatEther(allowance);
+  const displayAllowanceToCreate = isBTREE
+    ? parseInt(ethers.utils.formatEther(total - allowance), 10).toLocaleString()
+    : ethers.utils.formatEther(total - allowance);
 
   const enoughAllowanceToMint = Boolean(allowance >= total);
   const notEnoughErc20ToMint = Boolean(balance < total);
