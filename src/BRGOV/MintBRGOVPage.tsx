@@ -18,7 +18,7 @@ function MintBRGOVPage() {
         <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
           <div className="mx-auto flex flex-col items-center max-w-md drop-shadow-xl">
             <img
-              src="/bgov-cert-sm.png"
+              src="/brgov-cert-sm.png"
               width="1000px"
               height="566px"
               alt="BRGOV Certificate of Stock"

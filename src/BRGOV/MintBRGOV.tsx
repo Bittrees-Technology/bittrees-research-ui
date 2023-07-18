@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { goerli } from "wagmi/chains";
+import { mainnet, goerli } from "wagmi/chains";
 import abi from "./abi-brgov.json";
 import btreeAbi from "./abi-btree.json";
 import wbtcAbi from "./abi-wbtc.json";
@@ -9,13 +9,17 @@ import wbtcTestAbi from "./abi-wbtc-test.json";
 import { useERC20TokenInformation } from "./useERC20TokenInformation";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
-const CONTRACT_ADDRESS = "0x14dBB93a78B5e89540e902d1E6Ee26C989e08ef0"; // goerli
-const BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f"; // goerli
-// const BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436"; // mainnet
-const WBTC_CONTRACT_ADDRESS = "0x26bE8Ef5aBf9109384856dD25ce1b4344aFd88b0"; // goerli
-// const WBTC_CONTRACT_ADDRESS = "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599"; // mainnet
+// const CONTRACT_ADDRESS = "0x14dBB93a78B5e89540e902d1E6Ee26C989e08ef0"; // goerli
+// const BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f"; // goerli
+// const WBTC_CONTRACT_ADDRESS = "0x26bE8Ef5aBf9109384856dD25ce1b4344aFd88b0"; // goerli
+const CONTRACT_ADDRESS = "0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c"; // mainnet
+const BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436"; // mainnet
+const WBTC_CONTRACT_ADDRESS = "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"; // mainnet
 
-const chainId = goerli.id; //mainnet.id;
+const chainId = mainnet.id;
+
+const isTestnet = chainId === (goerli.id as number);
+const showTestnetWarning = true;
 
 console.info(`BRGOV contract: ${CONTRACT_ADDRESS}`);
 console.info(`BTREE contract: ${BTREE_CONTRACT_ADDRESS}`);
@@ -128,14 +132,10 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       ERC20_CONTRACT_ADDRESS: isBTREE
         ? BTREE_CONTRACT_ADDRESS
         : WBTC_CONTRACT_ADDRESS,
-      erc20Abi: isBTREE
-        ? btreeAbi
-        : chainId === goerli.id
-        ? wbtcTestAbi
-        : wbtcAbi,
+      erc20Abi: isBTREE ? btreeAbi : isTestnet ? wbtcTestAbi : wbtcAbi,
       erc20FunctionName: isBTREE
         ? "increaseAllowance"
-        : chainId === goerli.id
+        : isTestnet
         ? "increaseAllowance"
         : "increaseApproval",
       CONTRACT_ADDRESS,
@@ -198,9 +198,9 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   if (mintState === MintState.NotConnected) {
     return (
       <div>
-        {chainId === goerli.id && (
+        {showTestnetWarning && (
           <div className="text-2xl text-red-500 p-4">
-            This site is on testnet. Real BRGOV tokens are not mintable yet.
+            This site is being tested. BRGOV tokens are not mintable yet.
           </div>
         )}
         <p className="text-2xl mt-4">Please connect your wallet.</p>
@@ -210,9 +210,9 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   return (
     <>
-      {chainId === goerli.id && (
+      {showTestnetWarning && (
         <div className="text-2xl text-red-500 p-4">
-          This site is on testnet. Real BRGOV tokens are not mintable yet.{" "}
+          This site is being tested. BRGOV tokens are not mintable yet.
         </div>
       )}
       <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">

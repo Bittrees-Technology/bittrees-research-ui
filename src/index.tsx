@@ -9,7 +9,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { goerli, mainnet } from "wagmi/chains";
+import { mainnet } from "wagmi/chains";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 import { publicProvider } from "wagmi/providers/public";
 import App from "./App";
@@ -25,7 +25,7 @@ import VisionStatementPage from "./VisionStatementPage";
 //   process.env.REACT_APP_ENABLE_TESTNETS === "true" ? goerli : mainnet;
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [goerli, mainnet],
+  [mainnet],
   [
     alchemyProvider({ apiKey: "MY6sRxkJ6Jeo6Pd_6XvgrmvXJFbrQE0w" }),
     publicProvider(),
