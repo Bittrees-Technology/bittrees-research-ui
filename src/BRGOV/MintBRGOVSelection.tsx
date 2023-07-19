@@ -17,7 +17,7 @@ export function MintBRGOVSelection() {
       )}
       {!next && (
         <div className="flex flex-col items-center">
-          <div className="px-28 text-justify font-newtimesroman">
+          <div className="px-4 md:px-28 text-justify font-newtimesroman">
             <p>
               We offer three different certificate denominations: one, ten and a
               hundred. This helps save you gas fees. For example instead of
