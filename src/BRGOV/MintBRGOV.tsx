@@ -161,21 +161,29 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
     setAllowanceInProgress(false);
   }, [allowanceTransactionResult, allowance, total]);
 
+  function roundBTREE(value: bigint) {
+    return parseInt(ethers.utils.formatEther(value), 10).toLocaleString();
+  }
+
+  function roundWBTC(value: bigint) {
+    return (
+      Math.round(parseFloat(ethers.utils.formatEther(value)) * 10000) / 10000
+    );
+  }
+
   const displayMintPrice = isBTREE
-    ? parseInt(ethers.utils.formatEther(mintPrice), 10).toLocaleString()
-    : ethers.utils.formatEther(mintPrice);
-  const displayTotalPrice = isBTREE
-    ? parseInt(ethers.utils.formatEther(total), 10).toLocaleString()
-    : ethers.utils.formatEther(total);
+    ? roundBTREE(mintPrice)
+    : roundWBTC(mintPrice);
+  const displayTotalPrice = isBTREE ? roundBTREE(total) : roundWBTC(total);
   const displayErc20Balance = isBTREE
-    ? parseInt(ethers.utils.formatEther(balance), 10).toLocaleString()
-    : ethers.utils.formatEther(balance);
+    ? roundBTREE(balance)
+    : roundWBTC(balance);
   const displayErc20Allowance = isBTREE
-    ? parseInt(ethers.utils.formatEther(allowance), 10).toLocaleString()
-    : ethers.utils.formatEther(allowance);
+    ? roundBTREE(allowance)
+    : roundWBTC(allowance);
   const displayAllowanceToCreate = isBTREE
-    ? parseInt(ethers.utils.formatEther(total - allowance), 10).toLocaleString()
-    : ethers.utils.formatEther(total - allowance);
+    ? roundBTREE(total - allowance)
+    : roundWBTC(total - allowance);
 
   const enoughAllowanceToMint = Boolean(allowance >= total);
   const notEnoughErc20ToMint = Boolean(balance < total);
