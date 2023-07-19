@@ -1,7 +1,13 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { MintBRGOVSelection } from "./MintBRGOVSelection";
+import { Denomination } from "./MintBRGOV";
+import { useState } from "react";
 
 function MintBRGOVPage() {
+  const [denomination, setDenomination] = useState<Denomination>(
+    Denomination.One
+  );
+
   return (
     <div className="max-w-4xl mx-auto">
       <header className="border-2 border-b-0 bg-white">
@@ -18,14 +24,18 @@ function MintBRGOVPage() {
         <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
           <div className="mx-auto flex flex-col items-center max-w-md drop-shadow-xl">
             <img
-              src="/brgov-cert-sm.png"
+              src={`/brgov-${denomination}-preferred-cert.png`}
               width="1000px"
               height="566px"
               alt="BRGOV Certificate of Stock"
             />
           </div>
           <div className="mt-4 mb-4">
-            <MintBRGOVSelection />
+            <MintBRGOVSelection
+              onChangeDenomination={(denomination: Denomination) => {
+                setDenomination(denomination);
+              }}
+            />
           </div>
           <div>
             <ConnectButton />

@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Denomination, PurchaseToken, MintBRGOV } from "./MintBRGOV";
 
-export function MintBRGOVSelection() {
+export function MintBRGOVSelection({
+  onChangeDenomination,
+}: {
+  onChangeDenomination: (denomination: Denomination) => void;
+}) {
   const [denomination, setDenomination] = useState<Denomination>(
     Denomination.One
   );
@@ -39,6 +43,7 @@ export function MintBRGOVSelection() {
                 className="border-2"
                 onChange={(event) => {
                   setDenomination(event.target.value as Denomination);
+                  onChangeDenomination(event.target.value as Denomination);
                 }}
               >
                 <option value={Denomination.One}>One</option>
