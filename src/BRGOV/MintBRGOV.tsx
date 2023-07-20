@@ -67,14 +67,14 @@ export interface MintBRGOVProps {
 
 const pricePerDenomination = {
   [PurchaseToken.WBTC]: {
-    [Denomination.One]: BigInt("1") * BigInt(10) ** BigInt(5), // 0.001 WBTC
-    [Denomination.Ten]: BigInt("10") * BigInt(10) ** BigInt(5), // 0.01 WBTC
-    [Denomination.Hundred]: BigInt("100") * BigInt(10) ** BigInt(5), // 0.1 WBTC,
+    [Denomination.One]: BigInt("1") * BigInt(10 ** 5), // 0.001 WBTC
+    [Denomination.Ten]: BigInt("10") * BigInt(10 ** 5), // 0.01 WBTC
+    [Denomination.Hundred]: BigInt("100") * BigInt(10 ** 5), // 0.1 WBTC,
   },
   [PurchaseToken.BTREE]: {
-    [Denomination.One]: BigInt(1000) * BigInt(10) ** BigInt(18),
-    [Denomination.Ten]: BigInt(10000) * BigInt(10) ** BigInt(18),
-    [Denomination.Hundred]: BigInt(100000) * BigInt(10) ** BigInt(18),
+    [Denomination.One]: BigInt(1000) * BigInt(10 ** 18), // 1000 BTREE
+    [Denomination.Ten]: BigInt(10000) * BigInt(10 ** 18),
+    [Denomination.Hundred]: BigInt(100000) * BigInt(10 ** 18),
   },
 };
 
