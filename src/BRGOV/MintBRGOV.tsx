@@ -9,14 +9,28 @@ import wbtcTestAbi from "./abi-wbtc-test.json";
 import { useERC20TokenInformation } from "./useERC20TokenInformation";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
-// const CONTRACT_ADDRESS = "0x14dBB93a78B5e89540e902d1E6Ee26C989e08ef0"; // goerli
-// const BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f"; // goerli
-// const WBTC_CONTRACT_ADDRESS = "0x26bE8Ef5aBf9109384856dD25ce1b4344aFd88b0"; // goerli
-const CONTRACT_ADDRESS = "0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c"; // mainnet
-const BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436"; // mainnet
-const WBTC_CONTRACT_ADDRESS = "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599"; // mainnet
+const USE_MAINNET = true;
 
-const chainId = mainnet.id;
+let CONTRACT_ADDRESS: `0x${string}`;
+let BTREE_CONTRACT_ADDRESS: `0x${string}`;
+let WBTC_CONTRACT_ADDRESS: `0x${string}`;
+
+if (USE_MAINNET) {
+  CONTRACT_ADDRESS = "0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c";
+  BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436";
+  WBTC_CONTRACT_ADDRESS = "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599";
+} else {
+  CONTRACT_ADDRESS = "0x14dBB93a78B5e89540e902d1E6Ee26C989e08ef0";
+  BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f";
+  WBTC_CONTRACT_ADDRESS = "0x26bE8Ef5aBf9109384856dD25ce1b4344aFd88b0";
+}
+
+let chainId: number;
+if (USE_MAINNET) {
+  chainId = mainnet.id;
+} else {
+  chainId = goerli.id;
+}
 
 const isTestnet = chainId === (goerli.id as number);
 const showTestnetWarning = true;
@@ -53,14 +67,14 @@ export interface MintBRGOVProps {
 
 const pricePerDenomination = {
   [PurchaseToken.WBTC]: {
-    [Denomination.One]: "0.001",
-    [Denomination.Ten]: "0.01",
-    [Denomination.Hundred]: "0.1",
+    [Denomination.One]: BigInt("1") * BigInt(10) ** BigInt(5),
+    [Denomination.Ten]: BigInt("10") * BigInt(10) ** BigInt(5),
+    [Denomination.Hundred]: BigInt("100") * BigInt(10) ** BigInt(5),
   },
   [PurchaseToken.BTREE]: {
-    [Denomination.One]: "1000",
-    [Denomination.Ten]: "10000",
-    [Denomination.Hundred]: "100000",
+    [Denomination.One]: BigInt(1000) * BigInt(10) ** BigInt(18),
+    [Denomination.Ten]: BigInt(10000) * BigInt(10) ** BigInt(18),
+    [Denomination.Hundred]: BigInt(100000) * BigInt(10) ** BigInt(18),
   },
 };
 
@@ -73,15 +87,14 @@ const mintMethod = {
 function getMintPrice(
   denomination: Denomination,
   purchaseToken: PurchaseToken
-): string {
+): bigint {
   return pricePerDenomination[purchaseToken][denomination];
 }
 
 export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const isBTREE = purchaseToken === PurchaseToken.BTREE;
-  const mintPrice = ethers.utils
-    .parseUnits(getMintPrice(denomination, purchaseToken), "ether") // TODO: Support 3 different certifcate types/prices
-    .toBigInt();
+  const mintPrice = getMintPrice(denomination, purchaseToken);
+
   const currencySymbol = isBTREE ? "BTREE" : "WBTC";
   const denominationSymbol = `BRGOV-${denomination}`;
 
@@ -100,10 +113,11 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       : WBTC_CONTRACT_ADDRESS,
   });
 
-  function calcTotal(count: string) {
+  function calcTotal(isBTREE: boolean, count: string) {
     setMintcount(parseInt(count, 10));
-    const totalEther = mintPrice * BigInt(parseInt(count ? count : "0", 10));
-    setTotal(totalEther);
+    const total = mintPrice * BigInt(parseInt(count ? count : "0", 10));
+    isBTREE ? roundBTREE(total) : roundWBTC(total);
+    setTotal(total);
   }
 
   const { config } = usePrepareContractWrite({
@@ -149,15 +163,6 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   }
 
   useEffect(() => {
-    console.log(
-      "refresh UI, transaction successful. allowanceTransactionResult:",
-      allowanceTransactionResult,
-      "plus",
-      {
-        allowance,
-        total,
-      }
-    );
     setAllowanceInProgress(false);
   }, [allowanceTransactionResult, allowance, total]);
 
@@ -167,7 +172,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   function roundWBTC(value: bigint) {
     return (
-      Math.round(parseFloat(ethers.utils.formatEther(value)) * 10000) / 10000
+      Math.round(parseFloat(ethers.utils.formatUnits(value, 8)) * 10000) / 10000
     );
   }
 
@@ -235,7 +240,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
           <input
             className="w-20 input-sm"
             type="number"
-            onChange={(e) => calcTotal(e.target.value)}
+            onChange={(e) => calcTotal(isBTREE, e.target.value)}
             step="1"
             min="1"
             value={mintCount}
@@ -305,12 +310,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
           <button
             className="btn btn-primary"
             onClick={onClick}
-            disabled={
-              !Boolean(write) ||
-              notEnoughErc20ToMint ||
-              mintInProgress ||
-              mintComplete
-            }
+            disabled={notEnoughErc20ToMint || mintInProgress || mintComplete}
           >
             Step 2: Mint BRGOV
           </button>
