@@ -33,7 +33,7 @@ if (USE_MAINNET) {
 }
 
 const isTestnet = chainId === (goerli.id as number);
-const showTestnetWarning = true;
+const showTestnetWarning = false;
 
 console.info(`BRGOV contract: ${CONTRACT_ADDRESS}`);
 console.info(`BTREE contract: ${BTREE_CONTRACT_ADDRESS}`);
@@ -67,9 +67,9 @@ export interface MintBRGOVProps {
 
 const pricePerDenomination = {
   [PurchaseToken.WBTC]: {
-    [Denomination.One]: BigInt("1") * BigInt(10) ** BigInt(5),
-    [Denomination.Ten]: BigInt("10") * BigInt(10) ** BigInt(5),
-    [Denomination.Hundred]: BigInt("100") * BigInt(10) ** BigInt(5),
+    [Denomination.One]: BigInt("1") * BigInt(10) ** BigInt(5), // 0.001 WBTC
+    [Denomination.Ten]: BigInt("10") * BigInt(10) ** BigInt(5), // 0.01 WBTC
+    [Denomination.Hundred]: BigInt("100") * BigInt(10) ** BigInt(5), // 0.1 WBTC,
   },
   [PurchaseToken.BTREE]: {
     [Denomination.One]: BigInt(1000) * BigInt(10) ** BigInt(18),
@@ -131,14 +131,21 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       mintCount,
     ],
   });
-  const { write } = useContractWrite(config);
+  const { data, isSuccess, write, isError, error } = useContractWrite(config);
+
+  useEffect(() => {
+    console.log("MINT status", { isSuccess, data });
+    if (isSuccess) {
+      setMintComplete(true);
+    }
+    if (isError) {
+      console.error("Minting error", error?.message);
+    }
+  }, [isSuccess, data, isError, error]);
 
   function onClick() {
     setMintInProgress(true);
     write?.();
-    window.setTimeout(() => {
-      setMintComplete(true);
-    }, 10000);
   }
 
   const { sendAllowance, allowanceTransactionResult } =
@@ -223,68 +230,76 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   return (
     <>
-      {showTestnetWarning && (
-        <div className="text-2xl text-red-500 p-4">
-          This site is being tested. BRGOV tokens are not mintable yet.
-        </div>
-      )}
-      <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
-        <div className="text-right">Certificate Denomination:</div>
-        <div className="text-left">{denominationSymbol}</div>
-        <div className="text-right">Cost per BRGOV token:</div>
-        <div className="text-left">
-          {displayMintPrice} {currencySymbol}
-        </div>
-        <div className="text-right">Number of tokens to mint:</div>
-        <div className="text-left">
-          <input
-            className="w-20 input-sm"
-            type="number"
-            onChange={(e) => calcTotal(isBTREE, e.target.value)}
-            step="1"
-            min="1"
-            value={mintCount}
-          />
-        </div>
-        <div className="text-right">Total price:</div>
-        <div className="text-left">
-          {displayTotalPrice} <span>{currencySymbol}</span>
-        </div>
-      </div>
-      {isLoading && (
-        <div className="mt-2 font-newtimesroman">
-          Loading your {currencySymbol} holdings and allowance information...
-        </div>
-      )}
-      {!isLoading && (
-        <div className="mt-6 font-newtimesroman w-1/2 mx-auto">
-          <p className="text-xl underline">Your {currencySymbol} Holdings</p>
-          <p className="mt-2">
-            Your {currencySymbol} holdings are {displayErc20Balance}.{" "}
-            {notEnoughErc20ToMint && (
-              <span className="font-bold text-red-500">
-                Note that your wallet does not have enough {currencySymbol}{" "}
-                tokens to mint {mintCount} BRGOV token{mintCount > 0 ? "s" : ""}
-                .
-              </span>
-            )}
-          </p>
-          <p className="mt-2">
-            The allowance of {currencySymbol} you've granted for minting is{" "}
-            {displayErc20Allowance}.
-          </p>
-        </div>
-      )}
+      {mintState !== MintState.MintComplete && (
+        <div>
+          {showTestnetWarning && (
+            <div className="text-2xl text-red-500 p-4">
+              This site is being tested. BRGOV tokens are not mintable yet.
+            </div>
+          )}
+          <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
+            <div className="text-right">Certificate Denomination:</div>
+            <div className="text-left">{denominationSymbol}</div>
+            <div className="text-right">Cost per BRGOV token:</div>
+            <div className="text-left">
+              {displayMintPrice} {currencySymbol}
+            </div>
+            <div className="text-right">Number of tokens to mint:</div>
+            <div className="text-left">
+              <input
+                className="w-20 input-sm"
+                type="number"
+                onChange={(e) => calcTotal(isBTREE, e.target.value)}
+                step="1"
+                min="1"
+                value={mintCount}
+              />
+            </div>
+            <div className="text-right">Total price:</div>
+            <div className="text-left">
+              {displayTotalPrice} <span>{currencySymbol}</span>
+            </div>
+          </div>
+          {isLoading && (
+            <div className="mt-2 font-newtimesroman">
+              Loading your {currencySymbol} holdings and allowance
+              information...
+            </div>
+          )}
+          {!isLoading && (
+            <div className="mt-6 font-newtimesroman w-1/2 mx-auto">
+              <p className="text-xl underline">
+                Your {currencySymbol} Holdings
+              </p>
+              <p className="mt-2">
+                Your {currencySymbol} holdings are {displayErc20Balance}.{" "}
+                {notEnoughErc20ToMint && (
+                  <span className="font-bold text-red-500">
+                    Note that your wallet does not have enough {currencySymbol}{" "}
+                    tokens to mint {mintCount} BRGOV token
+                    {mintCount > 0 ? "s" : ""}.
+                  </span>
+                )}
+              </p>
+              <p className="mt-2">
+                The allowance of {currencySymbol} you've granted for minting is{" "}
+                {displayErc20Allowance}.
+              </p>
+            </div>
+          )}
 
-      <div className="m-4 mt-8 mx-auto max-w-xl font-newtimesroman">
-        <p className="text-xl underline">What's required for minting?</p>
-        <p className="mt-2">
-          To transfer {currencySymbol} tokens, you'll need ETH in your wallet.
-          There will also be two transactions. The first to grant permissions
-          for our contract to transfer {currencySymbol} tokens on your behalf,
-          the second to do the transfer and mint your equity tokens.
-        </p>
-      </div>
+          <div className="m-4 mt-8 mx-auto max-w-xl font-newtimesroman">
+            <p className="text-xl underline">What's required for minting?</p>
+            <p className="mt-2">
+              To transfer {currencySymbol} tokens, you'll need ETH in your
+              wallet. There will also be two transactions. The first to grant
+              permissions for our contract to transfer {currencySymbol} tokens
+              on your behalf, the second to do the transfer and mint your equity
+              tokens.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* only display error if there is enough btree, but something else went wrong */}
       {/* {mintState === MintState.MintStep && error && !notEnoughErc20ToMint && (

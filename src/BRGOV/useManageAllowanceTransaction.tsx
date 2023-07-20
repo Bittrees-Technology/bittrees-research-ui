@@ -44,10 +44,11 @@ export function useManageAllowanceTransaction({
     hash: allowanceHash,
     chainId,
     enabled: Boolean(allowanceHash),
+    confirmations: 5,
   });
 
   useEffect(() => {
-    console.log("useManageAllowanceTransaction: Successful", {
+    console.log("useManageAllowanceTransaction:", {
       dataForAllowanceTransaction,
     });
   }, [dataForAllowanceTransaction]);
