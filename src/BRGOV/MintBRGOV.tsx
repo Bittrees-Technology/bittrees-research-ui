@@ -104,6 +104,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const [allowanceInProgress, setAllowanceInProgress] = useState(false);
   const [mintInProgress, setMintInProgress] = useState(false);
   const [mintComplete, setMintComplete] = useState(false);
+  const [mintTransactionUrl, setMintTransactionUrl] = useState("");
 
   const { allowance, balance, isLoading } = useERC20TokenInformation({
     walletAddress: address,
@@ -137,6 +138,11 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
     console.log("MINT status", { isSuccess, data });
     if (isSuccess) {
       setMintComplete(true);
+      if (data?.hash) {
+        setMintTransactionUrl(
+          `https://${USE_MAINNET ? "" : "goerli."}etherscan.io/tx/${data?.hash}`
+        );
+      }
     }
     if (isError) {
       console.error("Minting error", error?.message);
@@ -342,9 +348,10 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
               </span>
             </div>
             <p className="text-2xl mt-2 font-bold">
-              Granting {currencySymbol} allowance. After you accept transaction,
-              soon this button will change to the Mint BRGOV step once allowance
-              has completed...
+              Granting {currencySymbol} allowance, this may take a couple of
+              minutes. After wallet pops up and you accept transaction, this
+              button will eventually change to the "Mint BRGOV" step once
+              allowance has completed...
             </p>
           </div>
         )}
@@ -368,7 +375,13 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
         {mintState === MintState.MintComplete && (
           <p className="text-2xl mt-2 font-bold">
-            Mint should now be complete.
+            Mint complete.{" "}
+            {mintTransactionUrl && (
+              <span>
+                Here is your
+                <a href={mintTransactionUrl}>transaction</a> link.
+              </span>
+            )}
           </p>
         )}
       </div>
