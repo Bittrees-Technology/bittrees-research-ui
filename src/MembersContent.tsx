@@ -79,14 +79,23 @@ export function MembersContent() {
                   </a>
                 </li>
                 <li className="p-2">
-                  {/* <a
+                  <a
                     className="text-black no-underline hover:underline hover:text-green-700"
                     href="/mint-brgov"
-                  > */}
-                  Mint BRGOV
-                  {/* </a> */}
+                  >
+                    Mint BRGOV
+                  </a>
                 </li>
-                <li className="p-2">BRGOV Contract </li>
+                <li className="p-2">
+                  <a
+                    className="text-black no-underline hover:underline hover:text-green-700"
+                    target="_blank"
+                    rel="noreferrer"
+                    href="https://etherscan.io/token/0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c#code"
+                  >
+                    BRGOV Contract
+                  </a>
+                </li>
                 <li className="p-2">Mint BRTC</li>
                 <li className="p-2">Stake BRTC</li>
                 <li className="p-2">Burn BRTC</li>
