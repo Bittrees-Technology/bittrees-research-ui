@@ -11,14 +11,13 @@ const chainId =
 console.info(`Contract: ${CONTRACT_ADDRESS}`);
 console.info(`Chain ID: ${chainId}`);
 
-const mintPrice = "0.0250";
+// const mintPrice = "0.0250";
+const mintPrice = "0.0";
 
 function displayFriendlyError(message: string | undefined): string {
   if (!message) return "";
 
-  if (
-    message.startsWith("insufficient funds for intrinsic transaction cost")
-  ) {
+  if (message.startsWith("insufficient funds for intrinsic transaction cost")) {
     return "insufficient funds for intrinsic transaction cost.";
   }
   return message;
