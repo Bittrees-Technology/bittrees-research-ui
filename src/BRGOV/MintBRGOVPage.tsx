@@ -113,7 +113,7 @@ function MintBRGOVPage() {
           </div>
           <footer className="flex flex-col gap-6 mx-auto mt-4">
             <span>
-              <a className="hover:text-green-700" href="/">
+              <a className="hover:text-green-700" href="/members">
                 <span className="inline-block align-middle pr-1">
                   <svg
                     className="h-4 w-4 hover:text-green-700"
