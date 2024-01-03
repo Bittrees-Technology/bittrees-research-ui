@@ -154,7 +154,7 @@ export function MembersContent() {
                     className="text-black no-underline hover:underline hover:text-green-700"
                     target="_blank"
                     rel="noreferrer"
-                    href="https://twitter.com/BittreesR"
+                    href="https://twitter.com/bresearch_"
                   >
                     Twitter
                   </a>
