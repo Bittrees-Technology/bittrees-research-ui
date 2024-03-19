@@ -96,6 +96,18 @@ export function MembersContent() {
                     BRGOV Contract
                   </a>
                 </li>
+
+                <li className="p-2">
+                  <a
+                    className="text-black no-underline hover:underline hover:text-green-700"
+                    target="_blank"
+                    rel="noreferrer"
+                    href="https://metaforo.io/g/bittreesresearch"
+                  >
+                    Governance Forum
+                  </a>
+                </li>
+                <li className="p-2">Snapshot</li>
                 <li className="p-2">Mint BRTC</li>
                 <li className="p-2">Stake BRTC</li>
                 <li className="p-2">Burn BRTC</li>
