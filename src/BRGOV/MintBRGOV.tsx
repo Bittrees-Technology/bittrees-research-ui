@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { mainnet, goerli } from "wagmi/chains";
+import { mainnet, baseSepolia } from "wagmi/chains";
 import abi from "./abi-brgov.json";
 import btreeAbi from "./abi-btree.json";
 import wbtcAbi from "./abi-wbtc.json";
@@ -29,10 +29,10 @@ let chainId: number;
 if (USE_MAINNET) {
   chainId = mainnet.id;
 } else {
-  chainId = goerli.id;
+  chainId = baseSepolia.id;
 }
 
-const isTestnet = chainId === (goerli.id as number);
+const isTestnet = chainId === (baseSepolia.id as number);
 const showTestnetWarning = false;
 
 console.info(`BRGOV contract: ${CONTRACT_ADDRESS}`);
@@ -140,7 +140,9 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       setMintComplete(true);
       if (data?.hash) {
         setMintTransactionUrl(
-          `https://${USE_MAINNET ? "" : "goerli."}etherscan.io/tx/${data?.hash}`
+          `https://${USE_MAINNET ? "" : "basesepolia."}etherscan.io/tx/${
+            data?.hash
+          }`
         );
       }
     }
