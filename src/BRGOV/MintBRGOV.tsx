@@ -67,6 +67,15 @@ const MINT_METHODS = {
   [Denomination.Hundred]: "mintHundred",
 } as const;
 
+enum MintState {
+  NotConnected,
+  AllowanceStep,
+  AllowanceTransactionInProgress,
+  MintStep,
+  MintTransactionInProgress,
+  MintComplete,
+}
+
 export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const chainId = useChainId();
   const { address } = useAccount();
@@ -161,6 +170,21 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const enoughAllowanceToMint = allowance >= total;
   const notEnoughTokensToMint = balance < total;
 
+  let mintState = MintState.NotConnected;
+  if (address) {
+    if (mintComplete) {
+      mintState = MintState.MintComplete;
+    } else if (allowanceInProgress) {
+      mintState = MintState.AllowanceTransactionInProgress;
+    } else if (mintInProgress) {
+      mintState = MintState.MintTransactionInProgress;
+    } else if (enoughAllowanceToMint || allowanceTransactionResult) {
+      mintState = MintState.MintStep;
+    } else {
+      mintState = MintState.AllowanceStep;
+    }
+  }
+
   if (!isSupported) {
     return (
       <div className="text-red-500 p-4">
@@ -179,7 +203,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   return (
     <>
-      {!mintComplete && (
+      {mintState !== MintState.MintComplete && (
         <div>
           <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
             <div className="text-right">Certificate Denomination:</div>
@@ -246,7 +270,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
       )}
 
       <div className="mt-4 font-newtimesroman">
-        {!enoughAllowanceToMint && !mintComplete && !mintInProgress && (
+        {mintState === MintState.AllowanceStep && (
           <button
             className="btn btn-primary"
             onClick={() => {
@@ -260,7 +284,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
           </button>
         )}
 
-        {enoughAllowanceToMint && !mintComplete && !mintInProgress && (
+        {mintState === MintState.MintStep && (
           <button
             className="btn btn-primary"
             onClick={() => {
@@ -275,7 +299,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
           </button>
         )}
 
-        {allowanceInProgress && (
+        {mintState === MintState.AllowanceTransactionInProgress && (
           <div className="mt-4">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em]" />
             <p className="text-2xl mt-2 font-bold">
@@ -284,14 +308,14 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
           </div>
         )}
 
-        {mintInProgress && (
+        {mintState === MintState.MintTransactionInProgress && (
           <div className="mt-4">
             <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em]" />
             <p className="text-2xl mt-2 font-bold">Minting BRGOV...</p>
           </div>
         )}
 
-        {mintComplete && (
+        {mintState === MintState.MintComplete && (
           <p className="text-2xl mt-2 font-bold">
             Mint complete.{" "}
             {mintTransactionUrl && (
