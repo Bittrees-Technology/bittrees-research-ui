@@ -24,7 +24,11 @@ export function useERC20TokenInformation({
   const [allowance, setAllowance] = useState<bigint>(BigInt(0));
   const [balance, setBalance] = useState<bigint>(BigInt(0));
 
-  const { data: tokenData, isLoading } = useReadContracts({
+  const {
+    data: tokenData,
+    isLoading,
+    refetch,
+  } = useReadContracts({
     contracts: [
       {
         address: erc20ContractAddress,
@@ -52,5 +56,5 @@ export function useERC20TokenInformation({
     }
   }, [tokenData]);
 
-  return { allowance, balance, isLoading };
+  return { allowance, balance, isLoading, refetch };
 }

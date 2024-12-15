@@ -95,7 +95,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const [mintComplete, setMintComplete] = useState(false);
   const [mintTransactionUrl, setMintTransactionUrl] = useState("");
 
-  const { allowance, balance, isLoading } = useERC20TokenInformation({
+  const { allowance, balance, isLoading, refetch } = useERC20TokenInformation({
     walletAddress: address,
     contractAddress: config.BRGOV,
     erc20ContractAddress: isBTREE ? config.BTREE : config.WBTC,
@@ -148,8 +148,15 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   }, [isSuccess, txData, config.EXPLORER]);
 
   useEffect(() => {
-    setAllowanceInProgress(false);
-  }, [allowanceTransactionResult, allowance, total]);
+    // If allowance transaction successful, recheck allowance
+    if (
+      allowanceTransactionResult &&
+      allowanceTransactionResult.status === "success"
+    ) {
+      refetch();
+      setAllowanceInProgress(false);
+    }
+  }, [allowanceTransactionResult]);
 
   const displayValues = {
     mintPrice: formatAmount(mintPrice, isBTREE ? 18 : 8),
@@ -289,9 +296,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
                 writeContract(simulateData.request);
               }
             }}
-            // TODO: Recheck allowance instead of assuming it's granted with allowanceTransactionResult
-            // disabled={notEnoughTokensToMint || !simulateData?.request}
-            disabled={!simulateData?.request}
+            disabled={notEnoughTokensToMint || !simulateData?.request}
           >
             Step 2: Mint BRGOV
           </button>
