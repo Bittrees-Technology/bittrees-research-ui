@@ -1,53 +1,37 @@
-import { ethers } from "ethers";
-import { useEffect, useState } from "react";
-import { useAccount, useSimulateContract, useWriteContract } from "wagmi";
-import { baseSepolia, mainnet } from "wagmi/chains";
+import { parseUnits, formatUnits } from "viem";
+import { useState, useEffect } from "react";
+import {
+  useAccount,
+  useSimulateContract,
+  useWriteContract,
+  useChainId,
+} from "wagmi";
+
 import abi from "./abi-brgov.json";
 import btreeAbi from "./abi-btree.json";
 import wbtcTestAbi from "./abi-wbtc-test.json";
 import wbtcAbi from "./abi-wbtc.json";
+
 import { useERC20TokenInformation } from "./useERC20TokenInformation";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
-const USE_MAINNET = true;
-
-let CONTRACT_ADDRESS: `0x${string}`;
-let BTREE_CONTRACT_ADDRESS: `0x${string}`;
-let WBTC_CONTRACT_ADDRESS: `0x${string}`;
-
-if (USE_MAINNET) {
-  CONTRACT_ADDRESS = "0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c";
-  BTREE_CONTRACT_ADDRESS = "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436";
-  WBTC_CONTRACT_ADDRESS = "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599";
-} else {
-  CONTRACT_ADDRESS = "0x14dBB93a78B5e89540e902d1E6Ee26C989e08ef0";
-  BTREE_CONTRACT_ADDRESS = "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f";
-  WBTC_CONTRACT_ADDRESS = "0x26bE8Ef5aBf9109384856dD25ce1b4344aFd88b0";
-}
-
-let chainId: number;
-if (USE_MAINNET) {
-  chainId = mainnet.id;
-} else {
-  chainId = baseSepolia.id;
-}
-
-const isTestnet = chainId === (baseSepolia.id as number);
-const showTestnetWarning = false;
-
-console.info(`BRGOV contract: ${CONTRACT_ADDRESS}`);
-console.info(`BTREE contract: ${BTREE_CONTRACT_ADDRESS}`);
-console.info(`WBTC contract: ${WBTC_CONTRACT_ADDRESS}`);
-console.info(`Chain ID: ${chainId}`);
-
-enum MintState {
-  NotConnected,
-  AllowanceStep,
-  AllowanceTransactionInProgress,
-  MintStep,
-  MintTransactionInProgress,
-  MintComplete,
-}
+// Contract configurations by network
+const CONTRACT_CONFIGS = {
+  // Mainnet
+  1: {
+    BRGOV: "0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c",
+    BTREE: "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436",
+    WBTC: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    EXPLORER: "etherscan.io",
+  },
+  // Base Sepolia
+  84532: {
+    BRGOV: "0x14dBB93a78B5e89540e902d1E6Ee26C989e08ef0",
+    BTREE: "0x1Ca23BB7dca2BEa5F57552AE99C3A44fA7307B5f",
+    WBTC: "0x5beB73bc1611111C3d5F692a286b31DCDd03Af81",
+    EXPLORER: "basesepolia.etherscan.io",
+  },
+} as const;
 
 export enum Denomination {
   One = "1",
@@ -65,42 +49,39 @@ export interface MintBRGOVProps {
   purchaseToken: PurchaseToken;
 }
 
-const pricePerDenomination = {
+const PRICE_PER_DENOMINATION = {
   [PurchaseToken.WBTC]: {
-    [Denomination.One]: BigInt("1") * BigInt(10 ** 5), // 0.001 WBTC
-    [Denomination.Ten]: BigInt("10") * BigInt(10 ** 5), // 0.01 WBTC
-    [Denomination.Hundred]: BigInt("100") * BigInt(10 ** 5), // 0.1 WBTC,
+    [Denomination.One]: parseUnits("0.001", 8), // 0.001 WBTC
+    [Denomination.Ten]: parseUnits("0.01", 8), // 0.01 WBTC
+    [Denomination.Hundred]: parseUnits("0.1", 8), // 0.1 WBTC
   },
   [PurchaseToken.BTREE]: {
-    [Denomination.One]: BigInt(1000) * BigInt(10 ** 18), // 1000 BTREE
-    [Denomination.Ten]: BigInt(10000) * BigInt(10 ** 18),
-    [Denomination.Hundred]: BigInt(100000) * BigInt(10 ** 18),
+    [Denomination.One]: parseUnits("1000", 18), // 1000 BTREE
+    [Denomination.Ten]: parseUnits("10000", 18), // 10000 BTREE
+    [Denomination.Hundred]: parseUnits("100000", 18), // 100000 BTREE
   },
 };
 
-const mintMethod = {
+const MINT_METHODS = {
   [Denomination.One]: "mint",
   [Denomination.Ten]: "mintTen",
   [Denomination.Hundred]: "mintHundred",
-};
-
-function getMintPrice(
-  denomination: Denomination,
-  purchaseToken: PurchaseToken
-): bigint {
-  return pricePerDenomination[purchaseToken][denomination];
-}
+} as const;
 
 export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
-  const isBTREE = purchaseToken === PurchaseToken.BTREE;
-  const mintPrice = getMintPrice(denomination, purchaseToken);
-
-  const currencySymbol = isBTREE ? "BTREE" : "WBTC";
-  const denominationSymbol = `BRGOV-${denomination}`;
-
-  const [mintCount, setMintcount] = useState(1);
-  const [total, setTotal] = useState<bigint>(mintPrice);
+  const chainId = useChainId();
   const { address } = useAccount();
+
+  const isSupported = chainId in CONTRACT_CONFIGS;
+  const config = isSupported
+    ? CONTRACT_CONFIGS[chainId as keyof typeof CONTRACT_CONFIGS]
+    : CONTRACT_CONFIGS[1]; // Default to mainnet config
+
+  const isBTREE = purchaseToken === PurchaseToken.BTREE;
+  const mintPrice = PRICE_PER_DENOMINATION[purchaseToken][denomination];
+
+  const [mintCount, setMintCount] = useState(1);
+  const [total, setTotal] = useState(mintPrice);
   const [allowanceInProgress, setAllowanceInProgress] = useState(false);
   const [mintInProgress, setMintInProgress] = useState(false);
   const [mintComplete, setMintComplete] = useState(false);
@@ -108,127 +89,78 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   const { allowance, balance, isLoading } = useERC20TokenInformation({
     walletAddress: address,
-    CONTRACT_ADDRESS,
-    ERC20_CONTRACT_ADDRESS: isBTREE
-      ? BTREE_CONTRACT_ADDRESS
-      : WBTC_CONTRACT_ADDRESS,
+    contractAddress: config.BRGOV,
+    erc20ContractAddress: isBTREE ? config.BTREE : config.WBTC,
   });
-
-  function calcTotal(isBTREE: boolean, count: string) {
-    setMintcount(parseInt(count, 10));
-    const total = mintPrice * BigInt(parseInt(count ? count : "0", 10));
-    isBTREE ? roundBTREE(total) : roundWBTC(total);
-    setTotal(total);
-  }
 
   const { data: simulateData } = useSimulateContract({
-    address: CONTRACT_ADDRESS,
-    abi,
-    functionName: mintMethod[denomination],
+    address: config.BRGOV,
+    abi, // Import your ABI
+    functionName: MINT_METHODS[denomination],
     args: [isBTREE ? 0x0 : 0x1, address, BigInt(mintCount)],
-    chainId,
   });
 
-  // Then use the writeContract hook
-  const { writeContract, data, isError, error, isSuccess } = useWriteContract();
-
-  useEffect(() => {
-    console.log("MINT status", { isSuccess, data });
-    if (isSuccess) {
-      setMintComplete(true);
-      if (data) {
-        // data is now just the transaction hash
-        setMintTransactionUrl(
-          `https://${USE_MAINNET ? "" : "basesepolia."}etherscan.io/tx/${data}`
-        );
-      }
-    }
-    if (isError) {
-      console.error("Minting error", error?.message);
-    }
-  }, [isSuccess, data, isError, error]);
-
-  function onClick() {
-    if (!simulateData?.request) return;
-    setMintInProgress(true);
-    writeContract(simulateData.request);
-  }
+  const { writeContract, data: txData, isSuccess } = useWriteContract();
 
   const { sendAllowance, allowanceTransactionResult } =
     useManageAllowanceTransaction({
-      ERC20_CONTRACT_ADDRESS: isBTREE
-        ? BTREE_CONTRACT_ADDRESS
-        : WBTC_CONTRACT_ADDRESS,
-      erc20Abi: isBTREE ? btreeAbi : isTestnet ? wbtcTestAbi : wbtcAbi,
-      erc20FunctionName: isBTREE
-        ? "increaseAllowance"
-        : isTestnet
-        ? "increaseAllowance"
-        : "increaseApproval",
-      CONTRACT_ADDRESS,
+      erc20ContractAddress: isBTREE ? config.BTREE : config.WBTC,
+      erc20Abi: isBTREE ? btreeAbi : chainId === 84532 ? wbtcTestAbi : wbtcAbi,
+      erc20FunctionName:
+        chainId === 84532 || isBTREE ? "increaseAllowance" : "increaseApproval",
+      contractAddress: config.BRGOV,
+      amount: total - allowance < BigInt(0) ? BigInt(0) : total - allowance,
       chainId,
-      amount: total - allowance < 0 ? BigInt(0) : total - allowance,
     });
 
-  function onClickAllowance() {
-    setAllowanceInProgress(true);
-    sendAllowance();
+  function calcTotal(count: string) {
+    const newCount = parseInt(count || "0", 10);
+    setMintCount(newCount);
+    setTotal(mintPrice * BigInt(newCount));
   }
+
+  function formatAmount(amount: bigint, decimals: number) {
+    return parseFloat(formatUnits(amount, decimals)).toLocaleString(undefined, {
+      maximumFractionDigits: decimals === 18 ? 0 : 4,
+    });
+  }
+
+  useEffect(() => {
+    if (isSuccess && txData) {
+      setMintComplete(true);
+      setMintTransactionUrl(`https://${config.EXPLORER}/tx/${txData}`);
+    }
+  }, [isSuccess, txData, config.EXPLORER]);
 
   useEffect(() => {
     setAllowanceInProgress(false);
   }, [allowanceTransactionResult, allowance, total]);
 
-  function roundBTREE(value: bigint) {
-    return parseInt(ethers.utils.formatEther(value), 10).toLocaleString();
-  }
+  const displayValues = {
+    mintPrice: formatAmount(mintPrice, isBTREE ? 18 : 8),
+    totalPrice: formatAmount(total, isBTREE ? 18 : 8),
+    balance: formatAmount(balance, isBTREE ? 18 : 8),
+    allowance: formatAmount(allowance, isBTREE ? 18 : 8),
+    allowanceToCreate: formatAmount(
+      total - allowance < BigInt(0) ? BigInt(0) : total - allowance,
+      isBTREE ? 18 : 8
+    ),
+  };
 
-  function roundWBTC(value: bigint) {
+  const enoughAllowanceToMint = allowance >= total;
+  const notEnoughTokensToMint = balance < total;
+
+  if (!isSupported) {
     return (
-      Math.round(parseFloat(ethers.utils.formatUnits(value, 8)) * 10000) / 10000
+      <div className="text-red-500 p-4">
+        Please connect to a supported network (Mainnet or Base Sepolia)
+      </div>
     );
   }
 
-  const displayMintPrice = isBTREE
-    ? roundBTREE(mintPrice)
-    : roundWBTC(mintPrice);
-  const displayTotalPrice = isBTREE ? roundBTREE(total) : roundWBTC(total);
-  const displayErc20Balance = isBTREE
-    ? roundBTREE(balance)
-    : roundWBTC(balance);
-  const displayErc20Allowance = isBTREE
-    ? roundBTREE(allowance)
-    : roundWBTC(allowance);
-  const displayAllowanceToCreate = isBTREE
-    ? roundBTREE(total - allowance)
-    : roundWBTC(total - allowance);
-
-  const enoughAllowanceToMint = Boolean(allowance >= total);
-  const notEnoughErc20ToMint = Boolean(balance < total);
-
-  let mintState = MintState.NotConnected;
-  if (address) {
-    if (mintComplete) {
-      mintState = MintState.MintComplete;
-    } else if (allowanceInProgress) {
-      mintState = MintState.AllowanceTransactionInProgress;
-    } else if (mintInProgress) {
-      mintState = MintState.MintTransactionInProgress;
-    } else if (enoughAllowanceToMint || allowanceTransactionResult) {
-      mintState = MintState.MintStep;
-    } else {
-      mintState = MintState.AllowanceStep;
-    }
-  }
-
-  if (mintState === MintState.NotConnected) {
+  if (!address) {
     return (
       <div>
-        {showTestnetWarning && (
-          <div className="text-2xl text-red-500 p-4">
-            This site is being tested. BRGOV tokens are not mintable yet.
-          </div>
-        )}
         <p className="text-2xl mt-4">Please connect your wallet.</p>
       </div>
     );
@@ -236,60 +168,55 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   return (
     <>
-      {mintState !== MintState.MintComplete && (
+      {!mintComplete && (
         <div>
-          {showTestnetWarning && (
-            <div className="text-2xl text-red-500 p-4">
-              This site is being tested. BRGOV tokens are not mintable yet.
-            </div>
-          )}
           <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
             <div className="text-right">Certificate Denomination:</div>
-            <div className="text-left">{denominationSymbol}</div>
+            <div className="text-left">{`BRGOV-${denomination}`}</div>
+
             <div className="text-right">Cost per BRGOV token:</div>
             <div className="text-left">
-              {displayMintPrice} {currencySymbol}
+              {displayValues.mintPrice} {purchaseToken}
             </div>
+
             <div className="text-right">Number of tokens to mint:</div>
             <div className="text-left">
               <input
                 className="w-20 input-sm"
                 type="number"
-                onChange={(e) => calcTotal(isBTREE, e.target.value)}
+                onChange={(e) => calcTotal(e.target.value)}
                 step="1"
                 min="1"
                 value={mintCount}
               />
             </div>
+
             <div className="text-right">Total price:</div>
             <div className="text-left">
-              {displayTotalPrice} <span>{currencySymbol}</span>
+              {displayValues.totalPrice} <span>{purchaseToken}</span>
             </div>
           </div>
-          {isLoading && (
+
+          {isLoading ? (
             <div className="mt-2 font-newtimesroman">
-              Loading your {currencySymbol} holdings and allowance
-              information...
+              Loading your {purchaseToken} holdings and allowance information...
             </div>
-          )}
-          {!isLoading && (
+          ) : (
             <div className="mt-6 font-newtimesroman w-1/2 mx-auto">
-              <p className="text-xl underline">
-                Your {currencySymbol} Holdings
-              </p>
+              <p className="text-xl underline">Your {purchaseToken} Holdings</p>
               <p className="mt-2">
-                Your {currencySymbol} holdings are {displayErc20Balance}.{" "}
-                {notEnoughErc20ToMint && (
+                Your {purchaseToken} holdings are {displayValues.balance}.{" "}
+                {notEnoughTokensToMint && (
                   <span className="font-bold text-red-500">
-                    Note that your wallet does not have enough {currencySymbol}{" "}
+                    Note that your wallet does not have enough {purchaseToken}{" "}
                     tokens to mint {mintCount} BRGOV token
-                    {mintCount > 0 ? "s" : ""}.
+                    {mintCount > 1 ? "s" : ""}.
                   </span>
                 )}
               </p>
               <p className="mt-2">
-                The allowance of {currencySymbol} you've granted for minting is{" "}
-                {displayErc20Allowance}.
+                The allowance of {purchaseToken} you've granted for minting is{" "}
+                {displayValues.allowance}.
               </p>
             </div>
           )}
@@ -297,89 +224,76 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
           <div className="m-4 mt-8 mx-auto max-w-xl font-newtimesroman">
             <p className="text-xl underline">What's required for minting?</p>
             <p className="mt-2">
-              To transfer {currencySymbol} tokens, you'll need ETH in your
-              wallet. There will also be two transactions. The first to grant
-              permissions for our contract to transfer {currencySymbol} tokens
-              on your behalf, the second to do the transfer and mint your equity
+              To transfer {purchaseToken} tokens, you'll need ETH in your
+              wallet. There will be two transactions. The first to grant
+              permissions for our contract to transfer {purchaseToken} tokens on
+              your behalf, the second to do the transfer and mint your equity
               tokens.
             </p>
           </div>
         </div>
       )}
 
-      {/* only display error if there is enough btree, but something else went wrong */}
-      {/* {mintState === MintState.MintStep && error && !notEnoughErc20ToMint && (
-        <div className="m-4 mx-auto max-w-xl font-newtimesroman font-bold text-lg text-red-500">
-          An error occurred preparing the transaction:{" "}
-          {displayFriendlyError(error.message)}
-        </div>
-      )} */}
-
       <div className="mt-4 font-newtimesroman">
-        {mintState === MintState.AllowanceStep && (
+        {!enoughAllowanceToMint && !mintComplete && !mintInProgress && (
           <button
             className="btn btn-primary"
-            onClick={onClickAllowance}
-            // disabled={dataForAllowanceTransaction}
+            onClick={() => {
+              setAllowanceInProgress(true);
+              sendAllowance();
+            }}
+            disabled={allowanceInProgress}
           >
-            Step 1: Grant permission to transfer {displayAllowanceToCreate}{" "}
-            {currencySymbol}
+            Step 1: Grant permission to transfer{" "}
+            {displayValues.allowanceToCreate} {purchaseToken}
           </button>
         )}
 
-        {mintState === MintState.MintStep && (
+        {enoughAllowanceToMint && !mintComplete && !mintInProgress && (
           <button
             className="btn btn-primary"
-            onClick={onClick}
-            disabled={notEnoughErc20ToMint || mintInProgress || mintComplete}
+            onClick={() => {
+              if (simulateData?.request) {
+                setMintInProgress(true);
+                writeContract(simulateData.request);
+              }
+            }}
+            disabled={notEnoughTokensToMint || !simulateData?.request}
           >
             Step 2: Mint BRGOV
           </button>
         )}
 
-        {mintState === MintState.AllowanceTransactionInProgress && (
+        {allowanceInProgress && (
           <div className="mt-4">
-            <div
-              className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-              role="status"
-            >
-              <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                Loading...
-              </span>
-            </div>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em]" />
             <p className="text-2xl mt-2 font-bold">
-              Granting {currencySymbol} allowance, this may take a couple of
-              minutes. After wallet pops up and you accept transaction, this
-              button will eventually change to the "Mint BRGOV" step once
-              allowance has completed...
+              Granting {purchaseToken} allowance...
             </p>
           </div>
         )}
 
-        {mintState === MintState.MintTransactionInProgress && (
+        {mintInProgress && (
           <div className="mt-4">
-            <div
-              className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
-              role="status"
-            >
-              <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
-                Loading...
-              </span>
-            </div>
-            <p className="text-2xl mt-2 font-bold">
-              Minting BRGOV. After wallet pops up and you accept transaction,
-              please be patient while minting...
-            </p>
+            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em]" />
+            <p className="text-2xl mt-2 font-bold">Minting BRGOV...</p>
           </div>
         )}
 
-        {mintState === MintState.MintComplete && (
+        {mintComplete && (
           <p className="text-2xl mt-2 font-bold">
             Mint complete.{" "}
             {mintTransactionUrl && (
               <span>
-                Here is your
-                <a href={mintTransactionUrl}>transaction</a> link.
+                Here is your{" "}
+                <a
+                  href={mintTransactionUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  transaction
+                </a>{" "}
+                link.
               </span>
             )}
           </p>

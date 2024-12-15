@@ -7,28 +7,28 @@ import {
 } from "wagmi";
 
 export function useManageAllowanceTransaction({
-  ERC20_CONTRACT_ADDRESS,
+  erc20ContractAddress,
   erc20FunctionName,
   erc20Abi,
-  CONTRACT_ADDRESS,
+  contractAddress,
   chainId,
   amount,
 }: {
-  ERC20_CONTRACT_ADDRESS: Address;
+  erc20ContractAddress: Address;
   erc20FunctionName: "increaseAllowance" | "increaseApproval";
   erc20Abi: any;
-  CONTRACT_ADDRESS: Address;
+  contractAddress: Address;
   chainId: number;
   amount: bigint;
 }) {
   const [allowanceHash, setAllowanceHash] = useState<Address | undefined>();
 
   const { data: simulateData } = useSimulateContract({
-    address: ERC20_CONTRACT_ADDRESS,
+    address: erc20ContractAddress,
     abi: erc20Abi,
     functionName: erc20FunctionName,
     chainId,
-    args: [CONTRACT_ADDRESS, amount],
+    args: [contractAddress, amount],
   });
 
   const { writeContract, data: writeData } = useWriteContract();
