@@ -1,11 +1,12 @@
-import { parseUnits, formatUnits } from "viem";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { formatUnits, parseUnits } from "viem";
 import {
   useAccount,
+  useChainId,
   useSimulateContract,
   useWriteContract,
-  useChainId,
 } from "wagmi";
+import { baseSepolia, mainnet } from "wagmi/chains";
 
 import abi from "./abi-brgov.json";
 import btreeAbi from "./abi-btree.json";
@@ -17,15 +18,13 @@ import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
 // Contract configurations by network
 const CONTRACT_CONFIGS = {
-  // Mainnet
-  1: {
+  [mainnet.id]: {
     BRGOV: "0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c",
     BTREE: "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436",
     WBTC: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
     EXPLORER: "etherscan.io",
   },
-  // Base Sepolia
-  84532: {
+  [baseSepolia.id]: {
     BRGOV: "0x3b66BDdd1FfA50B3F816D8398e55B7FF269a7a42",
     BTREE: "0xCa6f24a651bc4Ab545661a41a81EF387086a34C2",
     WBTC: "0x5beB73bc1611111C3d5F692a286b31DCDd03Af81",
@@ -105,9 +104,15 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   const { sendAllowance, allowanceTransactionResult } =
     useManageAllowanceTransaction({
       erc20ContractAddress: isBTREE ? config.BTREE : config.WBTC,
-      erc20Abi: isBTREE ? btreeAbi : chainId === 84532 ? wbtcTestAbi : wbtcAbi,
+      erc20Abi: isBTREE
+        ? btreeAbi
+        : chainId === baseSepolia.id
+        ? wbtcTestAbi
+        : wbtcAbi,
       erc20FunctionName:
-        chainId === 84532 || isBTREE ? "increaseAllowance" : "increaseApproval",
+        chainId === baseSepolia.id || isBTREE
+          ? "increaseAllowance"
+          : "increaseApproval",
       contractAddress: config.BRGOV,
       amount: total - allowance < BigInt(0) ? BigInt(0) : total - allowance,
       chainId,
