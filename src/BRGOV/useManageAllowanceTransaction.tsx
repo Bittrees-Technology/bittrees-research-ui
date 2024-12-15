@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import type { Address } from "viem";
 import {
-  Address,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
+  useSimulateContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
 } from "wagmi";
 
 export function useManageAllowanceTransaction({
@@ -21,29 +21,28 @@ export function useManageAllowanceTransaction({
   chainId: number;
   amount: bigint;
 }) {
-  const { config: configAllowance } = usePrepareContractWrite({
+  const [allowanceHash, setAllowanceHash] = useState<Address | undefined>();
+
+  const { data: simulateData } = useSimulateContract({
     address: ERC20_CONTRACT_ADDRESS,
     abi: erc20Abi,
     functionName: erc20FunctionName,
     chainId,
-    args: [CONTRACT_ADDRESS, amount.toString()],
+    args: [CONTRACT_ADDRESS, amount],
   });
 
-  const [allowanceHash, setAllowanceHash] = useState<Address | undefined>();
-
-  const { data: allowanceData, write: writeAllowance } =
-    useContractWrite(configAllowance);
+  const { writeContract, data: writeData } = useWriteContract();
 
   useEffect(() => {
-    if (allowanceData?.hash) {
-      setAllowanceHash(allowanceData?.hash);
+    if (writeData) {
+      setAllowanceHash(writeData);
     }
-  }, [allowanceData]);
+  }, [writeData]);
 
-  const { data: dataForAllowanceTransaction } = useWaitForTransaction({
+  // Removed 'enabled' option as it's no longer supported
+  const { data: dataForAllowanceTransaction } = useWaitForTransactionReceipt({
     hash: allowanceHash,
     chainId,
-    enabled: Boolean(allowanceHash),
     confirmations: 5,
   });
 
@@ -55,7 +54,8 @@ export function useManageAllowanceTransaction({
 
   function sendAllowance() {
     if (amount <= BigInt(0)) return;
-    writeAllowance?.();
+    if (!simulateData?.request) return;
+    writeContract(simulateData.request);
   }
 
   return {

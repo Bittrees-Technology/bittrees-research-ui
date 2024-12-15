@@ -1,8 +1,8 @@
-import { useAccount, usePrepareContractWrite, useContractWrite } from "wagmi";
-import abi from "./abi.json";
-import { baseSepolia, mainnet } from "wagmi/chains";
-import { parseEther } from "viem";
 import { useState } from "react";
+import { parseEther } from "viem";
+import { useAccount, useSimulateContract, useWriteContract } from "wagmi";
+import { baseSepolia, mainnet } from "wagmi/chains";
+import abi from "./abi.json";
 
 const CONTRACT_ADDRESS = "0xc8121e650bd797d8b9dad00227a9a77ef603a84a";
 const chainId =
@@ -37,21 +37,21 @@ export function Mint() {
 
   const { address } = useAccount();
 
-  const { config, error } = usePrepareContractWrite({
+  const { data: simulateData, error } = useSimulateContract({
     address: CONTRACT_ADDRESS,
     abi,
     functionName: "mintMembership",
-    chainId: chainId,
+    chainId,
     args: [address],
     value: parseEther(total),
   });
 
-  const { isLoading, write } = useContractWrite(config);
+  const { writeContract, isPending } = useWriteContract();
 
   function onClick() {
-    write?.();
+    if (!simulateData?.request) return;
+    writeContract(simulateData.request);
   }
-
   return (
     <>
       <div className="grid grid-cols-2 gap-6 justify-start font-newtimesroman">
@@ -93,7 +93,6 @@ export function Mint() {
         {!address && (
           <p className="text-2xl mt-4">Please connect your wallet.</p>
         )}
-        {isLoading && <p className="text-2xl mt-4">Minting...</p>}
       </div>
     </>
   );

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import { useContractReads, Address } from "wagmi";
-import { erc20ABI } from "wagmi";
 import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import { type Address, erc20Abi } from "viem";
+import { useReadContracts } from "wagmi";
 
 export function useERC20TokenInformation({
   walletAddress,
@@ -15,17 +15,17 @@ export function useERC20TokenInformation({
   const [allowance, setAllowance] = useState<bigint>(BigInt(0));
   const [balance, setBalance] = useState<bigint>(BigInt(0));
 
-  const { data: tokenData, isLoading } = useContractReads({
+  const { data: tokenData, isLoading } = useReadContracts({
     contracts: [
       {
         address: ERC20_CONTRACT_ADDRESS,
-        abi: erc20ABI,
+        abi: erc20Abi,
         functionName: "allowance",
         args: [walletAddress || "0x0", CONTRACT_ADDRESS],
       },
       {
         address: ERC20_CONTRACT_ADDRESS,
-        abi: erc20ABI,
+        abi: erc20Abi,
         functionName: "balanceOf",
         args: [walletAddress || "0x0"],
       },

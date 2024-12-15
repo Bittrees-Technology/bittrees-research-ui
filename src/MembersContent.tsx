@@ -12,11 +12,7 @@ export function MembersContent() {
   const [hasValidMembership, setHasValidMembership] = useState(false);
   const [cookies, setCookie] = useCookies([CONTRACT_ADDRESS]);
 
-  const { address, isConnected, isConnecting } = useAccount({
-    onConnect({ address, connector, isReconnected }) {
-      console.log("Connected", { address, connector, isReconnected });
-    },
-  });
+  const { address, isConnected, isConnecting } = useAccount();
 
   useEffect(() => {
     let token = cookies[CONTRACT_ADDRESS];

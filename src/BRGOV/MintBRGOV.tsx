@@ -1,11 +1,11 @@
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
-import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { mainnet, baseSepolia } from "wagmi/chains";
+import { useAccount, useSimulateContract, useWriteContract } from "wagmi";
+import { baseSepolia, mainnet } from "wagmi/chains";
 import abi from "./abi-brgov.json";
 import btreeAbi from "./abi-btree.json";
-import wbtcAbi from "./abi-wbtc.json";
 import wbtcTestAbi from "./abi-wbtc-test.json";
+import wbtcAbi from "./abi-wbtc.json";
 import { useERC20TokenInformation } from "./useERC20TokenInformation";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 
@@ -121,28 +121,25 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
     setTotal(total);
   }
 
-  const { config } = usePrepareContractWrite({
+  const { data: simulateData } = useSimulateContract({
     address: CONTRACT_ADDRESS,
     abi,
     functionName: mintMethod[denomination],
+    args: [isBTREE ? 0x0 : 0x1, address, BigInt(mintCount)],
     chainId,
-    args: [
-      isBTREE ? 0x0 : 0x1, // 0x0 is BTREE. 0x1 is WBTC.
-      address,
-      mintCount,
-    ],
   });
-  const { data, isSuccess, write, isError, error } = useContractWrite(config);
+
+  // Then use the writeContract hook
+  const { writeContract, data, isError, error, isSuccess } = useWriteContract();
 
   useEffect(() => {
     console.log("MINT status", { isSuccess, data });
     if (isSuccess) {
       setMintComplete(true);
-      if (data?.hash) {
+      if (data) {
+        // data is now just the transaction hash
         setMintTransactionUrl(
-          `https://${USE_MAINNET ? "" : "basesepolia."}etherscan.io/tx/${
-            data?.hash
-          }`
+          `https://${USE_MAINNET ? "" : "basesepolia."}etherscan.io/tx/${data}`
         );
       }
     }
@@ -152,8 +149,9 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   }, [isSuccess, data, isError, error]);
 
   function onClick() {
+    if (!simulateData?.request) return;
     setMintInProgress(true);
-    write?.();
+    writeContract(simulateData.request);
   }
 
   const { sendAllowance, allowanceTransactionResult } =
