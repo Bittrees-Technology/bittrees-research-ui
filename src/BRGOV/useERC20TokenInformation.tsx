@@ -1,3 +1,12 @@
+/*
+This React hook fetches two key pieces of ERC20 token information
+in a single batch: the wallet's token balance and the spending
+allowance granted to a specific contract. It stores these values
+as BigInts in local state and returns them along with a loading
+flag, making it easy to check if a user has enough tokens and
+appropriate permissions before executing token-related transactions.
+*/
+
 import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { type Address, erc20Abi } from "viem";

@@ -132,12 +132,18 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
 
   useEffect(() => {
     if (isSuccess && txData) {
+      setMintInProgress(false);
       setMintComplete(true);
       setMintTransactionUrl(`https://${config.EXPLORER}/tx/${txData}`);
     }
   }, [isSuccess, txData, config.EXPLORER]);
 
   useEffect(() => {
+    console.log("XXX ALLOWANCE", {
+      allowanceTransactionResult,
+      allowance,
+      total,
+    });
     setAllowanceInProgress(false);
   }, [allowanceTransactionResult, allowance, total]);
 
@@ -158,7 +164,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   if (!isSupported) {
     return (
       <div className="text-red-500 p-4">
-        Please connect to a supported network (Mainnet or Base Sepolia)
+        Please connect to a supported network.
       </div>
     );
   }
@@ -295,6 +301,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
                   href={mintTransactionUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  style={{ textDecoration: "underline" }}
                 >
                   transaction
                 </a>{" "}

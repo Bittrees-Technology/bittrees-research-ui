@@ -1,3 +1,14 @@
+/*
+
+A custom React hook for managing ERC20 token allowances.
+
+This hook essentially provides a complete workflow for:
+
+- Simulating the allowance change
+- Sending the transaction
+- Tracking its confirmation status
+
+*/
 import { useEffect, useState } from "react";
 import type { Address } from "viem";
 import {
@@ -40,11 +51,15 @@ export function useManageAllowanceTransaction({
   }, [writeData]);
 
   // Removed 'enabled' option as it's no longer supported
-  const { data: dataForAllowanceTransaction } = useWaitForTransactionReceipt({
-    hash: allowanceHash,
-    chainId,
-    confirmations: 5,
-  });
+  const { data: dataForAllowanceTransaction } = useWaitForTransactionReceipt(
+    Boolean(allowanceHash)
+      ? {
+          hash: allowanceHash,
+          chainId,
+          confirmations: 5,
+        }
+      : undefined
+  );
 
   useEffect(() => {
     console.log("useManageAllowanceTransaction:", {
