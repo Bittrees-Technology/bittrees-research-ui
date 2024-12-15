@@ -148,11 +148,6 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
   }, [isSuccess, txData, config.EXPLORER]);
 
   useEffect(() => {
-    console.log("XXX ALLOWANCE", {
-      allowanceTransactionResult,
-      allowance,
-      total,
-    });
     setAllowanceInProgress(false);
   }, [allowanceTransactionResult, allowance, total]);
 
@@ -179,6 +174,7 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
     } else if (mintInProgress) {
       mintState = MintState.MintTransactionInProgress;
     } else if (enoughAllowanceToMint || allowanceTransactionResult) {
+      // TODO: Recheck allowance instead of assuming it's granted with allowanceTransactionResult
       mintState = MintState.MintStep;
     } else {
       mintState = MintState.AllowanceStep;
@@ -293,7 +289,9 @@ export function MintBRGOV({ denomination, purchaseToken }: MintBRGOVProps) {
                 writeContract(simulateData.request);
               }
             }}
-            disabled={notEnoughTokensToMint || !simulateData?.request}
+            // TODO: Recheck allowance instead of assuming it's granted with allowanceTransactionResult
+            // disabled={notEnoughTokensToMint || !simulateData?.request}
+            disabled={!simulateData?.request}
           >
             Step 2: Mint BRGOV
           </button>
