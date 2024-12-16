@@ -31,8 +31,8 @@ const CONTRACT_CONFIGS = {
     EXPLORER: "sepolia.basescan.org",
   },
   [base.id]: {
-    BRGOV: "0x",
-    BTREE: "0x",
+    BRGOV: "0xCa6f24a651bc4Ab545661a41a81EF387086a34C2",
+    BTREE: "0x4DE534be4793C52ACc69A230A0318fF1A06aF8A0",
     WBTC: "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
     EXPLORER: "basescan.org",
