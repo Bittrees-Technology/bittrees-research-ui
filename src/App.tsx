@@ -6,17 +6,17 @@ function App() {
       <main className="bg-[#dedede] flex flex-col h-screen justify-center items-center">
         <div className="flex flex-col gap-6 p-6">
           <Link to="/mint" className="flex flex-col items-center">
-          <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center shadow-md shadow-gray-500 hover:shadow-black">
+            <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center shadow-md shadow-gray-500 hover:shadow-black">
               <div className="text-xl">Become a Member</div>
-          </div>
+            </div>
           </Link>
           <Link to="/members" className="flex flex-col items-center">
-          <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center shadow-md shadow-gray-500 hover:shadow-black">
+            <div className="mx-auto border border-black p-4 w-80 h-64 flex flex-col justify-center items-center shadow-md shadow-gray-500 hover:shadow-black">
               <div className="text-xl">Members Portal</div>
-          </div>
+            </div>
           </Link>
           <footer className="flex flex-col gap-6 mx-auto mt-4">
-          <span>
+            <span>
               <a className="hover:text-green-700" href="https://bittrees.org">
                 <span className="inline-block align-middle pr-1">
                   <svg
@@ -24,9 +24,9 @@ function App() {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
                     {" "}
                     <circle cx="12" cy="12" r="10" />{" "}
@@ -38,7 +38,7 @@ function App() {
                   Back
                 </span>
               </a>
-          </span>
+            </span>
           </footer>
         </div>
       </main>

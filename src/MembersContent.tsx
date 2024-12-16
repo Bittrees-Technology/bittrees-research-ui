@@ -12,11 +12,7 @@ export function MembersContent() {
   const [hasValidMembership, setHasValidMembership] = useState(false);
   const [cookies, setCookie] = useCookies([CONTRACT_ADDRESS]);
 
-  const { address, isConnected, isConnecting } = useAccount({
-    onConnect({ address, connector, isReconnected }) {
-      console.log("Connected", { address, connector, isReconnected });
-    },
-  });
+  const { address, isConnected, isConnecting } = useAccount();
 
   useEffect(() => {
     let token = cookies[CONTRACT_ADDRESS];
@@ -93,7 +89,15 @@ export function MembersContent() {
                     rel="noreferrer"
                     href="https://etherscan.io/token/0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c#code"
                   >
-                    BRGOV Contract
+                    BRGOV Contract (on Ethereum){" "}
+                  </a>
+                  <a
+                    className="text-black no-underline hover:underline hover:text-green-700"
+                    target="_blank"
+                    rel="noreferrer"
+                    href="https://basescan.org/token/0xCa6f24a651bc4Ab545661a41a81EF387086a34C2#code"
+                  >
+                    BRGOV Contract (on Base)
                   </a>
                 </li>
 

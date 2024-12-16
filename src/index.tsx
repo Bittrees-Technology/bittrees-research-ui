@@ -1,51 +1,38 @@
-import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { EthereumClient } from "@web3modal/ethereum";
-import { Web3Modal } from "@web3modal/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
 import {
-  createBrowserRouter,
   Navigate,
   RouterProvider,
+  createBrowserRouter,
 } from "react-router-dom";
-import { configureChains, createClient, WagmiConfig } from "wagmi";
-import { mainnet } from "wagmi/chains";
-import { alchemyProvider } from "wagmi/providers/alchemy";
-import { publicProvider } from "wagmi/providers/public";
+import { WagmiProvider, http } from "wagmi";
+import { base, baseSepolia, mainnet } from "wagmi/chains";
 import App from "./App";
+import MintBRGOVPage from "./BRGOV/MintBRGOVPage";
 import CodeOfEthicsPage from "./CodeOfEthicsPage";
 import "./index.css";
 import MembersPage from "./MembersPage";
-import MintBRGOVPage from "./BRGOV/MintBRGOVPage";
 import MintPage from "./MintPage";
-import reportWebVitals from "./reportWebVitals";
 import VisionStatementPage from "./VisionStatementPage";
 
-// const myChain =
-//   process.env.REACT_APP_ENABLE_TESTNETS === "true" ? goerli : mainnet;
+const productionChains = [mainnet, base] as const;
+const developmentChains = [...productionChains, baseSepolia] as const;
 
-const { chains, provider, webSocketProvider } = configureChains(
-  [mainnet],
-  [
-    alchemyProvider({ apiKey: "MY6sRxkJ6Jeo6Pd_6XvgrmvXJFbrQE0w" }),
-    publicProvider(),
-  ]
-);
+const myChains =
+  process.env.REACT_APP_ENABLE_TESTNETS === "true"
+    ? developmentChains
+    : productionChains;
 
-const { connectors } = getDefaultWallets({
+// Configure wagmi and RainbowKit
+const config = getDefaultConfig({
   appName: "Bittrees Research",
   projectId: "8971e0de563ab27ccfff96c91ac1c3c3",
-  chains,
+  chains: myChains,
+  transports: Object.fromEntries(myChains.map((chain) => [chain.id, http()])),
+  ssr: false, // Set to true if using Next.js
 });
-
-const wagmiClient = createClient({
-  autoConnect: true,
-  connectors,
-  provider,
-  webSocketProvider,
-});
-
-const ethereumClient = new EthereumClient(wagmiClient, chains);
 
 const router = createBrowserRouter([
   {
@@ -81,22 +68,15 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
+const queryClient = new QueryClient();
+
 root.render(
-  <>
-    <WagmiConfig client={wagmiClient}>
-      <RainbowKitProvider chains={chains}>
+  <WagmiProvider config={config}>
+    <QueryClientProvider client={queryClient}>
+      <RainbowKitProvider>
         <RouterProvider router={router} />
       </RainbowKitProvider>
-    </WagmiConfig>
-
-    <Web3Modal
-      projectId="8971e0de563ab27ccfff96c91ac1c3c3"
-      ethereumClient={ethereumClient}
-    />
-  </>
+    </QueryClientProvider>
+  </WagmiProvider>
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

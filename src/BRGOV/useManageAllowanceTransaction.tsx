@@ -1,61 +1,70 @@
+/*
+
+A custom React hook for managing ERC20 token allowances.
+
+This hook essentially provides a complete workflow for:
+
+- Simulating the allowance change
+- Sending the transaction
+- Tracking its confirmation status
+
+*/
 import { useEffect, useState } from "react";
+import type { Address } from "viem";
 import {
-  Address,
-  useContractWrite,
-  usePrepareContractWrite,
-  useWaitForTransaction,
+  useSimulateContract,
+  useWriteContract,
+  useWaitForTransactionReceipt,
 } from "wagmi";
 
 export function useManageAllowanceTransaction({
-  ERC20_CONTRACT_ADDRESS,
+  erc20ContractAddress,
   erc20FunctionName,
   erc20Abi,
-  CONTRACT_ADDRESS,
+  contractAddress,
   chainId,
   amount,
 }: {
-  ERC20_CONTRACT_ADDRESS: Address;
+  erc20ContractAddress: Address;
   erc20FunctionName: "increaseAllowance" | "increaseApproval";
   erc20Abi: any;
-  CONTRACT_ADDRESS: Address;
+  contractAddress: Address;
   chainId: number;
   amount: bigint;
 }) {
-  const { config: configAllowance } = usePrepareContractWrite({
-    address: ERC20_CONTRACT_ADDRESS,
+  const [allowanceHash, setAllowanceHash] = useState<Address | undefined>();
+
+  const { data: simulateData } = useSimulateContract({
+    address: erc20ContractAddress,
     abi: erc20Abi,
     functionName: erc20FunctionName,
     chainId,
-    args: [CONTRACT_ADDRESS, amount.toString()],
+    args: [contractAddress, amount],
   });
 
-  const [allowanceHash, setAllowanceHash] = useState<Address | undefined>();
-
-  const { data: allowanceData, write: writeAllowance } =
-    useContractWrite(configAllowance);
+  const { writeContract, data: writeData } = useWriteContract();
 
   useEffect(() => {
-    if (allowanceData?.hash) {
-      setAllowanceHash(allowanceData?.hash);
+    if (writeData) {
+      setAllowanceHash(writeData);
     }
-  }, [allowanceData]);
+  }, [writeData]);
 
-  const { data: dataForAllowanceTransaction } = useWaitForTransaction({
-    hash: allowanceHash,
-    chainId,
-    enabled: Boolean(allowanceHash),
-    confirmations: 5,
-  });
-
-  useEffect(() => {
-    console.log("useManageAllowanceTransaction:", {
-      dataForAllowanceTransaction,
-    });
-  }, [dataForAllowanceTransaction]);
+  // Removed 'enabled' option as it's no longer supported
+  const { data: dataForAllowanceTransaction } = useWaitForTransactionReceipt(
+    Boolean(allowanceHash)
+      ? {
+          hash: allowanceHash,
+          chainId,
+          confirmations: 5,
+        }
+      : undefined
+  );
 
   function sendAllowance() {
     if (amount <= BigInt(0)) return;
-    writeAllowance?.();
+    if (!simulateData?.request) return;
+    writeContract(simulateData.request);
   }
 
   return {
