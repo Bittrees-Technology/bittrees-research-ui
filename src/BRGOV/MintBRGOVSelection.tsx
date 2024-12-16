@@ -1,5 +1,7 @@
 import { useState } from "react";
-import { Denomination, PurchaseToken, MintBRGOV } from "./MintBRGOV";
+import { useChainId } from "wagmi";
+import { mainnet } from "wagmi/chains";
+import { Denomination, MintBRGOV, PurchaseToken } from "./MintBRGOV";
 
 export function MintBRGOVSelection({
   onChangeDenomination,
@@ -13,6 +15,8 @@ export function MintBRGOVSelection({
     PurchaseToken.WBTC
   );
   const [next, setNext] = useState(false);
+
+  const chainId = useChainId();
 
   return (
     <>
@@ -59,7 +63,9 @@ export function MintBRGOVSelection({
                   setPurchaseToken(event.target.value as PurchaseToken);
                 }}
               >
-                <option value={PurchaseToken.WBTC}>WBTC</option>
+                <option value={PurchaseToken.WBTC}>
+                  {chainId === mainnet.id ? "WBTC" : "cbBTC"}
+                </option>
                 <option value={PurchaseToken.BTREE}>BTREE</option>
               </select>
             </div>
