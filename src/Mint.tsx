@@ -1,14 +1,11 @@
 import { useState } from "react";
 import { parseEther } from "viem";
 import { useAccount, useSimulateContract, useWriteContract } from "wagmi";
-import { baseSepolia, mainnet } from "wagmi/chains";
+import { mainnet } from "wagmi/chains";
 import abi from "./abi.json";
 
 const CONTRACT_ADDRESS = "0xc8121e650bd797d8b9dad00227a9a77ef603a84a";
-const chainId =
-  process.env.REACT_APP_ENABLE_TESTNETS === "true"
-    ? baseSepolia.id
-    : mainnet.id;
+const chainId = mainnet.id;
 
 console.info(`Contract: ${CONTRACT_ADDRESS}`);
 console.info(`Chain ID: ${chainId}`);

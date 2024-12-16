@@ -29,7 +29,7 @@ const myChains =
 const config = getDefaultConfig({
   appName: "Bittrees Research",
   projectId: "8971e0de563ab27ccfff96c91ac1c3c3",
-  chains: myChains, //[mainnet, base, baseSepolia], //myChains,
+  chains: myChains,
   transports: Object.fromEntries(myChains.map((chain) => [chain.id, http()])),
   ssr: false, // Set to true if using Next.js
 });
