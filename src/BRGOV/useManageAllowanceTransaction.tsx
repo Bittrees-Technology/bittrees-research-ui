@@ -61,12 +61,6 @@ export function useManageAllowanceTransaction({
       : undefined
   );
 
-  useEffect(() => {
-    console.log("useManageAllowanceTransaction:", {
-      dataForAllowanceTransaction,
-    });
-  }, [dataForAllowanceTransaction]);
-
   function sendAllowance() {
     if (amount <= BigInt(0)) return;
     if (!simulateData?.request) return;

@@ -46,7 +46,6 @@ export function useERC20TokenInformation({
   });
 
   useEffect(() => {
-    console.log({ tokenData });
     if (tokenData && tokenData[0]?.result) {
       setAllowance(ethers.BigNumber.from(tokenData[0].result).toBigInt());
     }

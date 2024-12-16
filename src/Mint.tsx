@@ -46,7 +46,7 @@ export function Mint() {
     value: parseEther(total),
   });
 
-  const { writeContract, isPending } = useWriteContract();
+  const { writeContract } = useWriteContract();
 
   function onClick() {
     if (!simulateData?.request) return;
