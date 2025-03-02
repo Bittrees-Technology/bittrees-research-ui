@@ -1,7 +1,11 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 import { Mint } from "./Mint";
 
 function MintPage() {
+  const { chain } = useAccount();
+  const isCorrectChain = chain?.id === 1;
+
   return (
     <div className="max-w-4xl mx-auto">
       <header className="bg-[#dedede] border-b-2 border-gray-500">
@@ -28,9 +32,17 @@ function MintPage() {
               alt="Bittrees Research Membership Card"
             />
           </div>
-          <div className="mt-4">
-            <Mint />
-          </div>
+          {isCorrectChain && (
+            <div className="mt-4">
+              <Mint />
+            </div>
+          )}
+          {!isCorrectChain && (
+            <div className="mt-4">
+              Please connect to Ethereum mainnet to verify membership.
+            </div>
+          )}
+
           <div>
             <ConnectButton />
           </div>

@@ -1,7 +1,11 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 import { MembersContent } from "./MembersContent";
 
 function MembersPage() {
+  const { chain } = useAccount();
+  const isCorrectChain = chain?.id === 1;
+
   return (
     <div className="max-w-4xl mx-auto">
       <header className="bg-[#dedede] border-b-2 border-gray-500">
@@ -20,17 +24,23 @@ function MembersPage() {
 
       <main className="text-center bg-[#dedede]">
         <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
+          {isCorrectChain && (
+            <div className="mt-4">
+              <MembersContent />
+            </div>
+          )}
 
-
-          <div className="mt-4">
-            <MembersContent />
-          </div>
+          {!isCorrectChain && (
+            <div className="mt-4">
+              Please connect to Ethereum mainnet to verify membership.
+            </div>
+          )}
 
           <footer className="flex flex-col gap-6 mx-auto mt-4">
             <span>
-            <div>
-              <ConnectButton />
-            </div>
+              <div>
+                <ConnectButton />
+              </div>
             </span>
 
             <div className="flex w-full justify-center items-center">
