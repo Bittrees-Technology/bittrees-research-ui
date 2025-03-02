@@ -1,7 +1,11 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { VisionStatementContent } from "./VisionStatementContent";
+import { useAccount } from "wagmi";
 
 function VisionStatementPage() {
+  const { chain } = useAccount();
+  const isCorrectChain = chain?.id === 1;
+
   return (
     <div className="max-w-4xl mx-auto">
       <header className="bg-[#dedede] border-b-2 border-gray-500">
@@ -20,16 +24,39 @@ function VisionStatementPage() {
 
       <main className="text-center bg-[#dedede]">
         <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
-                    
-          <div className="mt-4">
-            <VisionStatementContent />
-          </div>
+          {isCorrectChain && (
+            <div className="mt-4">
+              <VisionStatementContent />
+            </div>
+          )}
+          {!isCorrectChain && (
+            <div className="mt-4">
+              Please connect to Ethereum mainnet to verify membership.
+            </div>
+          )}
 
           <footer className="flex flex-col gap-6 mx-auto mt-4">
             <span>
               <a className="hover:text-green-700" href="/members">
-                <span className="inline-block align-middle pr-1"><svg className="h-4 w-4 hover:text-green-700"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  strokeWidth="2"  strokeLinecap="round"  strokeLinejoin="round">  <circle cx="12" cy="12" r="10" />  <polyline points="12 8 8 12 12 16" />  <line x1="16" y1="12" x2="8" y2="12" /></svg></span>
-                <span className="inline-block align-middle underline font-bold font-newtimesroman">Member Services</span>
+                <span className="inline-block align-middle pr-1">
+                  <svg
+                    className="h-4 w-4 hover:text-green-700"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    {" "}
+                    <circle cx="12" cy="12" r="10" />{" "}
+                    <polyline points="12 8 8 12 12 16" />{" "}
+                    <line x1="16" y1="12" x2="8" y2="12" />
+                  </svg>
+                </span>
+                <span className="inline-block align-middle underline font-bold font-newtimesroman">
+                  Member Services
+                </span>
               </a>
             </span>
             <span>
