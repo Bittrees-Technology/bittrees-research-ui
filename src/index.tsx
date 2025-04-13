@@ -48,7 +48,7 @@ const router = createBrowserRouter([
     element: <MintPage />,
   },
   {
-    path: "/mint/bnote",
+    path: "/mint-bnote",
     element: <MintBNOTEPage />,
   },
   {
@@ -56,7 +56,7 @@ const router = createBrowserRouter([
     element: (
       <div className="p-10">
         Please visit{" "}
-        <a href="/mint/bnote" className="underline">
+        <a href="/mint-bnote" className="underline">
           Bittrees Research Preferred Stock
         </a>
         .
