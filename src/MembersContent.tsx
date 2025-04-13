@@ -77,7 +77,7 @@ export function MembersContent() {
                 <li className="p-2">
                   <a
                     className="text-black no-underline hover:underline hover:text-green-700"
-                    href="/mint/bnote"
+                    href="/mint-bnote"
                   >
                     Mint BNOTE (Bittrees Research Preferred Stock)
                   </a>
