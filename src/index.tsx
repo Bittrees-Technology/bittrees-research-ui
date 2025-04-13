@@ -10,7 +10,7 @@ import {
 import { WagmiProvider, http } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
 import App from "./App";
-import MintBRGOVPage from "./BRGOV/MintBRGOVPage";
+import { MintBNOTEPage } from "./BRGOV/MintBNOTEPage";
 import CodeOfEthicsPage from "./CodeOfEthicsPage";
 import "./index.css";
 import MembersPage from "./MembersPage";
@@ -48,8 +48,20 @@ const router = createBrowserRouter([
     element: <MintPage />,
   },
   {
+    path: "/mint/bnote",
+    element: <MintBNOTEPage />,
+  },
+  {
     path: "/mint-brgov",
-    element: <MintBRGOVPage />,
+    element: (
+      <div className="p-10">
+        Please visit{" "}
+        <a href="/mint/bnote" className="underline">
+          Bittrees Research Preferred Stock
+        </a>
+        .
+      </div>
+    ),
   },
   {
     path: "/members",
