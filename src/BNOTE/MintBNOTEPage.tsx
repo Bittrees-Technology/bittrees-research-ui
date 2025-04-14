@@ -1,13 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { MintBRGOVSelection } from "../BRGOV/MintBRGOVSelection";
-import { Denomination } from "../BRGOV/MintBRGOV";
-import { useState } from "react";
+import { MintBNOTE } from "./MintBNOTE";
 
 export function MintBNOTEPage() {
-  const [denomination, setDenomination] = useState<Denomination>(
-    Denomination.One
-  );
-
   return (
     <div className="max-w-4xl mx-auto">
       <header className="border-2 border-b-0 bg-white">
@@ -33,16 +27,12 @@ export function MintBNOTEPage() {
             />
           </div>
           <div className="mt-4 mb-4">
-            <MintBRGOVSelection
-              onChangeDenomination={(denomination: Denomination) => {
-                setDenomination(denomination);
-              }}
-            />
+            <MintBNOTE />
           </div>
           <div>
             <ConnectButton />
           </div>
-          <div className="space-y-5 mt-8 text-left mx-8 font-newtimesroman">
+          {/* <div className="space-y-5 mt-8 text-left mx-8 font-newtimesroman">
             <div>
               <hr className="border-gray-500" />
             </div>
@@ -112,7 +102,7 @@ export function MintBNOTEPage() {
                 acquiring BRGOV tokens.
               </span>
             </p>
-          </div>
+          </div> */}
           <footer className="flex flex-col gap-6 mx-auto mt-4">
             <span>
               <a className="hover:text-green-700" href="/members">
