@@ -7,7 +7,7 @@ import {
   useWriteContract,
 } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
-import abi from "./abi-brgov.json";
+import abi from "../BNOTE/abi-bnote.json";
 import btreeAbi from "./abi-btree.json";
 import wbtcTestAbi from "./abi-wbtc-test.json";
 import wbtcAbi from "./abi-wbtc.json";
