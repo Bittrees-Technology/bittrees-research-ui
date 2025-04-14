@@ -1,3 +1,4 @@
+import { convertCertificatesToDenominations } from "../lib/certificate-math";
 export function CertificatePicker() {
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
@@ -29,7 +30,7 @@ export function CertificatePicker() {
                   </div>
                 </div> */}
 
-            <div className="flex flex-wrap gap-2">
+            {/* <div className="flex flex-wrap gap-2">
               <button className="px-3 py-1 bg-gray-100 border border-gray-300 rounded text-sm hover:bg-gray-200 transition-colors">
                 10
               </button>
@@ -45,7 +46,7 @@ export function CertificatePicker() {
               <button className="px-3 py-1 bg-gray-100 border border-gray-300 rounded text-sm hover:bg-gray-200 transition-colors">
                 250
               </button>
-            </div>
+            </div> */}
           </div>
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
@@ -57,8 +58,15 @@ export function CertificatePicker() {
                 type="number"
                 min="1"
                 max="10000"
-                value="25"
                 className="w-full px-4 py-2 border-2 border-gray-200 rounded-md"
+                onChange={(v) => {
+                  console.log(
+                    "Denominations:",
+                    convertCertificatesToDenominations(
+                      parseInt(v.target.value, 10)
+                    )
+                  );
+                }}
               />
             </div>
           </div>
