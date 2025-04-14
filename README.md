@@ -6,15 +6,16 @@ Based on <https://github.com/Bittrees-Technology/bittrees-nft-deployer-ui-for-ba
 
 Includes:
 
-- React via [Create React App](https://github.com/facebook/create-react-app) plus TypeScript
+- Vite tooling
+- React
 - [RainbowKit](https://www.rainbowkit.com/)
-- [Tailwind CSS](https://tailwindcss.com/) and [DaisyUI](https://daisyui.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
 ## Scripts
 
 ### Run site locally
 
-Run `REACT_APP_ENABLE_TESTNETS=true yarn start`
+Run `VITE_ENABLE_TESTNETS=true yarn dev`
 
 Make sure you bring in latest ABI!
 
@@ -35,9 +36,3 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-## To deploy app to Azure
-
-Create a PR that merges `main` to `azcontainerdeploy-prod` to deploy to production at <https://bag-website-caddy.eastus.azurecontainer.io>
-
-Or merge to `azcontainerdeploy-dev` to deploy to dev at <http://bag-website-dev.eastus.azurecontainer.io>.
