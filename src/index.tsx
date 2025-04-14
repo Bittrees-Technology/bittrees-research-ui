@@ -30,7 +30,6 @@ const config = getDefaultConfig({
   ssr: false, // Set to true if using Next.js
 });
 
-console.log("XXX");
 const router = createBrowserRouter([
   {
     path: "/",
