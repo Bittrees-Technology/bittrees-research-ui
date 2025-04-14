@@ -9,7 +9,7 @@ Includes:
 - Vite tooling
 - React
 - [RainbowKit](https://www.rainbowkit.com/)
-- [Tailwind CSS](https://tailwindcss.com/) and [DaisyUI](https://daisyui.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
 
 ## Scripts
 
