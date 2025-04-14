@@ -2,11 +2,7 @@ import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
-import {
-  Navigate,
-  RouterProvider,
-  createBrowserRouter,
-} from "react-router-dom";
+import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
 import { WagmiProvider, http } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
 import App from "./App";
@@ -21,7 +17,7 @@ const productionChains = [mainnet, base] as const;
 const developmentChains = [...productionChains, baseSepolia] as const;
 
 const myChains =
-  process.env.REACT_APP_ENABLE_TESTNETS === "true"
+  import.meta.env.VITE_ENABLE_TESTNETS === "true"
     ? developmentChains
     : productionChains;
 
