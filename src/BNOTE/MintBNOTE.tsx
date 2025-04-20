@@ -52,6 +52,8 @@ export function MintBNOTE() {
     });
   console.log("paymentTokens", paymentTokens);
 
+  const readyToMint = address && paymentTokenContractAddress;
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="md:col-span-2">
@@ -63,11 +65,11 @@ export function MintBNOTE() {
             Bittrees Research certificates represent...lorem ipsum dolor sit
             amet. lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed.
           </p>
-          {!address && <div>Connect wallet to mint.</div>}
           {!paymentTokenContractAddress && (
-            <div>Connect has no active payment options.</div>
+            <div>BNOTE contract has no active payment options enabled.</div>
           )}
-          {address && paymentTokenContractAddress && (
+          {!address && <div>Connect wallet to mint.</div>}
+          {readyToMint && (
             <div>
               <CertificatePicker
                 totalCertificates={totalCertificates}
