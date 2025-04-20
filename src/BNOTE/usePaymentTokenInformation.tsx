@@ -1,9 +1,12 @@
-import { type Address } from "viem";
+import { useEffect, useState } from "react";
+import { Abi, type Address } from "viem";
+import { useReadContracts } from "wagmi";
+import bnoteAbi from "./abi-bnote.json";
 
 export type PaymentToken = {
   name: string;
   address: Address;
-  mintPrice: number;
+  mintPriceForOneNote: number;
   active: boolean;
 };
 
@@ -20,24 +23,48 @@ export function usePaymentTokenInformation({
   bnoteContractAddress: Address;
 }): {
   paymentTokens: PaymentToken[];
+  isLoading: boolean;
 } {
-  // loop through contracts and discover which ones are active and how much mint price is
-  const activePaymentTokens = PAYMENT_TOKENS.map((token) => {
-    const address = token.address;
-    console.log(
-      `TODO: call contract to get mint price and active status for token ${token.name} at address ${address} for bnote contract ${bnoteContractAddress}`
-    );
+  const [paymentTokens, setPaymentTokens] = useState<PaymentToken[]>([]);
 
-    const mintPrice = 0.0;
-    const active = true;
-    return {
-      ...token,
-      mintPrice,
-      active,
-    } as PaymentToken;
-  }).filter((token) => token.active);
+  // Create contract calls for each payment token
+  const contractCalls = PAYMENT_TOKENS.map((token) => ({
+    address: bnoteContractAddress,
+    abi: bnoteAbi as Abi,
+    functionName: "paymentTokens",
+    args: [token.address],
+  }));
+
+  // Use wagmi's useReadContracts to batch all the calls
+  const { data, isLoading } = useReadContracts({
+    contracts: contractCalls,
+  });
+
+  useEffect(() => {
+    if (data) {
+      const processedTokens = PAYMENT_TOKENS.map((token, index) => {
+        const result = data[index]?.result as [boolean, bigint] | undefined;
+
+        // If we have a result, extract the mintPrice and active status
+        // Otherwise, use default values
+        const active = result ? result[0] : false;
+        const mintPriceForOneNote = result ? Number(result[1]) : 0;
+
+        return {
+          ...token,
+          mintPriceForOneNote,
+          active,
+        } as PaymentToken;
+      });
+
+      // Filter out inactive tokens
+      const activeTokens = processedTokens.filter((token) => token.active);
+      setPaymentTokens(activeTokens);
+    }
+  }, [data]);
 
   return {
-    paymentTokens: activePaymentTokens,
+    paymentTokens,
+    isLoading,
   };
 }
