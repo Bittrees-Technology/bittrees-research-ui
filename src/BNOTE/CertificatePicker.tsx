@@ -1,5 +1,14 @@
 import { convertCertificatesToDenominations } from "../lib/certificate-math";
-export function CertificatePicker() {
+
+export function CertificatePicker({
+  totalCertificates,
+  onCertificatesChange,
+}: {
+  totalCertificates: number;
+  onCertificatesChange: (certificates: number) => void;
+}) {
+  const denominations = convertCertificatesToDenominations(totalCertificates);
+
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
       <div className="bg-secondary/10 border-l-4 border-secondary p-4 rounded-r-lg mb-6">
@@ -49,36 +58,39 @@ export function CertificatePicker() {
             </div> */}
           </div>
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+          <div className="flex flex-col sm:flex-row justify-start items-center">
             <div className="font-semibold text-gray-700">
-              Or enter exact amount:
+              Enter exact amount:
             </div>
             <div className="w-full sm:w-auto flex-grow">
               <input
                 type="number"
                 min="1"
                 max="10000"
-                className="w-full px-4 py-2 border-2 border-gray-200 rounded-md"
+                className="w-48 px-4 py-2 border-2 border-gray-200 rounded-md"
                 onChange={(v) => {
-                  console.log(
-                    "Denominations:",
-                    convertCertificatesToDenominations(
-                      parseInt(v.target.value, 10)
-                    )
-                  );
+                  if (v.target.value === "") {
+                    onCertificatesChange(0);
+                    return;
+                  }
+                  onCertificatesChange(parseInt(v.target.value, 10));
                 }}
               />
             </div>
           </div>
 
-          <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-700">
-            For your selected quantity of 25 certificates, our system will mint:
-            <div className="flex flex-wrap gap-2 mt-2">
+          <div className="flex flex-col justify-between align-middle w-full bg-gray-50 p-3 rounded-md text-sm text-gray-700">
+            For your selected quantity of {totalCertificates} certificates, our
+            system will mint:
+            <div className="flex gap-2 mt-2 justify-center">
               <div className="bg-white px-3 py-1 rounded-full border border-gray-200 text-xs text-primary">
-                2 × 10 certificates
+                {denominations[100]} × 100 certificates
               </div>
               <div className="bg-white px-3 py-1 rounded-full border border-gray-200 text-xs text-primary">
-                5 × 1 certificates
+                {denominations[10]} × 10 certificates
+              </div>
+              <div className="bg-white px-3 py-1 rounded-full border border-gray-200 text-xs text-primary">
+                {denominations[1]} × 1 certificates
               </div>
             </div>
           </div>
