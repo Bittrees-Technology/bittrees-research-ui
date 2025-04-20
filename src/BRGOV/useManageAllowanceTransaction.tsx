@@ -10,11 +10,11 @@ This hook essentially provides a complete workflow for:
 
 */
 import { useEffect, useState } from "react";
-import type { Address } from "viem";
+import type { Abi, Address } from "viem";
 import {
   useSimulateContract,
-  useWriteContract,
   useWaitForTransactionReceipt,
+  useWriteContract,
 } from "wagmi";
 
 export function useManageAllowanceTransaction({
@@ -27,7 +27,7 @@ export function useManageAllowanceTransaction({
 }: {
   erc20ContractAddress: Address;
   erc20FunctionName: "increaseAllowance" | "increaseApproval";
-  erc20Abi: any;
+  erc20Abi: Abi;
   contractAddress: Address;
   chainId: number;
   amount: bigint;

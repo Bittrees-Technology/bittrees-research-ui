@@ -1,5 +1,5 @@
-import { Address, formatUnits, parseUnits } from "viem";
-import { useERC20TokenInformation } from "./useERC20TokenInformation";
+import { Address } from "viem";
+import { useMintingInfo } from "./useMintingInfo";
 import { PaymentToken } from "./usePaymentTokenInformation";
 
 export function PaymentSummary({
@@ -13,41 +13,12 @@ export function PaymentSummary({
   erc20PaymentToken: PaymentToken;
   userWalletAddress: Address;
 }) {
-  const mintPriceWei = erc20PaymentToken.mintPriceWeiForOneNote;
-  const totalPriceWei = BigInt(totalCertificates) * mintPriceWei;
-
-  const {
-    allowanceWei,
-    balanceWei,
-    isLoading: isLoadingERC20,
-  } = useERC20TokenInformation({
-    walletAddress: userWalletAddress,
-    contractAddress: bnoteContractAddress,
-    erc20ContractAddress: erc20PaymentToken.address,
+  const { isLoading, displayValues } = useMintingInfo({
+    totalCertificates,
+    bnoteContractAddress,
+    erc20PaymentToken,
+    userWalletAddress,
   });
-
-  // Combined loading state
-  const isLoading = isLoadingERC20;
-
-  function formatAmount(amount: bigint, decimals: number) {
-    return parseFloat(formatUnits(amount, decimals)).toLocaleString(undefined, {
-      maximumFractionDigits: decimals === 18 ? 0 : 4,
-    });
-  }
-
-  const decimals = erc20PaymentToken.decimals;
-  const displayValues = {
-    mintPrice: formatAmount(mintPriceWei, decimals),
-    totalPrice: formatAmount(totalPriceWei, decimals),
-    balance: formatAmount(balanceWei, decimals),
-    allowance: formatAmount(allowanceWei, decimals),
-    allowanceToCreate: formatAmount(
-      totalPriceWei - allowanceWei < BigInt(0)
-        ? BigInt(0)
-        : totalPriceWei - allowanceWei,
-      decimals
-    ),
-  };
 
   return (
     <div>

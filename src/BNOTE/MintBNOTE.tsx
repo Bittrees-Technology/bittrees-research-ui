@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAccount, useChainId } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
+import { AllocateAndMint } from "./AllocateAndMint";
 import { CertificatePicker } from "./CertificatePicker";
 import { PaymentPicker } from "./PaymentPicker";
 import { PaymentSummary } from "./PaymentSummary";
@@ -102,12 +103,13 @@ export function MintBNOTE() {
                 totalCertificates={totalCertificates}
                 userWalletAddress={address}
               />
-              <button
-                className="border w-full bg-secondary hover:bg-secondary/90 font-semibold text-lg py-4 px-6 rounded-md transition-all hover:-translate-y-0.5"
-                onClick={() => {}}
-              >
-                Mint
-              </button>
+
+              <AllocateAndMint
+                bnoteContractAddress={config.BNOTE}
+                erc20PaymentToken={currentPaymentToken}
+                totalCertificates={totalCertificates}
+                userWalletAddress={address}
+              />
             </div>
           )}
         </div>
