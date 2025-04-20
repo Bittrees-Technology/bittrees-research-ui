@@ -4,6 +4,8 @@ import { useAccount, useChainId } from "wagmi";
 import { baseSepolia, mainnet } from "wagmi/chains";
 import { CertificatePicker } from "./CertificatePicker";
 import { PaymentPicker } from "./PaymentPicker";
+import { PaymentSummary } from "./PaymentSummary";
+import { usePaymentTokenInformation } from "./usePaymentTokenInformation";
 
 const CONTRACT_CONFIGS = {
   [mainnet.id]: {
@@ -44,6 +46,12 @@ export function MintBNOTE() {
     ? CONTRACT_CONFIGS[chainId as keyof typeof CONTRACT_CONFIGS]
     : CONTRACT_CONFIGS[1]; // Default to mainnet config
 
+  const { paymentTokens, isLoading: isLoadingPaymentTokens } =
+    usePaymentTokenInformation({
+      bnoteContractAddress: config.BNOTE,
+    });
+  console.log("paymentTokens", paymentTokens);
+
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="md:col-span-2">
@@ -55,22 +63,31 @@ export function MintBNOTE() {
             Bittrees Research certificates represent...lorem ipsum dolor sit
             amet. lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed.
           </p>
-          <CertificatePicker
-            totalCertificates={totalCertificates}
-            onCertificatesChange={(certs: number) => {
-              setTotalCertificates(certs);
-            }}
-          />
           {!address && <div>Connect wallet to mint.</div>}
-          {address && (
+          {!paymentTokenContractAddress && (
+            <div>Connect has no active payment options.</div>
+          )}
+          {address && paymentTokenContractAddress && (
             <div>
+              <CertificatePicker
+                totalCertificates={totalCertificates}
+                onCertificatesChange={(certs: number) => {
+                  setTotalCertificates(certs);
+                }}
+              />
+              {isLoadingPaymentTokens && (
+                <div>Loading payment token options...</div>
+              )}
               <PaymentPicker
+                paymentTokens={paymentTokens}
+                onPaymentChange={setPaymentTokenContractAddress}
+              />
+              <PaymentSummary
                 bnoteContractAddress={config.BNOTE}
                 erc20ContractAddress={config.BTREE}
                 erc20Decimals={18}
                 totalCertificates={totalCertificates}
                 userWalletAddress={address}
-                onPaymentChange={setPaymentTokenContractAddress}
               />
               <button
                 className="border w-full bg-secondary hover:bg-secondary/90 font-semibold text-lg py-4 px-6 rounded-md transition-all hover:-translate-y-0.5"
