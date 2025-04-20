@@ -66,9 +66,16 @@ export function MintBNOTE() {
             amet. lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed.
           </p>
           {!paymentTokenContractAddress && (
-            <div>BNOTE contract has no active payment options enabled.</div>
+            <div className="text-red-500">
+              BNOTE contract on the current blockchain network has no active
+              payment options enabled. Unable to mint.
+            </div>
           )}
-          {!address && <div>Connect wallet to mint.</div>}
+          {!address && (
+            <div className="text-red-500">
+              Please connect your wallet to mint.
+            </div>
+          )}
           {readyToMint && (
             <div>
               <CertificatePicker
