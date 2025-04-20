@@ -98,8 +98,7 @@ export function MintBNOTE() {
               />
               <PaymentSummary
                 bnoteContractAddress={config.BNOTE}
-                erc20ContractAddress={currentPaymentToken.address}
-                erc20Decimals={18}
+                erc20PaymentToken={currentPaymentToken}
                 totalCertificates={totalCertificates}
                 userWalletAddress={address}
               />

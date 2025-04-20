@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Abi, type Address } from "viem";
+import { Abi, parseUnits, type Address } from "viem";
 import { useReadContracts } from "wagmi";
 import bnoteAbi from "./abi-bnote.json";
 
@@ -7,7 +7,7 @@ export type PaymentToken = {
   name: string;
   address: Address;
   decimals: number;
-  mintPriceForOneNote: bigint;
+  mintPriceWeiForOneNote: bigint;
   active: boolean;
 };
 
@@ -23,12 +23,14 @@ const PAYMENT_TOKENS = [
     address: "0xCa6f24a651bc4Ab545661a41a81EF387086a34C2",
     decimals: 18,
     active: true,
+    mintPriceWeiForOneNote: parseUnits("1000", 18),
   },
   {
     name: "WBTC",
     address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
     decimals: 8,
     active: true,
+    mintPriceWeiForOneNote: parseUnits("0.001", 8),
   },
 ];
 
@@ -64,16 +66,16 @@ export function usePaymentTokenInformation({
   useEffect(() => {
     if (!data) return;
 
-    const processedTokens = PAYMENT_TOKENS.map((token, index) => {
-      const result = data[index]?.result as [boolean, bigint] | undefined;
-
-      // TODO: Re-enable active when BNOTE contract is updated
+    const processedTokens = PAYMENT_TOKENS.map((token) => {
+      // TODO: Re-enable active and mintPriceWeiForOneNote when BNOTE contract is updated
+      // const processedTokens = PAYMENT_TOKENS.map((token, index) => {
+      // const result = data[index]?.result as [boolean, bigint] | undefined;
       // const active = result ? result[0] : false;
-      const mintPriceForOneNote = result ? result[1] : 0n;
+      // const mintPriceWeiForOneNote = result ? result[1] : 0n;
 
       return {
         ...token,
-        mintPriceForOneNote,
+        // mintPriceWeiForOneNote,
         // active,
       } as PaymentToken;
     });
@@ -88,7 +90,7 @@ export function usePaymentTokenInformation({
         name: token.name,
         address: token.address,
         decimals: token.decimals,
-        mintPriceForOneNote: token.mintPriceForOneNote,
+        mintPriceWeiForOneNote: token.mintPriceWeiForOneNote,
         active: token.active,
       };
     });

@@ -1,21 +1,19 @@
-import { Address, formatUnits } from "viem";
+import { Address, formatUnits, parseUnits } from "viem";
 import { useERC20TokenInformation } from "./useERC20TokenInformation";
+import { PaymentToken } from "./usePaymentTokenInformation";
 
 export function PaymentSummary({
   totalCertificates,
   bnoteContractAddress,
-  erc20ContractAddress,
-  erc20Decimals,
+  erc20PaymentToken,
   userWalletAddress,
 }: {
   totalCertificates: number;
   bnoteContractAddress: Address;
-  erc20ContractAddress: Address;
-  erc20Decimals: number;
+  erc20PaymentToken: PaymentToken;
   userWalletAddress: Address;
 }) {
-  const mintPrice = BigInt(1000);
-
+  const mintPrice = erc20PaymentToken.mintPriceWeiForOneNote;
   const total = BigInt(totalCertificates) * mintPrice;
 
   const {
@@ -25,7 +23,7 @@ export function PaymentSummary({
   } = useERC20TokenInformation({
     walletAddress: userWalletAddress,
     contractAddress: bnoteContractAddress,
-    erc20ContractAddress: erc20ContractAddress,
+    erc20ContractAddress: erc20PaymentToken.address,
   });
 
   // Combined loading state
@@ -37,14 +35,15 @@ export function PaymentSummary({
     });
   }
 
+  const decimals = erc20PaymentToken.decimals;
   const displayValues = {
-    mintPrice: formatAmount(mintPrice, erc20Decimals),
-    totalPrice: formatAmount(total, erc20Decimals),
-    balance: formatAmount(balance, erc20Decimals),
-    allowance: formatAmount(allowance, erc20Decimals),
+    mintPrice: formatAmount(mintPrice, decimals),
+    totalPrice: formatAmount(total, decimals),
+    balance: formatAmount(balance, decimals),
+    allowance: formatAmount(allowance, decimals),
     allowanceToCreate: formatAmount(
       total - allowance < BigInt(0) ? BigInt(0) : total - allowance,
-      erc20Decimals
+      decimals
     ),
   };
 
@@ -61,17 +60,23 @@ export function PaymentSummary({
       <div className="bg-gray-50 rounded-lg p-5 mb-6">
         <div className="flex justify-between mb-2">
           <div>Price ({totalCertificates} certificates):</div>
-          <div>{total} BTREE</div>
+          <div>
+            {displayValues.totalPrice} {erc20PaymentToken.name}
+          </div>
         </div>
         <div className="flex justify-between font-bold text-lg pt-3 border-t border-gray-200 mt-3">
           <div>Total:</div>
-          <div>{total} BTREE</div>
+          <div>
+            {displayValues.totalPrice} {erc20PaymentToken.name}
+          </div>
         </div>
       </div>
       <div>
         <div>--DEBUG--</div>
         <div>Allowance: {displayValues.allowance}</div>
-        <div>Balance: {displayValues.balance} BTREE</div>
+        <div>
+          Balance: {displayValues.balance} {erc20PaymentToken.name}
+        </div>
       </div>
     </div>
   );
