@@ -6,7 +6,8 @@ import bnoteAbi from "./abi-bnote.json";
 export type PaymentToken = {
   name: string;
   address: Address;
-  mintPriceForOneNote: number;
+  decimals: number;
+  mintPriceForOneNote: bigint;
   active: boolean;
 };
 
@@ -14,6 +15,7 @@ const PAYMENT_TOKENS = [
   {
     name: "BTREE",
     address: "0xCa6f24a651bc4Ab545661a41a81EF387086a34C2",
+    decimals: 18,
   },
 ];
 
@@ -36,6 +38,7 @@ export function usePaymentTokenInformation({
   }));
 
   // Use wagmi's useReadContracts to batch all the calls
+  console.log("calling contract paymentTokens");
   const { data, isLoading } = useReadContracts({
     contracts: contractCalls,
   });
@@ -48,7 +51,7 @@ export function usePaymentTokenInformation({
         // If we have a result, extract the mintPrice and active status
         // Otherwise, use default values
         const active = result ? result[0] : false;
-        const mintPriceForOneNote = result ? Number(result[1]) : 0;
+        const mintPriceForOneNote = result ? result[1] : 0;
 
         return {
           ...token,
