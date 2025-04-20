@@ -52,33 +52,10 @@ export function PaymentSummary({
     <div>
       <div className="mb-6">
         <label className="block text-lg font-semibold text-primary mb-3">
-          Select Payment Token
+          Payment Summary
         </label>
 
         {isLoading && <div>Loading...</div>}
-
-        <div className="grid grid-cols-3 gap-3">
-          {/* <div className="border-2 border-secondary bg-secondary/10 rounded-md p-3 flex items-center gap-2 cursor-pointer">
-      <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center font-bold text-primary">
-        W
-      </div>
-      <div className="font-semibold">WBTC</div>
-    </div> */}
-
-          <div className="border-2 border-gray-200 rounded-md p-3 flex items-center gap-2 cursor-pointer hover:border-secondary transition-colors">
-            <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center font-bold text-primary">
-              B
-            </div>
-            <div className="font-semibold">BTREE</div>
-          </div>
-
-          {/* <div className="border-2 border-gray-200 rounded-md p-3 flex items-center gap-2 cursor-pointer hover:border-secondary transition-colors">
-      <div className="w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center font-bold text-primary">
-        U
-      </div>
-      <div className="font-semibold">USDC</div>
-    </div> */}
-        </div>
       </div>
 
       <div className="bg-gray-50 rounded-lg p-5 mb-6">

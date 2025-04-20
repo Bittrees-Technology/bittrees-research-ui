@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
-import { Address } from "viem";
 import { useAccount, useChainId } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
 import { CertificatePicker } from "./CertificatePicker";
 import { PaymentPicker } from "./PaymentPicker";
 import { PaymentSummary } from "./PaymentSummary";
-import { usePaymentTokenInformation } from "./usePaymentTokenInformation";
+import {
+  PaymentToken,
+  usePaymentTokenInformation,
+} from "./usePaymentTokenInformation";
 
 const BNOTE_CONTRACT_CONFIGS = {
   [mainnet.id]: {
@@ -42,16 +44,19 @@ export function MintBNOTE() {
     });
 
   const tokenKeys = Object.keys(paymentTokenDictionary);
-  const [currentPaymentToken, setCurrentPaymentToken] =
-    useState<Address | null>(null);
+  const [currentPaymentToken, setCurrentPaymentToken] = useState<
+    PaymentToken | undefined
+  >(undefined);
 
   useEffect(() => {
     if (tokenKeys.length > 0 && !currentPaymentToken) {
-      setCurrentPaymentToken(tokenKeys[0] as Address);
+      const firstTokenKey = tokenKeys[0];
+      const firstToken = paymentTokenDictionary[firstTokenKey];
+      setCurrentPaymentToken(firstToken);
     }
-  }, [tokenKeys, currentPaymentToken]);
+  }, [tokenKeys, currentPaymentToken, paymentTokenDictionary]);
 
-  const readyToMint = address && currentPaymentToken;
+  const readyToMint = address && currentPaymentToken?.address;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -88,11 +93,12 @@ export function MintBNOTE() {
               )}
               <PaymentPicker
                 paymentTokenDictionary={paymentTokenDictionary}
+                currentPaymentToken={currentPaymentToken}
                 onPaymentChange={setCurrentPaymentToken}
               />
               <PaymentSummary
                 bnoteContractAddress={config.BNOTE}
-                erc20ContractAddress={config.BTREE}
+                erc20ContractAddress={currentPaymentToken.address}
                 erc20Decimals={18}
                 totalCertificates={totalCertificates}
                 userWalletAddress={address}

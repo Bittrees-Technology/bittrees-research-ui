@@ -12,14 +12,23 @@ export type PaymentToken = {
 };
 
 export type PaymentTokenDictionary = {
-  [address: string]: Omit<PaymentToken, "address">;
+  [address: string]: PaymentToken;
 };
 
+// TODO: When v2 contract changes, we can bring in all details from BNOTE contract
+// plus looks up get name and decimals on ERC20 contracts.
 const PAYMENT_TOKENS = [
   {
     name: "BTREE",
     address: "0xCa6f24a651bc4Ab545661a41a81EF387086a34C2",
     decimals: 18,
+    active: true,
+  },
+  {
+    name: "WBTC",
+    address: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
+    decimals: 8,
+    active: true,
   },
 ];
 
@@ -58,25 +67,26 @@ export function usePaymentTokenInformation({
     const processedTokens = PAYMENT_TOKENS.map((token, index) => {
       const result = data[index]?.result as [boolean, bigint] | undefined;
 
-      const active = result ? result[0] : false;
+      // TODO: Re-enable active when BNOTE contract is updated
+      // const active = result ? result[0] : false;
       const mintPriceForOneNote = result ? result[1] : 0n;
 
       return {
         ...token,
         mintPriceForOneNote,
-        active,
+        // active,
       } as PaymentToken;
     });
 
     // Filter out inactive tokens
-    const activeTokens = processedTokens; // processedTokens.filter((token) => token.active);
-    console.log({ activeTokens });
+    const activeTokens = processedTokens.filter((token) => token.active);
 
     // convert array of PaymentToken to dictionary
     const activeTokensDictionary: PaymentTokenDictionary = {};
     activeTokens.forEach((token) => {
       activeTokensDictionary[token.address] = {
         name: token.name,
+        address: token.address,
         decimals: token.decimals,
         mintPriceForOneNote: token.mintPriceForOneNote,
         active: token.active,
