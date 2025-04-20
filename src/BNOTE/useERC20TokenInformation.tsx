@@ -55,5 +55,5 @@ export function useERC20TokenInformation({
     }
   }, [tokenData]);
 
-  return { allowance, balance, isLoading, refetch };
+  return { allowanceWei: allowance, balanceWei: balance, isLoading, refetch };
 }

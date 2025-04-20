@@ -13,12 +13,12 @@ export function PaymentSummary({
   erc20PaymentToken: PaymentToken;
   userWalletAddress: Address;
 }) {
-  const mintPrice = erc20PaymentToken.mintPriceWeiForOneNote;
-  const total = BigInt(totalCertificates) * mintPrice;
+  const mintPriceWei = erc20PaymentToken.mintPriceWeiForOneNote;
+  const totalPriceWei = BigInt(totalCertificates) * mintPriceWei;
 
   const {
-    allowance,
-    balance,
+    allowanceWei,
+    balanceWei,
     isLoading: isLoadingERC20,
   } = useERC20TokenInformation({
     walletAddress: userWalletAddress,
@@ -37,12 +37,14 @@ export function PaymentSummary({
 
   const decimals = erc20PaymentToken.decimals;
   const displayValues = {
-    mintPrice: formatAmount(mintPrice, decimals),
-    totalPrice: formatAmount(total, decimals),
-    balance: formatAmount(balance, decimals),
-    allowance: formatAmount(allowance, decimals),
+    mintPrice: formatAmount(mintPriceWei, decimals),
+    totalPrice: formatAmount(totalPriceWei, decimals),
+    balance: formatAmount(balanceWei, decimals),
+    allowance: formatAmount(allowanceWei, decimals),
     allowanceToCreate: formatAmount(
-      total - allowance < BigInt(0) ? BigInt(0) : total - allowance,
+      totalPriceWei - allowanceWei < BigInt(0)
+        ? BigInt(0)
+        : totalPriceWei - allowanceWei,
       decimals
     ),
   };
@@ -72,8 +74,15 @@ export function PaymentSummary({
         </div>
       </div>
       <div>
-        <div>--DEBUG--</div>
-        <div>Allowance: {displayValues.allowance}</div>
+        <div>-- USER'S WALLET --</div>
+        <div>
+          Current allowance on {erc20PaymentToken.name} is{" "}
+          {displayValues.allowance}
+        </div>
+        <div>
+          Allowance we need to create on {erc20PaymentToken.name} is{" "}
+          {displayValues.allowanceToCreate}
+        </div>
         <div>
           Balance: {displayValues.balance} {erc20PaymentToken.name}
         </div>
