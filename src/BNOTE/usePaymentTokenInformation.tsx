@@ -11,6 +11,10 @@ export type PaymentToken = {
   active: boolean;
 };
 
+export type PaymentTokenDictionary = {
+  [address: string]: Omit<PaymentToken, "address">;
+};
+
 const PAYMENT_TOKENS = [
   {
     name: "BTREE",
@@ -24,10 +28,11 @@ export function usePaymentTokenInformation({
 }: {
   bnoteContractAddress: Address;
 }): {
-  paymentTokens: PaymentToken[];
+  paymentTokenDictionary: PaymentTokenDictionary;
   isLoading: boolean;
 } {
-  const [paymentTokens, setPaymentTokens] = useState<PaymentToken[]>([]);
+  const [paymentTokenDictionary, setPaymentTokenDictionary] =
+    useState<PaymentTokenDictionary>({});
 
   // Memoize the contract calls to prevent recreation on every render
   const contractCalls = useMemo(
@@ -64,12 +69,25 @@ export function usePaymentTokenInformation({
     });
 
     // Filter out inactive tokens
-    const activeTokens = processedTokens.filter((token) => token.active);
-    setPaymentTokens(activeTokens);
+    const activeTokens = processedTokens; // processedTokens.filter((token) => token.active);
+    console.log({ activeTokens });
+
+    // convert array of PaymentToken to dictionary
+    const activeTokensDictionary: PaymentTokenDictionary = {};
+    activeTokens.forEach((token) => {
+      activeTokensDictionary[token.address] = {
+        name: token.name,
+        decimals: token.decimals,
+        mintPriceForOneNote: token.mintPriceForOneNote,
+        active: token.active,
+      };
+    });
+    // Set the state with the new dictionary
+    setPaymentTokenDictionary(activeTokensDictionary);
   }, [data]);
 
   return {
-    paymentTokens,
+    paymentTokenDictionary,
     isLoading,
   };
 }

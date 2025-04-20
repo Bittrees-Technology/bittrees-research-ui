@@ -1,16 +1,15 @@
 import { Address } from "viem";
-import { PaymentToken } from "./usePaymentTokenInformation";
+import { PaymentTokenDictionary } from "./usePaymentTokenInformation";
 
 export function PaymentPicker({
-  paymentTokens,
+  paymentTokenDictionary,
   onPaymentChange,
 }: {
-  paymentTokens: PaymentToken[];
+  paymentTokenDictionary: PaymentTokenDictionary;
   onPaymentChange: (paymentTokenContractAddress: Address) => void;
 }) {
   return (
     <div>
-      <div>paymentTokens: {paymentTokens.map((token) => token.name)}</div>
       <div className="mb-6">
         <label className="block text-lg font-semibold text-primary mb-3">
           Select Payment Token

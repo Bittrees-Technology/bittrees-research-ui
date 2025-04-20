@@ -1,58 +1,57 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Address } from "viem";
 import { useAccount, useChainId } from "wagmi";
-import { baseSepolia, mainnet } from "wagmi/chains";
+import { base, baseSepolia, mainnet } from "wagmi/chains";
 import { CertificatePicker } from "./CertificatePicker";
 import { PaymentPicker } from "./PaymentPicker";
 import { PaymentSummary } from "./PaymentSummary";
 import { usePaymentTokenInformation } from "./usePaymentTokenInformation";
 
-const CONTRACT_CONFIGS = {
+const BNOTE_CONTRACT_CONFIGS = {
   [mainnet.id]: {
     BNOTE: "0x53da448d2CF3f3Bce37D0C9669b94ed9a59aB558",
-    BTREE: "0x6bDdE71Cf0C751EB6d5EdB8418e43D3d9427e436",
-    WBTC: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseApproval", // not using standard ERC20 method
     EXPLORER: "etherscan.io",
   },
   [baseSepolia.id]: {
     BNOTE: "0x53da448d2CF3f3Bce37D0C9669b94ed9a59aB558",
-    BTREE: "0xCa6f24a651bc4Ab545661a41a81EF387086a34C2",
-    WBTC: "0x5beB73bc1611111C3d5F692a286b31DCDd03Af81",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
     EXPLORER: "sepolia.basescan.org",
   },
-  // [base.id]: {
-  //   BRGOV: "0xCa6f24a651bc4Ab545661a41a81EF387086a34C2",
-  //   BTREE: "0x4DE534be4793C52ACc69A230A0318fF1A06aF8A0",
-  //   WBTC: "0xcbb7c0000ab88b473b1f5afd9ef808440eed33bf",
-  //   WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
-  //   EXPLORER: "basescan.org",
-  // },
+  [base.id]: {
+    BNOTE: "0x53da448d2CF3f3Bce37D0C9669b94ed9a59aB558",
+    WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
+    EXPLORER: "basescan.org",
+  },
 } as const;
 
 export function MintBNOTE() {
   const [totalCertificates, setTotalCertificates] = useState(0);
-  const [paymentTokenContractAddress, setPaymentTokenContractAddress] =
-    useState<Address | null>(null);
-
-  console.log("paymentTokenContractAddress", paymentTokenContractAddress);
 
   const chainId = useChainId();
   const { address } = useAccount();
 
-  const isSupported = chainId in CONTRACT_CONFIGS;
+  const isSupported = chainId in BNOTE_CONTRACT_CONFIGS;
   const config = isSupported
-    ? CONTRACT_CONFIGS[chainId as keyof typeof CONTRACT_CONFIGS]
-    : CONTRACT_CONFIGS[1]; // Default to mainnet config
+    ? BNOTE_CONTRACT_CONFIGS[chainId as keyof typeof BNOTE_CONTRACT_CONFIGS]
+    : BNOTE_CONTRACT_CONFIGS[1]; // Default to mainnet config
 
-  const { paymentTokens, isLoading: isLoadingPaymentTokens } =
+  const { paymentTokenDictionary, isLoading: isLoadingPaymentTokens } =
     usePaymentTokenInformation({
       bnoteContractAddress: config.BNOTE,
     });
-  console.log("paymentTokens", paymentTokens);
 
-  const readyToMint = address && paymentTokenContractAddress;
+  const tokenKeys = Object.keys(paymentTokenDictionary);
+  const [currentPaymentToken, setCurrentPaymentToken] =
+    useState<Address | null>(null);
+
+  useEffect(() => {
+    if (tokenKeys.length > 0 && !currentPaymentToken) {
+      setCurrentPaymentToken(tokenKeys[0] as Address);
+    }
+  }, [tokenKeys, currentPaymentToken]);
+
+  const readyToMint = address && currentPaymentToken;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -65,7 +64,7 @@ export function MintBNOTE() {
             Bittrees Research certificates represent...lorem ipsum dolor sit
             amet. lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed.
           </p>
-          {!paymentTokenContractAddress && (
+          {!currentPaymentToken && (
             <div className="text-red-500">
               BNOTE contract on the current blockchain network has no active
               payment options enabled. Unable to mint.
@@ -88,8 +87,8 @@ export function MintBNOTE() {
                 <div>Loading payment token options...</div>
               )}
               <PaymentPicker
-                paymentTokens={paymentTokens}
-                onPaymentChange={setPaymentTokenContractAddress}
+                paymentTokenDictionary={paymentTokenDictionary}
+                onPaymentChange={setCurrentPaymentToken}
               />
               <PaymentSummary
                 bnoteContractAddress={config.BNOTE}
