@@ -4,6 +4,7 @@ import { useAccount, useChainId } from "wagmi";
 import { baseSepolia, mainnet } from "wagmi/chains";
 import { CertificatePicker } from "./CertificatePicker";
 import { useERC20TokenInformation } from "./useERC20TokenInformation";
+import { usePaymentTokenInformation } from "./usePaymentTokenInformation";
 
 const CONTRACT_CONFIGS = {
   [mainnet.id]: {
@@ -44,6 +45,11 @@ export function MintBNOTE() {
   const config = isSupported
     ? CONTRACT_CONFIGS[chainId as keyof typeof CONTRACT_CONFIGS]
     : CONTRACT_CONFIGS[1]; // Default to mainnet config
+
+  const { paymentTokens } = usePaymentTokenInformation({
+    bnoteContractAddress: config.BNOTE,
+  });
+  console.log("paymentTokens", paymentTokens);
 
   const isBTREE = true; //purchaseToken === PurchaseToken.BTREE;
   // const mintPrice = PRICE_PER_DENOMINATION[purchaseToken][denomination];
