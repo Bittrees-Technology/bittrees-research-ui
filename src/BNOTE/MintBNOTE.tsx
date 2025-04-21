@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAccount, useChainId } from "wagmi";
+import { useAccount, useBalance, useChainId } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
 import { AllocateAndMint } from "./AllocateAndMint";
 import { CertificatePicker } from "./CertificatePicker";
@@ -33,6 +33,11 @@ export function MintBNOTE() {
 
   const chainId = useChainId();
   const { address } = useAccount();
+
+  const result = useBalance({
+    address,
+  });
+  const walletBalance = result.data?.value ?? BigInt(0);
 
   const isSupported = chainId in BNOTE_CONTRACT_CONFIGS;
   const config = isSupported
@@ -105,10 +110,12 @@ export function MintBNOTE() {
               />
 
               <AllocateAndMint
+                walletBalance={walletBalance}
                 bnoteContractAddress={config.BNOTE}
                 erc20PaymentToken={currentPaymentToken}
                 totalCertificates={totalCertificates}
                 userWalletAddress={address}
+                chainId={chainId}
               />
             </div>
           )}

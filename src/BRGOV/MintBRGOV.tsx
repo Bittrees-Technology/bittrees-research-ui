@@ -8,11 +8,11 @@ import {
 } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
 import abi from "../BNOTE/abi-bnote.json";
-import btreeAbi from "./abi-btree.json";
+import btreeAbi from "../BNOTE/abi-btree.json";
 import wbtcTestAbi from "./abi-wbtc-test.json";
 import wbtcAbi from "./abi-wbtc.json";
 import { useERC20TokenInformation } from "../BNOTE/useERC20TokenInformation";
-import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
+import { useManageAllowanceTransaction } from "../BNOTE/useManageAllowanceTransaction";
 
 // Contract configurations by network
 const CONTRACT_CONFIGS = {

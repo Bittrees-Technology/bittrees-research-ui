@@ -44,20 +44,6 @@ export function PaymentSummary({
           </div>
         </div>
       </div>
-      <div>
-        <div>-- USER'S WALLET --</div>
-        <div>
-          Current allowance on {erc20PaymentToken.name} is{" "}
-          {displayValues.allowance}
-        </div>
-        <div>
-          Allowance we need to create on {erc20PaymentToken.name} is{" "}
-          {displayValues.allowanceToCreate}
-        </div>
-        <div>
-          Balance: {displayValues.balance} {erc20PaymentToken.name}
-        </div>
-      </div>
     </div>
   );
 }

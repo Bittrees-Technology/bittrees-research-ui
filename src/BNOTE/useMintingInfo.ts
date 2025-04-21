@@ -36,19 +36,22 @@ export function useMintingInfo({
     });
   }
 
+  const amountOfAllowanceNeededWei =
+    totalPriceWei - allowanceWei < BigInt(0)
+      ? BigInt(0)
+      : totalPriceWei - allowanceWei;
+
   return {
     isLoading,
+    amountOfAllowanceNeededWei,
+    totalPriceWei,
+    balanceWei,
     displayValues: {
       mintPrice: formatAmount(mintPriceWei, decimals),
       totalPrice: formatAmount(totalPriceWei, decimals),
       balance: formatAmount(balanceWei, decimals),
       allowance: formatAmount(allowanceWei, decimals),
-      allowanceToCreate: formatAmount(
-        totalPriceWei - allowanceWei < BigInt(0)
-          ? BigInt(0)
-          : totalPriceWei - allowanceWei,
-        decimals
-      ),
+      allowanceToCreate: formatAmount(amountOfAllowanceNeededWei, decimals),
     },
   };
 }
