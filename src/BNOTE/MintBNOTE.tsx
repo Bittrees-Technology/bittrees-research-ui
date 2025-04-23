@@ -12,17 +12,17 @@ import {
 
 const BNOTE_CONTRACT_CONFIGS = {
   [mainnet.id]: {
-    BNOTE: "0x53da448d2CF3f3Bce37D0C9669b94ed9a59aB558",
+    BNOTE: "0xEC0f5e4d5B458a8d9337589a7e31Ef95149ee845",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseApproval", // not using standard ERC20 method
     EXPLORER: "etherscan.io",
   },
   [baseSepolia.id]: {
-    BNOTE: "0x53da448d2CF3f3Bce37D0C9669b94ed9a59aB558",
+    BNOTE: "0xEC0f5e4d5B458a8d9337589a7e31Ef95149ee845",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
     EXPLORER: "sepolia.basescan.org",
   },
   [base.id]: {
-    BNOTE: "0x53da448d2CF3f3Bce37D0C9669b94ed9a59aB558",
+    BNOTE: "0xEC0f5e4d5B458a8d9337589a7e31Ef95149ee845",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
     EXPLORER: "basescan.org",
   },
@@ -75,7 +75,7 @@ export function MintBNOTE() {
             Bittrees Research certificates represent...lorem ipsum dolor sit
             amet. lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed.
           </p>
-          {!currentPaymentToken && (
+          {address && !currentPaymentToken && (
             <div className="text-red-500">
               BNOTE contract on the current blockchain network has no active
               payment options enabled. Unable to mint.
