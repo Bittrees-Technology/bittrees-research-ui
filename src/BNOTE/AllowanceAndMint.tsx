@@ -4,7 +4,7 @@ import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 import { useMintingInfo } from "./useMintingInfo";
 import { PaymentToken } from "./usePaymentTokenInformation";
 
-export function AllocateAndMint({
+export function AllowanceAndMint({
   walletBalance,
   totalCertificates,
   bnoteContractAddress,

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAccount, useBalance, useChainId } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
-import { AllocateAndMint } from "./AllocateAndMint";
+import { AllowanceAndMint } from "./AllowanceAndMint";
 import { CertificatePicker } from "./CertificatePicker";
 import { PaymentPicker } from "./PaymentPicker";
 import { PaymentSummary } from "./PaymentSummary";
@@ -109,7 +109,7 @@ export function MintBNOTE() {
                 userWalletAddress={address}
               />
 
-              <AllocateAndMint
+              <AllowanceAndMint
                 walletBalance={walletBalance}
                 bnoteContractAddress={config.BNOTE}
                 erc20PaymentToken={currentPaymentToken}
