@@ -544,6 +544,15 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "getAllPaymentTokenAddresses",
+    "outputs": [
+      { "internalType": "address[]", "name": "", "type": "address[]" }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       { "internalType": "bytes32", "name": "role", "type": "bytes32" }
     ],
@@ -575,7 +584,6 @@
   {
     "inputs": [
       { "internalType": "string", "name": "baseURI_", "type": "string" },
-      { "internalType": "address", "name": "treasury_", "type": "address" },
       { "internalType": "address", "name": "admin_", "type": "address" }
     ],
     "name": "initialize",
@@ -619,15 +627,25 @@
     "type": "function"
   },
   {
+    "inputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+    "name": "paymentTokenAddresses",
+    "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+    "name": "paymentTokenExists",
+    "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
     "name": "paymentTokens",
     "outputs": [
       { "internalType": "bool", "name": "active", "type": "bool" },
-      {
-        "internalType": "uint256",
-        "name": "mintPriceForOneNote",
-        "type": "uint256"
-      }
+      { "internalType": "uint256", "name": "unitMintPrice", "type": "uint256" }
     ],
     "stateMutability": "view",
     "type": "function"
