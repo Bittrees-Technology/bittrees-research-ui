@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Address } from "viem";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
+import { useMint } from "./useMint";
 import { useMintingInfo } from "./useMintingInfo";
 import { PaymentToken } from "./usePaymentTokenInformation";
 
@@ -42,14 +43,32 @@ export function AllowanceAndMint({
       chainId,
     });
 
+  const { mintIt, isSuccess, txData, request } = useMint({
+    bnoteContractAddress,
+    paymentToken: erc20PaymentToken,
+    totalCertificates,
+  });
+
+  const handleMint = useCallback(() => {
+    if (request) {
+      mintIt(request);
+    } else {
+      console.error("Unable to mint since request is undefined");
+    }
+  }, [request, mintIt]);
+
+  useEffect(() => {
+    console.log("Mint results:", { isSuccess, txData });
+  }, [isSuccess, txData]);
+
   useEffect(() => {
     console.log("Allowance transaction result:", allowanceTransactionResult);
     setAllowanceInProgress(false);
     if (allowanceTransactionResult?.status === "success") {
       console.log("Allowance transaction successful");
-      // TODO: If successful, trigger the minting process
+      handleMint();
     }
-  }, [allowanceTransactionResult]);
+  }, [allowanceTransactionResult, handleMint, mintIt, request]);
 
   const needAllowance = amountOfAllowanceNeededWei > BigInt(0);
   const notEnoughTokensToMint = balanceWei < totalPriceWei;
@@ -113,6 +132,8 @@ export function AllowanceAndMint({
           if (needAllowance) {
             setAllowanceInProgress(true);
             sendAllowance();
+          } else {
+            handleMint();
           }
         }}
         disabled={!enableMintButton}
