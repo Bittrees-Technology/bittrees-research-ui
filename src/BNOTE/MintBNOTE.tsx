@@ -33,6 +33,7 @@ export function MintBNOTE() {
   const [totalCertificates, setTotalCertificates] = useState(0);
   const [mintComplete, setMintComplete] = useState(false);
   const [mintTransaction, setMintTransaction] = useState<Address | undefined>();
+  const [disclaimerAccepted, setDisclaimerAccepted] = useState(false);
 
   const chainId = useChainId();
   const explorerDomain =
@@ -115,6 +116,30 @@ export function MintBNOTE() {
                 userWalletAddress={address}
               />
 
+              <div className="mt-6 mb-6 p-4 bg-gray-50 rounded-md border border-gray-200">
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="disclaimer"
+                      type="checkbox"
+                      checked={disclaimerAccepted}
+                      onChange={(e) => setDisclaimerAccepted(e.target.checked)}
+                      className="w-4 h-4 text-primary bg-gray-100 border-gray-300 rounded focus:ring-primary"
+                    />
+                  </div>
+                  <label
+                    htmlFor="disclaimer"
+                    className="ml-2 text-sm text-gray-700"
+                  >
+                    I understand that by minting these certificates, I
+                    acknowledge that this is a non-refundable transaction. The
+                    BNOTE tokens represent certificates in Bittrees Research and
+                    are subject to the terms outlined in the project
+                    documentation.
+                  </label>
+                </div>
+              </div>
+
               <AllowanceAndMint
                 walletBalance={walletBalance}
                 bnoteContractAddress={config.BNOTE}
@@ -122,6 +147,7 @@ export function MintBNOTE() {
                 totalCertificates={totalCertificates}
                 userWalletAddress={address}
                 chainId={chainId}
+                disclaimerAccepted={disclaimerAccepted}
                 mintComplete={(transactionHash) => {
                   setMintComplete(true);
                   setMintTransaction(transactionHash);

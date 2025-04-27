@@ -12,6 +12,7 @@ export function AllowanceAndMint({
   erc20PaymentToken,
   userWalletAddress,
   chainId,
+  disclaimerAccepted,
   mintComplete,
 }: {
   walletBalance: bigint;
@@ -20,6 +21,7 @@ export function AllowanceAndMint({
   erc20PaymentToken: PaymentToken;
   userWalletAddress: Address;
   chainId: number;
+  disclaimerAccepted: boolean;
   mintComplete: (transactionHash?: Address) => void;
 }) {
   const [allowanceInProgress, setAllowanceInProgress] = useState(false);
@@ -109,54 +111,58 @@ export function AllowanceAndMint({
 
   return (
     <div>
-      <div className="mt-6 w-1/2 mx-auto">
-        <p className="text-xl underline">
-          Your {erc20PaymentToken.name} Holdings
-        </p>
-        <p className="mt-2">
-          Your {erc20PaymentToken.name} holdings are {displayValues.balance}.{" "}
-          {notEnoughTokensToMint && (
-            <span className="font-bold text-red-500">
-              Note that your wallet does not have enough{" "}
-              {erc20PaymentToken.name} tokens to mint {totalCertificates} BNOTE
-              token
-              {totalCertificates > 1 ? "s" : ""}.
-            </span>
-          )}
-        </p>
-        <p className="mt-2">
-          The allowance of {erc20PaymentToken.name} you've granted for minting
-          is {displayValues.allowance}.
-        </p>
-      </div>
-      <div className="m-4 mt-8 mx-auto max-w-xl">
-        <p className="text-xl underline">What's required for minting?</p>
-        <ol className="list-decimal list-inside mt-2">
-          <li>
-            To transfer {erc20PaymentToken.name} tokens, you'll need ETH in your
-            wallet.
-          </li>
-          <li>
-            {needAllowance && (
-              <span>
-                There will be two transactions. The first to grant permissions
-                for our contract to transfer {erc20PaymentToken.name} tokens on
-                your behalf, the second to do the transfer and mint your equity
-                tokens.
+      {disclaimerAccepted && (
+        <div className="mt-6 w-1/2 mx-auto">
+          <p className="text-xl underline">
+            Your {erc20PaymentToken.name} Holdings
+          </p>
+          <p className="mt-2">
+            Your {erc20PaymentToken.name} holdings are {displayValues.balance}.{" "}
+            {notEnoughTokensToMint && (
+              <span className="font-bold text-red-500">
+                Note that your wallet does not have enough{" "}
+                {erc20PaymentToken.name} tokens to mint {totalCertificates}{" "}
+                BNOTE token
+                {totalCertificates > 1 ? "s" : ""}.
               </span>
             )}
-            {!needAllowance && (
-              <span>
+          </p>
+          <p className="mt-2">
+            The allowance of {erc20PaymentToken.name} you've granted for minting
+            is {displayValues.allowance}.
+          </p>
+        </div>
+      )}
+      {disclaimerAccepted && (
+        <div className="m-4 mt-8 mx-auto max-w-xl">
+          <p className="text-xl underline">What's required for minting?</p>
+          <ol className="list-decimal list-inside mt-2">
+            <li>
+              To transfer {erc20PaymentToken.name} tokens, you'll need ETH in
+              your wallet.
+            </li>
+            <li>
+              {needAllowance && (
                 <span>
-                  There will be one transaction to mint your equity tokens,
-                  since you have already granted permissions for our contract to
-                  transfer {erc20PaymentToken.name} tokens on your behalf.
+                  There will be two transactions. The first to grant permissions
+                  for our contract to transfer {erc20PaymentToken.name} tokens
+                  on your behalf, the second to do the transfer and mint your
+                  equity tokens.
                 </span>
-              </span>
-            )}
-          </li>
-        </ol>
-      </div>
+              )}
+              {!needAllowance && (
+                <span>
+                  <span>
+                    There will be one transaction to mint your equity tokens,
+                    since you have already granted permissions for our contract
+                    to transfer {erc20PaymentToken.name} tokens on your behalf.
+                  </span>
+                </span>
+              )}
+            </li>
+          </ol>
+        </div>
+      )}
 
       <button
         className="disabled:italic disabled:text-gray-300 border w-full bg-secondary enabled:hover:bg-secondary/90 font-semibold text-lg py-4 px-6 rounded-md transition-all enabled:hover:-translate-y-0.5"
@@ -167,9 +173,15 @@ export function AllowanceAndMint({
             sendAllowance();
           }
         }}
-        disabled={!enableMintButton}
+        disabled={
+          !enableMintButton || !disclaimerAccepted || notEnoughTokensToMint
+        }
       >
-        Mint
+        {!disclaimerAccepted
+          ? "Please accept the disclaimer to continue"
+          : notEnoughTokensToMint
+          ? `Insufficient ${erc20PaymentToken.name} balance`
+          : "Mint"}
       </button>
 
       <div className="text-lg m-4 text-green-500 font-semibold">
