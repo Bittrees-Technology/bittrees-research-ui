@@ -49,7 +49,7 @@ export function AllowanceAndMint({
       chainId,
     });
 
-  const { mintIt, isSuccessfulMint, txData, isReadyToMint } = useMint({
+  const { mintIt, isSuccessfulMint, txData } = useMint({
     bnoteContractAddress,
     paymentToken: erc20PaymentToken,
     totalCertificates,
@@ -66,20 +66,16 @@ export function AllowanceAndMint({
       console.log("Allowance transaction successful");
       setAllowanceSuccessful(true);
     }
-  }, [allowanceSuccessful, allowanceTransactionResult, isReadyToMint, mintIt]);
-
-  useEffect(() => console.log("YYY", { isReadyToMint }), [isReadyToMint]);
+  }, [allowanceSuccessful, allowanceTransactionResult, mintIt]);
 
   useEffect(() => {
     console.log("XXX", {
       allowanceSuccessful,
-      isReadyToMint,
       isSuccessfulMint,
       mintInProgress,
     });
     if (
       allowanceSuccessful &&
-      isReadyToMint &&
       !isSuccessfulMint &&
       !mintInProgress &&
       mintButtonPressed
@@ -90,7 +86,6 @@ export function AllowanceAndMint({
     }
   }, [
     allowanceSuccessful,
-    isReadyToMint,
     mintIt,
     isSuccessfulMint,
     handleMint,

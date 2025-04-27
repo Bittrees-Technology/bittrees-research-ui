@@ -1,11 +1,11 @@
-import { useSimulateContract, useWriteContract } from "wagmi";
-import bnoteAbi from "./abi-bnote.json";
 import { Address } from "viem";
-import { PaymentToken } from "./usePaymentTokenInformation";
+import { useWriteContract } from "wagmi";
 import {
   convertCertificatesToDenominations,
   denominationsToMintBatch,
 } from "../lib/certificate-math";
+import bnoteAbi from "./abi-bnote.json";
+import { PaymentToken } from "./usePaymentTokenInformation";
 
 export function useMint({
   bnoteContractAddress,
@@ -20,13 +20,6 @@ export function useMint({
     convertCertificatesToDenominations(totalCertificates)
   );
 
-  const { data: simulateData, isLoading: isSimulating } = useSimulateContract({
-    address: bnoteContractAddress,
-    abi: bnoteAbi,
-    functionName: "mintBatch",
-    args: [tokenIds, amounts, paymentToken.address],
-  });
-
   const {
     writeContract: mintItRaw,
     data: txData,
@@ -36,19 +29,18 @@ export function useMint({
 
   // Function to safely call mintIt only when simulation data is available
   const mintIt = () => {
-    if (!simulateData?.request) {
-      console.warn("Cannot mint: simulation data is not available yet");
-      return;
-    }
-    mintItRaw(simulateData.request);
+    mintItRaw({
+      address: bnoteContractAddress,
+      abi: bnoteAbi,
+      functionName: "mintBatch",
+      args: [tokenIds, amounts, paymentToken.address],
+    });
   };
 
   return {
     mintIt,
     isSuccessfulMint,
     txData,
-    isSimulating,
     isPending,
-    isReadyToMint: !!simulateData?.request,
   };
 }
