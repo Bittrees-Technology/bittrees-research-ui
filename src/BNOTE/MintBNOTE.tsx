@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Address } from "viem";
 import { useAccount, useBalance, useChainId } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
 import { AllowanceAndMint } from "./AllowanceAndMint";
@@ -30,6 +31,8 @@ const BNOTE_CONTRACT_CONFIGS = {
 
 export function MintBNOTE() {
   const [totalCertificates, setTotalCertificates] = useState(0);
+  const [mintComplete, setMintComplete] = useState(false);
+  const [mintTransaction, setMintTransaction] = useState<Address | undefined>();
 
   const chainId = useChainId();
   const explorerDomain =
@@ -65,7 +68,7 @@ export function MintBNOTE() {
     }
   }, [tokenKeys, currentPaymentToken, paymentTokenDictionary]);
 
-  const readyToMint = address && currentPaymentToken?.address;
+  const readyToMint = address && currentPaymentToken?.address && !mintComplete;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -119,8 +122,36 @@ export function MintBNOTE() {
                 totalCertificates={totalCertificates}
                 userWalletAddress={address}
                 chainId={chainId}
-                explorerDomain={explorerDomain}
+                mintComplete={(transactionHash) => {
+                  setMintComplete(true);
+                  setMintTransaction(transactionHash);
+                }}
               />
+            </div>
+          )}
+          {mintComplete && (
+            <div>
+              <div className="mt-4">
+                <p className="text-2xl font-semibold text-primary mb-3">
+                  BNOTE minting completed!
+                </p>
+                <p>
+                  Your transaction has been successfully completed. You can view
+                  it{" "}
+                  <a
+                    href={`https://${explorerDomain}/tx/${mintTransaction}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 underline"
+                  >
+                    here
+                  </a>
+                  .
+                </p>
+                <p className="mt-2">
+                  You can now view your BNOTE tokens in your wallet.
+                </p>
+              </div>
             </div>
           )}
         </div>

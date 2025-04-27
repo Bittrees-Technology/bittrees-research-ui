@@ -12,7 +12,7 @@ export function AllowanceAndMint({
   erc20PaymentToken,
   userWalletAddress,
   chainId,
-  explorerDomain,
+  mintComplete,
 }: {
   walletBalance: bigint;
   totalCertificates: number;
@@ -20,13 +20,12 @@ export function AllowanceAndMint({
   erc20PaymentToken: PaymentToken;
   userWalletAddress: Address;
   chainId: number;
-  explorerDomain: string;
+  mintComplete: (transactionHash?: Address) => void;
 }) {
   const [allowanceInProgress, setAllowanceInProgress] = useState(false);
   const [allowanceSuccessful, setAllowanceSuccessful] = useState(false);
   const [mintInProgress, setMintInProgress] = useState(false);
   const [mintButtonPressed, setMintButtonPressed] = useState(false);
-  const [mintCompleted, setMintCompleted] = useState(false);
 
   const {
     displayValues,
@@ -60,27 +59,19 @@ export function AllowanceAndMint({
   }, [mintIt]);
 
   useEffect(() => {
-    console.log("Allowance transaction result:", allowanceTransactionResult);
     setAllowanceInProgress(false);
     if (allowanceTransactionResult?.status === "success") {
-      console.log("Allowance transaction successful");
       setAllowanceSuccessful(true);
     }
   }, [allowanceSuccessful, allowanceTransactionResult, mintIt]);
 
   useEffect(() => {
-    console.log("XXX", {
-      allowanceSuccessful,
-      isSuccessfulMint,
-      mintInProgress,
-    });
     if (
       allowanceSuccessful &&
       !isSuccessfulMint &&
       !mintInProgress &&
       mintButtonPressed
     ) {
-      console.log("CALLING MINT!!!");
       setMintInProgress(true);
       handleMint();
     }
@@ -94,14 +85,12 @@ export function AllowanceAndMint({
   ]);
 
   useEffect(() => {
-    console.log("Mint results:", { isSuccessfulMint, txData });
     if (isSuccessfulMint) {
-      // setMintInProgress(false);
-      // setMintButtonPressed(false);
-      console.log("Mint transaction successful");
-      setMintCompleted(true);
+      setMintButtonPressed(false);
+      setMintInProgress(false);
+      mintComplete(txData);
     }
-  }, [isSuccessfulMint, txData]);
+  }, [isSuccessfulMint, mintComplete, txData]);
 
   const needAllowance = amountOfAllowanceNeededWei > BigInt(0);
   const notEnoughTokensToMint = balanceWei < totalPriceWei;
@@ -113,17 +102,11 @@ export function AllowanceAndMint({
 
   useEffect(() => {
     if (!needAllowance) {
-      console.log("AAA No allowance needed");
       setAllowanceSuccessful(true);
     } else {
-      console.log("AAA Allowance needed");
       setAllowanceSuccessful(false);
     }
   }, [needAllowance]);
-
-  useEffect(() => {
-    console.log("txData", txData);
-  }, [txData]);
 
   return (
     <div>
@@ -176,6 +159,7 @@ export function AllowanceAndMint({
         </ol>
       </div>
       {allowanceInProgress && <div>Allowance in-progress</div>}
+      {mintInProgress && <div>Minting in-progress</div>}
       <button
         className="disabled:italic disabled:text-gray-300 border w-full bg-secondary enabled:hover:bg-secondary/90 font-semibold text-lg py-4 px-6 rounded-md transition-all enabled:hover:-translate-y-0.5"
         onClick={() => {
@@ -189,28 +173,6 @@ export function AllowanceAndMint({
       >
         Mint
       </button>
-      {mintCompleted && (
-        <div className="mt-4">
-          <p className="text-lg font-semibold text-primary mb-3">
-            Minting completed!
-          </p>
-          <p>
-            Your transaction has been successfully completed. You can view it{" "}
-            <a
-              href={`https://${explorerDomain}/tx/${txData}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline"
-            >
-              {`https://${explorerDomain}/tx/${txData}`}
-            </a>
-            .
-          </p>
-          <p className="mt-2">
-            You can now view your BNOTE tokens in your wallet.
-          </p>
-        </div>
-      )}
     </div>
   );
 }
