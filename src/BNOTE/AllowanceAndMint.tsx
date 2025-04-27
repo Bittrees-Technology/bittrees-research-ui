@@ -43,32 +43,32 @@ export function AllowanceAndMint({
       chainId,
     });
 
-  const { mintIt, isSuccess, txData, request } = useMint({
+  const { mintIt, isSuccessfulMint, txData, isReadyToMint } = useMint({
     bnoteContractAddress,
     paymentToken: erc20PaymentToken,
     totalCertificates,
   });
 
   const handleMint = useCallback(() => {
-    if (request) {
-      mintIt(request);
-    } else {
-      console.error("Unable to mint since request is undefined");
-    }
-  }, [request, mintIt]);
+    mintIt();
+  }, [mintIt]);
 
   useEffect(() => {
-    console.log("Mint results:", { isSuccess, txData });
-  }, [isSuccess, txData]);
+    console.log("Mint results:", { isSuccessfulMint, txData });
+  }, [isSuccessfulMint, txData]);
 
   useEffect(() => {
     console.log("Allowance transaction result:", allowanceTransactionResult);
     setAllowanceInProgress(false);
     if (allowanceTransactionResult?.status === "success") {
       console.log("Allowance transaction successful");
-      handleMint();
+      if (isReadyToMint) {
+        handleMint();
+      } else {
+        console.log("Minting is not ready");
+      }
     }
-  }, [allowanceTransactionResult, handleMint, mintIt, request]);
+  }, [allowanceTransactionResult, handleMint, isReadyToMint, mintIt]);
 
   const needAllowance = amountOfAllowanceNeededWei > BigInt(0);
   const notEnoughTokensToMint = balanceWei < totalPriceWei;
@@ -133,7 +133,11 @@ export function AllowanceAndMint({
             setAllowanceInProgress(true);
             sendAllowance();
           } else {
-            handleMint();
+            if (isReadyToMint) {
+              handleMint();
+            } else {
+              console.log("Minting is not ready");
+            }
           }
         }}
         disabled={!enableMintButton}

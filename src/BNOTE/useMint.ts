@@ -20,19 +20,35 @@ export function useMint({
     convertCertificatesToDenominations(totalCertificates)
   );
 
-  const { data: simulateData } = useSimulateContract({
+  const { data: simulateData, isLoading: isSimulating } = useSimulateContract({
     address: bnoteContractAddress,
     abi: bnoteAbi,
     functionName: "mintBatch",
     args: [tokenIds, amounts, paymentToken.address],
   });
 
-  const { writeContract: mintIt, data: txData, isSuccess } = useWriteContract();
+  const {
+    writeContract: mintItRaw,
+    data: txData,
+    isSuccess: isSuccessfulMint,
+    isPending,
+  } = useWriteContract();
+
+  // Function to safely call mintIt only when simulation data is available
+  const mintIt = () => {
+    if (!simulateData?.request) {
+      console.warn("Cannot mint: simulation data is not available yet");
+      return;
+    }
+    mintItRaw(simulateData.request);
+  };
 
   return {
     mintIt,
-    isSuccess,
+    isSuccessfulMint,
     txData,
-    request: simulateData?.request,
+    isSimulating,
+    isPending,
+    isReadyToMint: !!simulateData?.request,
   };
 }
