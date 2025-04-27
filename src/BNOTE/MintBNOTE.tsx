@@ -32,6 +32,9 @@ export function MintBNOTE() {
   const [totalCertificates, setTotalCertificates] = useState(0);
 
   const chainId = useChainId();
+  const explorerDomain =
+    BNOTE_CONTRACT_CONFIGS[chainId as keyof typeof BNOTE_CONTRACT_CONFIGS]
+      .EXPLORER;
   const { address } = useAccount();
 
   const result = useBalance({
@@ -116,6 +119,7 @@ export function MintBNOTE() {
                 totalCertificates={totalCertificates}
                 userWalletAddress={address}
                 chainId={chainId}
+                explorerDomain={explorerDomain}
               />
             </div>
           )}
