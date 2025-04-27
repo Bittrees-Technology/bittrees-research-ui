@@ -33,7 +33,7 @@ export function useManageAllowanceTransaction({
 }) {
   const [allowanceHash, setAllowanceHash] = useState<Address | undefined>();
 
-  const { data: simulateData, error } = useSimulateContract({
+  const { data: simulateData } = useSimulateContract({
     address: erc20ContractAddress,
     abi: btreeAbi,
     functionName: erc20FunctionName,
