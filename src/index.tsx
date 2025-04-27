@@ -6,7 +6,7 @@ import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
 import { WagmiProvider, http } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
 import App from "./App";
-import { MintBNOTEPage } from "./BRGOV/MintBNOTEPage";
+import { MintBNOTEPage } from "./BNOTE/MintBNOTEPage";
 import CodeOfEthicsPage from "./CodeOfEthicsPage";
 import "./index.css";
 import MembersPage from "./MembersPage";

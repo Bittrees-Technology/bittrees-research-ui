@@ -13,21 +13,20 @@ import { useEffect, useState } from "react";
 import type { Address } from "viem";
 import {
   useSimulateContract,
-  useWriteContract,
   useWaitForTransactionReceipt,
+  useWriteContract,
 } from "wagmi";
+import btreeAbi from "./abi-btree.json";
 
 export function useManageAllowanceTransaction({
   erc20ContractAddress,
   erc20FunctionName,
-  erc20Abi,
   contractAddress,
   chainId,
   amount,
 }: {
   erc20ContractAddress: Address;
   erc20FunctionName: "increaseAllowance" | "increaseApproval";
-  erc20Abi: any;
   contractAddress: Address;
   chainId: number;
   amount: bigint;
@@ -36,7 +35,7 @@ export function useManageAllowanceTransaction({
 
   const { data: simulateData } = useSimulateContract({
     address: erc20ContractAddress,
-    abi: erc20Abi,
+    abi: btreeAbi,
     functionName: erc20FunctionName,
     chainId,
     args: [contractAddress, amount],
@@ -52,7 +51,7 @@ export function useManageAllowanceTransaction({
 
   // Removed 'enabled' option as it's no longer supported
   const { data: dataForAllowanceTransaction } = useWaitForTransactionReceipt(
-    Boolean(allowanceHash)
+    allowanceHash
       ? {
           hash: allowanceHash,
           chainId,

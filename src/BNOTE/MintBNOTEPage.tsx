@@ -1,13 +1,7 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { MintBRGOVSelection } from "./MintBRGOVSelection";
-import { Denomination } from "./MintBRGOV";
-import { useState } from "react";
+import { MintBNOTE } from "./MintBNOTE";
 
-function MintBRGOVPage() {
-  const [denomination, setDenomination] = useState<Denomination>(
-    Denomination.One
-  );
-
+export function MintBNOTEPage() {
   return (
     <div className="max-w-4xl mx-auto">
       <header className="border-2 border-b-0 bg-white">
@@ -15,6 +9,8 @@ function MintBRGOVPage() {
           <a href="/mint-brgov" className="mx-auto">
             <div className="font-newtimesroman pt-10 pb-6 text-4xl sm:text-6xl text-center font-bold tracking-wider">
               Bittrees Research
+              <br />
+              Preferred Stock
             </div>
           </a>
         </div>
@@ -24,23 +20,19 @@ function MintBRGOVPage() {
         <div className="flex flex-col gap-3 p-4 md:p-12 items-center">
           <div className="mx-auto flex flex-col items-center max-w-md drop-shadow-xl">
             <img
-              src={`/brgov-${denomination}-preferred-cert.png`}
-              width="1000px"
-              height="566px"
-              alt="BRGOV Certificate of Stock"
+              src={`/bnote-certificate.jpeg`}
+              width="1090px"
+              height="612px"
+              alt="BNOTE Preferred Stock"
             />
           </div>
           <div className="mt-4 mb-4">
-            <MintBRGOVSelection
-              onChangeDenomination={(denomination: Denomination) => {
-                setDenomination(denomination);
-              }}
-            />
+            <MintBNOTE />
           </div>
           <div>
             <ConnectButton />
           </div>
-          <div className="space-y-5 mt-8 text-left mx-8 font-newtimesroman">
+          {/* <div className="space-y-5 mt-8 text-left mx-8 font-newtimesroman">
             <div>
               <hr className="border-gray-500" />
             </div>
@@ -110,7 +102,7 @@ function MintBRGOVPage() {
                 acquiring BRGOV tokens.
               </span>
             </p>
-          </div>
+          </div> */}
           <footer className="flex flex-col gap-6 mx-auto mt-4">
             <span>
               <a className="hover:text-green-700" href="/members">
@@ -152,5 +144,3 @@ function MintBRGOVPage() {
     </div>
   );
 }
-
-export default MintBRGOVPage;

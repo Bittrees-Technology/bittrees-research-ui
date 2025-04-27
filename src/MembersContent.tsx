@@ -15,7 +15,7 @@ export function MembersContent() {
   const { address, isConnected, isConnecting } = useAccount();
 
   useEffect(() => {
-    let token = cookies[CONTRACT_ADDRESS];
+    const token = cookies[CONTRACT_ADDRESS];
     if (!token) {
       console.log("isConnected: " + isConnected);
       if (!(address && isConnected)) {
