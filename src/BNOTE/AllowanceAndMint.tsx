@@ -59,11 +59,10 @@ export function AllowanceAndMint({
   }, [mintIt]);
 
   useEffect(() => {
-    setAllowanceInProgress(false);
     if (allowanceTransactionResult?.status === "success") {
       setAllowanceSuccessful(true);
     }
-  }, [allowanceSuccessful, allowanceTransactionResult, mintIt]);
+  }, [allowanceSuccessful, allowanceTransactionResult]);
 
   useEffect(() => {
     if (
@@ -158,8 +157,7 @@ export function AllowanceAndMint({
           </li>
         </ol>
       </div>
-      {allowanceInProgress && <div>Allowance in-progress</div>}
-      {mintInProgress && <div>Minting in-progress</div>}
+
       <button
         className="disabled:italic disabled:text-gray-300 border w-full bg-secondary enabled:hover:bg-secondary/90 font-semibold text-lg py-4 px-6 rounded-md transition-all enabled:hover:-translate-y-0.5"
         onClick={() => {
@@ -173,6 +171,11 @@ export function AllowanceAndMint({
       >
         Mint
       </button>
+
+      <div className="text-lg m-4 text-green-500 font-semibold">
+        {allowanceInProgress && <div>Allowance in-progress</div>}
+        {mintInProgress && <div>Minting in-progress</div>}
+      </div>
     </div>
   );
 }
