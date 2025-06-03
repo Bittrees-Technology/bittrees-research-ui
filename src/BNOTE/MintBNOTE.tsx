@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Address } from "viem";
 import { useAccount, useBalance, useChainId } from "wagmi";
-import { base, baseSepolia, mainnet } from "wagmi/chains";
+import {base, baseSepolia, mainnet, sepolia} from "wagmi/chains";
 import { AllowanceAndMint } from "./AllowanceAndMint";
 import { CertificatePicker } from "./CertificatePicker";
 import { PaymentPicker } from "./PaymentPicker";
@@ -13,17 +13,22 @@ import {
 
 const BNOTE_CONTRACT_CONFIGS = {
   [mainnet.id]: {
-    BNOTE: "0xEC0f5e4d5B458a8d9337589a7e31Ef95149ee845",
+    BNOTE: "0xf1AAfFc982B5F553a730a9eC134715a547f1fe80",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseApproval", // not using standard ERC20 method
     EXPLORER: "etherscan.io",
   },
+  [sepolia.id]: {
+    BNOTE: "0xf1AAfFc982B5F553a730a9eC134715a547f1fe80",
+    WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
+    EXPLORER: "sepolia.etherscan.io",
+  },
   [baseSepolia.id]: {
-    BNOTE: "0xEC0f5e4d5B458a8d9337589a7e31Ef95149ee845",
+    BNOTE: "0xf1AAfFc982B5F553a730a9eC134715a547f1fe80",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
     EXPLORER: "sepolia.basescan.org",
   },
   [base.id]: {
-    BNOTE: "0xEC0f5e4d5B458a8d9337589a7e31Ef95149ee845",
+    BNOTE: "0xf1AAfFc982B5F553a730a9eC134715a547f1fe80",
     WBTC_INCREASE_ALLOWANCE_METHOD_NAME: "increaseAllowance",
     EXPLORER: "basescan.org",
   },
