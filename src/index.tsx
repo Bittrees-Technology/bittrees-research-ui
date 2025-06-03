@@ -4,8 +4,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
 import { WagmiProvider, http } from "wagmi";
-import { base, baseSepolia, mainnet } from "wagmi/chains";
+import { base, sepolia, baseSepolia, mainnet } from "wagmi/chains";
 import App from "./App";
+import { MintBITPage } from "./BIT/MintBITPage";
 import { MintBNOTEPage } from "./BNOTE/MintBNOTEPage";
 import CodeOfEthicsPage from "./CodeOfEthicsPage";
 import "./index.css";
@@ -14,12 +15,12 @@ import MintPage from "./MintPage";
 import VisionStatementPage from "./VisionStatementPage";
 
 const productionChains = [mainnet, base] as const;
-const developmentChains = [...productionChains, baseSepolia] as const;
+const developmentChains = [...productionChains, baseSepolia, sepolia] as const;
 
 const myChains =
-  import.meta.env.VITE_ENABLE_TESTNETS === "true"
-    ? developmentChains
-    : productionChains;
+    import.meta.env.VITE_ENABLE_TESTNETS === "true"
+        ? developmentChains
+        : productionChains;
 
 // Configure wagmi and RainbowKit
 const config = getDefaultConfig({
@@ -48,15 +49,19 @@ const router = createBrowserRouter([
     element: <MintBNOTEPage />,
   },
   {
+    path: "/mint-bit",
+    element: <MintBITPage />,
+  },
+  {
     path: "/mint-brgov",
     element: (
-      <div className="p-10">
-        Please visit{" "}
-        <a href="/mint-bnote" className="underline">
-          Bittrees Research Preferred Stock
-        </a>
-        .
-      </div>
+        <div className="p-10">
+          Please visit{" "}
+          <a href="/mint-bnote" className="underline">
+            Bittrees Research Preferred Stock
+          </a>
+          .
+        </div>
     ),
   },
   {
@@ -74,17 +79,17 @@ const router = createBrowserRouter([
 ]);
 
 const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
+    document.getElementById("root") as HTMLElement
 );
 
 const queryClient = new QueryClient();
 
 root.render(
-  <WagmiProvider config={config}>
-    <QueryClientProvider client={queryClient}>
-      <RainbowKitProvider>
-        <RouterProvider router={router} />
-      </RainbowKitProvider>
-    </QueryClientProvider>
-  </WagmiProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+          <RouterProvider router={router} />
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
 );
