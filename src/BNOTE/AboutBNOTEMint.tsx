@@ -2,9 +2,10 @@ export function AboutBNOTEMint() {
   return (
     <div className="max-h-96 overflow-y-auto border border-gray-200 rounded-lg p-4 bg-gray-50 text-gray-700 mb-4 leading-relaxed text-left">
       <h2 className="text-2xl font-bold text-primary pb-3 text-center mb-4">
-        About BNOTE Certificates
+        Bittrees Research Preferred Stock
+        <br />
+        Legal and Risk Disclosure
       </h2>
-
       <h3 className="text-lg font-semibold text-gray-900 mb-3">
         1. Issuer Information
       </h3>

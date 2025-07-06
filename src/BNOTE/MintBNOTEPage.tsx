@@ -26,7 +26,7 @@ export function MintBNOTEPage() {
               alt="BNOTE Preferred Stock"
             />
           </div>
-          <div className="mt-4 mb-4">
+          <div>
             <MintBNOTE />
           </div>
           <div>

@@ -76,10 +76,17 @@ export function MintBNOTE() {
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="md:col-span-2">
         <div className="bg-white rounded-xl shadow-sm p-6">
-          <h1 className="text-3xl font-bold text-primary pb-3 border-b border-gray-200 mb-4">
-            Mint BNOTE
-          </h1>
+          <h3 className="text-2xl font-bold text-primary pb-3">
+            Support the future of Bittrees Research
+          </h3>
+          <p className="text-xl border-b border-gray-200 p-4">
+            Mint a BNOTE to make a capital contribution and receive a preferred
+            stock with unique participation rights. Convertible, transferable,
+            and member-exclusive. Full details available below.
+          </p>
+
           <AboutBNOTEMint />
+
           {address && !currentPaymentToken && (
             <div className="text-red-500">
               BNOTE contract on the current blockchain network has no active
