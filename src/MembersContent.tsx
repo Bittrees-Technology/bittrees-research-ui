@@ -84,20 +84,20 @@ export function MembersContent() {
                 </li>
                 <li className="p-2">
                   <a
-                    className="text-black no-underline hover:underline hover:text-green-700"
+                    className="block text-black no-underline hover:underline hover:text-green-700"
                     target="_blank"
                     rel="noreferrer"
-                    href="https://etherscan.io/token/0x1a8b6b0f57876f5a1a17539c25f9e4235cf7060c#code"
+                    href="https://etherscan.io/address/0xf1AAfFc982B5F553a730a9eC134715a547f1fe80#code"
                   >
-                    BRGOV Contract (on Ethereum){" "}
+                    BNOTE Contract on Ethereum
                   </a>
                   <a
-                    className="text-black no-underline hover:underline hover:text-green-700"
+                    className="block text-black no-underline hover:underline hover:text-green-700"
                     target="_blank"
                     rel="noreferrer"
-                    href="https://basescan.org/token/0xCa6f24a651bc4Ab545661a41a81EF387086a34C2#code"
+                    href="https://basescan.org/address/0xf1AAfFc982B5F553a730a9eC134715a547f1fe80#code"
                   >
-                    BRGOV Contract (on Base)
+                    BNOTE Contract on Base
                   </a>
                 </li>
 
