@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Address } from "viem";
+import { useDetectAllowanceMethod } from "./useDetectAllowanceMethod";
 import { useManageAllowanceTransaction } from "./useManageAllowanceTransaction";
 import { useMint } from "./useMint";
 import { useMintingInfo } from "./useMintingInfo";
@@ -41,10 +42,17 @@ export function AllowanceAndMint({
     userWalletAddress,
   });
 
+  const { detectedMethod } = useDetectAllowanceMethod({
+    erc20ContractAddress: erc20PaymentToken.address,
+    contractAddress: bnoteContractAddress,
+    amount: amountOfAllowanceNeededWei,
+    chainId,
+  });
+
   const { sendAllowance, allowanceTransactionResult } =
     useManageAllowanceTransaction({
       erc20ContractAddress: erc20PaymentToken.address,
-      erc20FunctionName: "increaseAllowance", // TODO: Handle approveAllowance for WBTC
+      erc20FunctionName: detectedMethod || "increaseAllowance",
       contractAddress: bnoteContractAddress,
       amount: amountOfAllowanceNeededWei,
       chainId,
