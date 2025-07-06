@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Address } from "viem";
 import { useAccount, useBalance, useChainId } from "wagmi";
 import { base, baseSepolia, mainnet } from "wagmi/chains";
+import { AboutBNOTEMint } from "./AboutBNOTEMint";
 import { AllowanceAndMint } from "./AllowanceAndMint";
 import { CertificatePicker } from "./CertificatePicker";
 import { PaymentPicker } from "./PaymentPicker";
@@ -75,13 +76,10 @@ export function MintBNOTE() {
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="md:col-span-2">
         <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-2xl font-bold text-primary pb-3 border-b border-gray-200 mb-4">
-            About Bittrees Certificates
-          </h2>
-          <p className="text-gray-700 mb-4 leading-relaxed">
-            Bittrees Research certificates represent...lorem ipsum dolor sit
-            amet. lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed.
-          </p>
+          <h1 className="text-3xl font-bold text-primary pb-3 border-b border-gray-200 mb-4">
+            Mint BNOTE
+          </h1>
+          <AboutBNOTEMint />
           {address && !currentPaymentToken && (
             <div className="text-red-500">
               BNOTE contract on the current blockchain network has no active
