@@ -33,7 +33,7 @@ function MintMembershipPage() {
 
           {!isCorrectChain && (
             <div className="mt-4">
-              Please connect to Ethereum mainnet to verify membership.
+              Please connect to Ethereum mainnet.
             </div>
           )}
             <div className="flex gap-24 mt-12 justify-center">
