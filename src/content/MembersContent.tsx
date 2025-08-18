@@ -73,9 +73,6 @@ export function MembersContent() {
                                 Snapshot
                             </a>
                         </li>
-
-                        <li className="p-2">BIT Maker</li>
-                        <li className="p-2">BIT Farmer</li>
                     </ul>
                 </div>
                 <div className="text-left font-newtimesroman">
