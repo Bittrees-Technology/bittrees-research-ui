@@ -138,7 +138,7 @@ export function MembersContent() {
                                 className="text-black no-underline hover:underline hover:text-green-700"
                                 target="_blank"
                                 rel="noreferrer"
-                                href="https://paragraph.xyz/@bittrees_research"
+                                href="https://paragraph.xyz/@bresearch"
                             >
                                 Paragraph
                             </a>
