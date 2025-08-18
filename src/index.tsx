@@ -1,81 +1,100 @@
-import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import {RainbowKitProvider, getDefaultConfig} from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
-import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
-import { WagmiProvider, http } from "wagmi";
-import { base, sepolia, baseSepolia, mainnet } from "wagmi/chains";
-import App from "./App";
-import { MintBITPage } from "./BIT/MintBITPage";
-import { MintBNOTEPage } from "./BNOTE/MintBNOTEPage";
-import CodeOfEthicsPage from "./CodeOfEthicsPage";
+import {Navigate, RouterProvider, createBrowserRouter, Link} from "react-router";
+import {WagmiProvider, http} from "wagmi";
+import HomePage from "./pages/HomePage.tsx";
+import {MintBITPage} from "./pages/membersPages/MintBITPage.tsx";
+import {MintBNOTEPage} from "./pages/membersPages/MintBNOTEPage.tsx";
+import CodeOfEthicsPage from "./pages/CodeOfEthicsPage.tsx";
 import "./index.css";
-import MembersPage from "./MembersPage";
-import MintPage from "./MintPage";
-import VisionStatementPage from "./VisionStatementPage";
-
-const productionChains = [mainnet, base] as const;
-const developmentChains = [...productionChains, baseSepolia, sepolia] as const;
-
-const myChains =
-    import.meta.env.VITE_ENABLE_TESTNETS === "true"
-        ? developmentChains
-        : productionChains;
+import MembersPage from "./pages/membersPages/MembersPage.tsx";
+import MintMembershipPage from "./pages/MintMembershipPage.tsx";
+import VisionStatementPage from "./pages/VisionStatementPage.tsx";
+import {ALL_CHAINS as chains} from "./lib/constants/chains.ts";
+import Layout from "@/components/layout/Layout.tsx";
+import {LayoutProvider} from "@/hooks/useLayoutContext.tsx";
+import {MembershipRequired} from "@/components/MembershipRequired.tsx";
 
 // Configure wagmi and RainbowKit
 const config = getDefaultConfig({
-  appName: "Bittrees Research",
-  projectId: "8971e0de563ab27ccfff96c91ac1c3c3",
-  chains: myChains,
-  transports: Object.fromEntries(myChains.map((chain) => [chain.id, http()])),
-  ssr: false, // Set to true if using Next.js
+    appName: "Bittrees Research",
+    projectId: "8971e0de563ab27ccfff96c91ac1c3c3",
+    chains,
+    transports: Object.fromEntries(chains.map((chain) => [chain.id, http()])),
+    ssr: false, // Set to true if using Next.js
 });
 
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <App />,
-  },
-  {
-    path: "/mint",
-    element: <Navigate to="/mint-membership" />,
-  },
-  {
-    path: "/mint-membership",
-    element: <MintPage />,
-  },
-  {
-    path: "/mint-bnote",
-    element: <MintBNOTEPage />,
-  },
-  {
-    path: "/mint-bit",
-    element: <MintBITPage />,
-  },
-  {
-    path: "/mint-brgov",
-    element: (
-        <div className="p-10">
-          Please visit{" "}
-          <a href="/mint-bnote" className="underline">
-            Bittrees Research Preferred Stock
-          </a>
-          .
-        </div>
-    ),
-  },
-  {
-    path: "/members",
-    element: <MembersPage />,
-  },
-  {
-    path: "/codeofethics",
-    element: <CodeOfEthicsPage />,
-  },
-  {
-    path: "/visionstatement",
-    element: <VisionStatementPage />,
-  },
+    {
+        path: "/",
+        element: <Layout/>,
+        children: [
+            {
+                index: true,
+                element: <HomePage/>
+            },
+            {
+                path: "/mint",
+                element: <Navigate to="/mint-membership"/>,
+            },
+            {
+                path: "/mint-membership",
+                element: <MintMembershipPage />,
+            },
+            {
+                path: "/mint-bnote",
+                element: <MembershipRequired />,
+                children: [
+                    {
+                        index: true,
+                        element: <MintBNOTEPage />
+                    }
+                ]
+            },
+            {
+                path: "/mint-bit",
+                element: <MembershipRequired />,
+                children: [
+                    {
+                        index: true,
+                        element: <MintBITPage />
+                    }
+                ]
+            },
+            {
+                path: "/mint-brgov",
+                element: (
+                    <div className="p-10">
+                        Please visit{" "}
+                        <Link to="/mint-bnote" className="underline">
+                            Bittrees Research Preferred Stock
+                        </Link>
+                        .
+                    </div>
+                ),
+            },
+            {
+                path: "/members",
+                element: <MembershipRequired />,
+                children: [
+                    {
+                        index: true,
+                        element: <MembersPage />
+                    }
+                ]
+            },
+            {
+                path: "/codeofethics",
+                element: <CodeOfEthicsPage/>,
+            },
+            {
+                path: "/visionstatement",
+                element: <VisionStatementPage/>,
+            },
+        ]
+    },
 ]);
 
 const root = ReactDOM.createRoot(
@@ -86,10 +105,12 @@ const queryClient = new QueryClient();
 
 root.render(
     <WagmiProvider config={config}>
-      <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>
-          <RouterProvider router={router} />
-        </RainbowKitProvider>
-      </QueryClientProvider>
+        <QueryClientProvider client={queryClient}>
+            <RainbowKitProvider>
+                <LayoutProvider>
+                    <RouterProvider router={router}/>
+                </LayoutProvider>
+            </RainbowKitProvider>
+        </QueryClientProvider>
     </WagmiProvider>
 );
