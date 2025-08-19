@@ -6,7 +6,7 @@ export function MembersContent() {
             <div className="grid grid-cols-2 gap-6">
                 <div className="text-left font-newtimesroman">
                     <ul className="max-w-md space-y-1 text-gray-400 list-disc list-outside ms-4 dark:text-gray-400 ">
-                        <li className="p-2">Gift Membership</li>
+                        {/*<li className="p-2">Gift Membership</li>*/}
                         <li className="p-2">
                             <a
                                 className="text-black no-underline hover:underline hover:text-green-700"
@@ -22,7 +22,8 @@ export function MembersContent() {
                                 className="text-black no-underline hover:underline hover:text-green-700"
                                 to="/mint-bnote"
                             >
-                                Mint BNOTE (Bittrees Research Preferred Stock)
+                                <p>Mint BNOTE</p>
+                                <p>(Bittrees Research Preferred Stock)</p>
                             </Link>
                         </li>
                         <li className="p-2">
@@ -30,7 +31,8 @@ export function MembersContent() {
                                 className="text-black no-underline hover:underline hover:text-green-700"
                                 to="/mint-bit"
                             >
-                                BIT Token Manager (Lock/Unlock BNOTE)
+                                <p>BIT Manager</p>
+                                <p>(Lock/Unlock BNOTE)</p>
                             </Link>
                         </li>
                         <li className="p-2">
