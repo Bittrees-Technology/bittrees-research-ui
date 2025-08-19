@@ -52,7 +52,7 @@ export function BNoteAmountPicker({
                 </label>
 
                 <div className="space-y-4">
-                    {[100, 10, 1].map((denomination) => {
+                    {[1, 10, 100].map((denomination) => {
                         const maxAmount = getMaxAmount(denomination);
                         const currentAmount = amounts[denomination];
 
