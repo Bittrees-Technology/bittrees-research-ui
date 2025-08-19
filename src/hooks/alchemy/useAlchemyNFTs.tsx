@@ -1,0 +1,48 @@
+import { useQuery } from '@tanstack/react-query';
+import {Alchemy, OwnedNft} from 'alchemy-sdk';
+import type { ChainId } from '@/lib/constants/contracts';
+import {CHAIN_TO_ALCHEMY_NETWORK} from "@/lib/constants/chains.ts";
+
+// TODO fetch this from the .env and secure it on Alchemy against being used by other domains
+const ALCHEMY_API_KEY = 'g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN'// import.meta.env.VITE_ALCHEMY_API_KEY;
+
+/**
+ * Generic hook to get NFTs for specific contracts on any supported chain
+ */
+export function useAlchemyNFTs(
+    ownerAddress: string | undefined,
+    contractAddresses: string[],
+    chainId: ChainId
+) {
+    return useQuery({
+        queryKey: ['alchemy', 'nfts', ownerAddress, contractAddresses, chainId],
+        queryFn: async (): Promise<OwnedNft[]> => {
+            if (!ownerAddress || !contractAddresses.length) return [];
+
+            const alchemyNetwork = CHAIN_TO_ALCHEMY_NETWORK[chainId];
+            if (!alchemyNetwork) {
+                throw new Error(`Alchemy not supported for chain ${chainId}`);
+            }
+
+            // Create client for this specific network (lightweight operation)
+            const alchemy = new Alchemy({
+                apiKey: ALCHEMY_API_KEY,
+                network: alchemyNetwork,
+            });
+
+            let pagingToken: string | undefined = undefined;
+            const ownedNfts: OwnedNft[] = [];
+            do {
+                const response = await alchemy.nft.getNftsForOwner(ownerAddress, {
+                    contractAddresses,
+                });
+
+                ownedNfts.push(...response.ownedNfts);
+                pagingToken = response.pageKey;
+            } while (pagingToken)
+
+            return ownedNfts;
+        },
+        enabled: Boolean(ownerAddress && contractAddresses.length > 0),
+    });
+}
