@@ -80,13 +80,13 @@ export function MintBNOTE() {
     <div className="max-w-6xl mx-auto px-4 py-10">
       <div className="md:col-span-2">
         <div className="bg-white rounded-xl shadow-sm p-6">
-          <h2 className="text-2xl font-bold text-primary pb-3 border-b border-gray-200 mb-4">
-            About Bittrees Certificates
-          </h2>
-          <p className="text-gray-700 mb-4 leading-relaxed">
-            Bittrees Research certificates represent...lorem ipsum dolor sit
-            amet. lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed.
-          </p>
+          {/*<h2 className="text-2xl font-bold text-primary pb-3 border-b border-gray-200 mb-4">*/}
+          {/*  About Bittrees Certificates*/}
+          {/*</h2>*/}
+          {/*<p className="text-gray-700 mb-4 leading-relaxed">*/}
+          {/*  Bittrees Research certificates represent...lorem ipsum dolor sit*/}
+          {/*  amet. lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed.*/}
+          {/*</p>*/}
           {address && !currentPaymentToken && (
             <div className="text-red-500">
               BNOTE contract on the current blockchain network has no active
@@ -136,9 +136,9 @@ export function MintBNOTE() {
                     htmlFor="disclaimer"
                     className="ml-2 text-sm text-gray-700"
                   >
-                    I understand that by minting these certificates, I
+                    I understand that by minting these BNOTE tokens, I
                     acknowledge that this is a non-refundable transaction. The
-                    BNOTE tokens represent certificates in Bittrees Research and
+                    BNOTE tokens represent preferred stock in Bittrees Research and
                     are subject to the terms outlined in the project
                     documentation.
                   </label>
