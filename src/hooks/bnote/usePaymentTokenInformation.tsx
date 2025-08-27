@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Abi, type Address } from "viem";
 import { useReadContract, useReadContracts } from "wagmi";
 import bnoteAbi from "@/lib/constants/bnote.abi.json";
-import erc20Abi from "@/lib/constants/erc20.abi.json";
+import erc20Abi from "@/lib/constants/erc20-minimal.abi.json";
 
 export type PaymentToken = {
   name: string;

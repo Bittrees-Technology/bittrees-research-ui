@@ -44,7 +44,6 @@ export function AllowanceAndMint({
   const { sendAllowance, allowanceTransactionResult } =
     useManageAllowanceTransaction({
       erc20ContractAddress: erc20PaymentToken.address,
-      erc20FunctionName: "increaseAllowance", // TODO: Handle approveAllowance for WBTC
       contractAddress: bnoteContractAddress,
       amount: amountOfAllowanceNeededWei,
       chainId,

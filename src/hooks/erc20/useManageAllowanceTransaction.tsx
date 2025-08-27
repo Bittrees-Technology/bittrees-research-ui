@@ -1,14 +1,3 @@
-/*
-
-A custom React hook for managing ERC20 token allowances.
-
-This hook essentially provides a complete workflow for:
-
-- Simulating the allowance change
-- Sending the transaction
-- Tracking its confirmation status
-
-*/
 import { useEffect, useState } from "react";
 import type { Address } from "viem";
 import {
@@ -16,31 +5,45 @@ import {
   useWaitForTransactionReceipt,
   useWriteContract,
 } from "wagmi";
-import erc20Abi from "@/lib/constants/erc20.abi.json";
+import erc20MinimalAbi from "@/lib/constants/erc20-minimal.abi.json";
 
 export function useManageAllowanceTransaction({
-  erc20ContractAddress,
-  erc20FunctionName,
-  contractAddress,
-  chainId,
-  amount,
-}: {
+                                                erc20ContractAddress,
+                                                contractAddress,
+                                                chainId,
+                                                amount,
+                                              }: {
   erc20ContractAddress: Address;
-  erc20FunctionName: "increaseAllowance" | "increaseApproval";
   contractAddress: Address;
   chainId: number;
   amount: bigint;
 }) {
   const [allowanceHash, setAllowanceHash] = useState<Address | undefined>();
 
-  const { data: simulateData } = useSimulateContract({
+  const {
+    data: simulateDataStandard,
+    error: errorStandard
+  } = useSimulateContract({
     address: erc20ContractAddress,
-    abi: erc20Abi,
-    functionName: erc20FunctionName,
+    abi: erc20MinimalAbi,
+    functionName: "increaseAllowance",
     chainId,
     args: [contractAddress, amount],
   });
 
+  const { data: simulateDataLegacy } = useSimulateContract({
+    address: erc20ContractAddress,
+    abi: erc20MinimalAbi,
+    functionName: "increaseApproval",
+    chainId,
+    args: [contractAddress, amount],
+    query: {
+      enabled: !!errorStandard && amount > 0n // Only try if standard failed
+    },
+  });
+
+  // fall back to 'increaseApproval' if 'increaseAllowance' doesn't exist
+  const simulateData = simulateDataStandard || simulateDataLegacy;
   const { writeContract, data: writeData } = useWriteContract();
 
   useEffect(() => {
@@ -49,15 +52,12 @@ export function useManageAllowanceTransaction({
     }
   }, [writeData]);
 
-  // Removed 'enabled' option as it's no longer supported
   const { data: dataForAllowanceTransaction } = useWaitForTransactionReceipt(
-    allowanceHash
-      ? {
-          hash: allowanceHash,
-          chainId,
-          confirmations: 5,
-        }
-      : undefined
+      allowanceHash ? {
+        hash: allowanceHash,
+        chainId,
+        confirmations: 5,
+      } : undefined
   );
 
   function sendAllowance() {
