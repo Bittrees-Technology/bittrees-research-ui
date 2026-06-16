@@ -1,11 +1,12 @@
-import { RainbowKitProvider, getDefaultConfig } from "@rainbow-me/rainbowkit";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import ReactDOM from "react-dom/client";
 import { Navigate, RouterProvider, createBrowserRouter } from "react-router";
-import { WagmiProvider, http } from "wagmi";
+import { WagmiProvider } from "wagmi";
 import "./index.css";
 
+import { wagmiConfig } from "@/lib/wagmi.ts";
 import Layout from "@/components/layout/Layout";
 import { LayoutProvider } from "@/hooks/useLayoutContext.tsx";
 
@@ -20,16 +21,6 @@ import { MintBNOTEPage } from "./pages/membersPages/MintBNOTEPage.tsx";
 import { MintBITPage } from "./pages/membersPages/MintBITPage.tsx";
 import VisionStatementPage from "./pages/VisionStatementPage.tsx";
 import CodeOfEthicsPage from "./pages/CodeOfEthicsPage.tsx";
-
-import { ALL_CHAINS as chains } from "./lib/constants/chains.ts";
-
-const config = getDefaultConfig({
-  appName: "Bittrees Research",
-  projectId: "8971e0de563ab27ccfff96c91ac1c3c3",
-  chains,
-  transports: Object.fromEntries(chains.map((chain) => [chain.id, http()])),
-  ssr: false,
-});
 
 const router = createBrowserRouter([
   {
@@ -66,7 +57,7 @@ const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement)
 const queryClient = new QueryClient();
 
 root.render(
-  <WagmiProvider config={config}>
+  <WagmiProvider config={wagmiConfig}>
     <QueryClientProvider client={queryClient}>
       <RainbowKitProvider>
         <LayoutProvider>

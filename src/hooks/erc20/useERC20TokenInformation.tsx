@@ -7,7 +7,6 @@ flag, making it easy to check if a user has enough tokens and
 appropriate permissions before executing token-related transactions.
 */
 
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { type Address, erc20Abi } from "viem";
 import { useReadContracts } from "wagmi";
@@ -46,12 +45,13 @@ export function useERC20TokenInformation({
   });
 
   useEffect(() => {
-    if (tokenData && tokenData[0]?.result) {
-      setAllowance(ethers.BigNumber.from(tokenData[0].result).toBigInt());
+    // wagmi/viem already return these as native bigint — no ethers needed.
+    if (tokenData && tokenData[0]?.result !== undefined) {
+      setAllowance(tokenData[0].result as bigint);
     }
 
-    if (tokenData && tokenData[1]?.result) {
-      setBalance(ethers.BigNumber.from(tokenData[1].result).toBigInt());
+    if (tokenData && tokenData[1]?.result !== undefined) {
+      setBalance(tokenData[1].result as bigint);
     }
   }, [tokenData]);
 
