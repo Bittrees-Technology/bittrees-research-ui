@@ -18,6 +18,7 @@ import ForumThread from "./pages/ForumThread";
 import ChatPage from "./pages/ChatPage";
 import StructurePage from "./pages/StructurePage";
 import MembershipPage from "./pages/MembershipPage";
+import Admin from "./pages/Admin";
 import { MintBNOTEPage } from "./pages/membersPages/MintBNOTEPage.tsx";
 import { MintBITPage } from "./pages/membersPages/MintBITPage.tsx";
 import VisionStatementPage from "./pages/VisionStatementPage.tsx";
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
       { path: "bit", element: <MintBITPage /> },
       { path: "structure", element: <StructurePage /> },
       { path: "membership", element: <MembershipPage /> },
+      { path: "admin", element: <Admin /> },
       { path: "vision", element: <VisionStatementPage /> },
       { path: "ethics", element: <CodeOfEthicsPage /> },
 

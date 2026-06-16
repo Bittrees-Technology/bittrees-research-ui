@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link, NavLink } from "react-router";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useAccount } from "wagmi";
 import { BittreesMark } from "@/components/Brand";
 import { useMembershipStatus } from "@/hooks/membership/useMembershipStatus";
+import { useAdminAccess } from "@/lib/adminAccess";
 
 const NAV = [
   { to: "/", label: "Overview", end: true },
@@ -37,6 +39,10 @@ function MemberChip() {
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { address } = useAccount();
+  const isAdmin = useAdminAccess(address) !== "none";
+  // Admin sits far-left when present.
+  const navItems = isAdmin ? [{ to: "/admin", label: "Admin", end: false }, ...NAV] : NAV;
 
   return (
     <header
@@ -84,7 +90,7 @@ export default function Header() {
         </NavLink>
 
         <nav className="nav-desktop" style={{ gap: "0.1rem", flex: 1 }}>
-          {NAV.map(({ to, label, end }) => (
+          {navItems.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -153,7 +159,7 @@ export default function Header() {
           onClick={() => setMobileOpen(false)}
         >
           <nav style={{ display: "flex", flexDirection: "column" }}>
-            {[...NAV, { to: "/membership", label: "Membership", end: false }].map(
+            {[...navItems, { to: "/membership", label: "Membership", end: false }].map(
               ({ to, label, end }) => (
                 <NavLink
                   key={to}
