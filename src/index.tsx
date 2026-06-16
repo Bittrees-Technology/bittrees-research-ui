@@ -11,6 +11,7 @@ import { LayoutProvider } from "@/hooks/useLayoutContext.tsx";
 
 import Home from "./pages/Home";
 import ResearchPage from "./pages/ResearchPage";
+import PostPage from "./pages/PostPage";
 import ChatPage from "./pages/ChatPage";
 import RoadmapPage from "./pages/RoadmapPage";
 import StructurePage from "./pages/StructurePage";
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       { path: "research", element: <ResearchPage /> },
+      { path: "research/:slug", element: <PostPage /> },
       { path: "chat", element: <ChatPage /> },
       { path: "bnote", element: <MintBNOTEPage /> },
       { path: "bit", element: <MintBITPage /> },

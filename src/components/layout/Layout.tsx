@@ -12,7 +12,15 @@ export default function Layout() {
   const { hasValidMembership, isLoading, refetch } = useMembershipStatus();
   const [justJoined, setJustJoined] = useState(false);
 
-  const member = hasValidMembership || justJoined;
+  // DEV-only preview bypass for screenshotting the members area without a
+  // member wallet. `import.meta.env.DEV` is false in production builds, so this
+  // whole branch is dead code (tree-shaken) when deployed.
+  const devPreview =
+    import.meta.env.DEV &&
+    typeof localStorage !== "undefined" &&
+    localStorage.getItem("br_preview") === "1";
+
+  const member = hasValidMembership || justJoined || devPreview;
 
   // Still resolving wallet / membership for a connected user.
   if (isConnecting || (isConnected && isLoading && !justJoined)) {
