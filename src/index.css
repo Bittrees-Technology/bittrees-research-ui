@@ -427,3 +427,29 @@ h2, h3, h4, h5, h6 {
 }
 .prose-research h2 + p,
 .prose-research h3 + p { margin-top: 0.5rem; }
+
+/* ============================================================
+   Membership card — the member NFT in an elegant gold frame
+   ============================================================ */
+.member-frame {
+  display: inline-block;
+  padding: 12px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #B8860B 0%, #F6E27A 22%, #C9A227 50%, #F6E27A 78%, #9E7409 100%);
+  box-shadow: 0 10px 30px rgba(26, 22, 10, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  max-width: 100%;
+}
+.member-frame-inner {
+  padding: 7px;
+  background: #fffdf7;
+  border: 1px solid rgba(120, 90, 20, 0.35);
+  border-radius: 3px;
+}
+.member-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 2px;
+}
+.member-frame--sm { padding: 8px; border-radius: 5px; }
+.member-frame--sm .member-frame-inner { padding: 5px; }

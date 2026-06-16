@@ -25,6 +25,7 @@ const WRAP_INFO = utf8ToBytes("bittrees-app-wrap-v1");
 
 export interface Application {
   name: string;
+  roles: string[];
   expertise: string[];
   region: string[];
   languages: string[];

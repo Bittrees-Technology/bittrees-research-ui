@@ -2,26 +2,27 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import { BittreesMark } from "@/components/Brand";
 import { MembershipMint } from "@/components/membership/MembershipMint";
+import { MembershipCard } from "@/components/membership/MembershipCard";
+import { useMembershipStatus } from "@/hooks/membership/useMembershipStatus";
 import { FAMILY_LINKS } from "@/lib/links";
 
 /**
- * Full-screen membership gate. Everything on Bittrees Research is members-only;
- * non-members see this branded join screen — connect, then mint a membership.
- * On a successful mint, onJoined() flips the app into the members area
- * immediately (ahead of NFT indexing).
+ * Full-screen membership gate. Everything on Bittrees Research is members-only.
+ * On connect we check the wallet and route to the right action — enter (valid,
+ * handled by Layout), mint a new membership (none), or extend an expired one.
+ * A successful mint flips the app into the members area via onJoined().
  */
 export function MembershipGate({ onJoined }: { onJoined: () => void }) {
   const { isConnected } = useAccount();
+  const { isLoading, tokens } = useMembershipStatus();
+
+  const hasExpired = tokens.length > 0; // reaching the gate while holding tokens ⇒ all expired
+  const mode: "join" | "renew" = hasExpired ? "renew" : "join";
 
   return (
     <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", background: "var(--color-bg)" }}>
       {/* Minimal top bar */}
-      <header
-        style={{
-          borderBottom: "1px solid var(--color-border)",
-          background: "#fff",
-        }}
-      >
+      <header style={{ borderBottom: "1px solid var(--color-border)", background: "#fff" }}>
         <div
           style={{
             maxWidth: "1000px",
@@ -34,14 +35,7 @@ export function MembershipGate({ onJoined }: { onJoined: () => void }) {
           }}
         >
           <BittreesMark />
-          <span
-            style={{
-              fontFamily: "var(--font-logo)",
-              fontWeight: 700,
-              fontSize: "1.1rem",
-              letterSpacing: "-0.01em",
-            }}
-          >
+          <span style={{ fontFamily: "var(--font-logo)", fontWeight: 700, fontSize: "1.1rem", letterSpacing: "-0.01em" }}>
             Bittrees Research
           </span>
           <div style={{ marginLeft: "auto" }}>
@@ -53,74 +47,76 @@ export function MembershipGate({ onJoined }: { onJoined: () => void }) {
       <main
         style={{
           flex: 1,
-          maxWidth: "1000px",
           width: "100%",
+          maxWidth: "760px",
           margin: "0 auto",
           padding: "3.5rem 1.5rem",
-          display: "grid",
-          gap: "2.5rem",
-          gridTemplateColumns: "1fr",
-          alignItems: "start",
+          textAlign: "center",
         }}
       >
-        {/* Hero */}
-        <section>
-          <span className="text-label" style={{ color: "var(--color-primary-hover)" }}>
-            Members only
-          </span>
-          <h1 className="text-display" style={{ fontSize: "2.5rem", margin: "0.5rem 0 1rem" }}>
-            A research foundation,
-            <br />
-            built on Bitcoin.
-          </h1>
-          <p style={{ fontSize: "1.0625rem", color: "var(--color-ink-muted)", maxWidth: "46ch", lineHeight: 1.6 }}>
-            Bittrees Research studies emerging technology, systems innovation, and the
-            institutions of a more equitable digital future. Membership unlocks original
-            research, Bitcoin-backed preferred stock (BNOTE), the Bittrees Index Token
-            (BIT), and a private members community.
+        <span className="text-label" style={{ color: "var(--color-primary-hover)" }}>
+          Members only
+        </span>
+        <h1 className="text-display" style={{ fontSize: "2.4rem", margin: "0.6rem 0 1.5rem" }}>
+          Bittrees Research
+        </h1>
+
+        <div style={{ maxWidth: "62ch", margin: "0 auto", display: "flex", flexDirection: "column", gap: "1rem", textAlign: "left" }}>
+          <p style={{ fontSize: "1.0rem", color: "var(--color-ink-muted)", lineHeight: 1.7, margin: 0 }}>
+            Bittrees Research is an organization focused on promoting research in emerging
+            technologies, systems innovation, and related fields with a goal of creating new
+            knowledge and tools whilst fostering innovation with a positive impact in the
+            metaverse and beyond.
           </p>
-
-          <ul
-            style={{
-              listStyle: "none",
-              padding: 0,
-              margin: "1.75rem 0 0",
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "0.5rem",
-            }}
-          >
-            <li className="badge badge-member">Original research</li>
-            <li className="badge badge-preferred">Preferred stock · BNOTE</li>
-            <li className="badge badge-index">Index token · BIT</li>
-            <li className="badge badge-researcher">Members community</li>
-          </ul>
-        </section>
-
-        {/* Join card */}
-        <section className="card" style={{ padding: "1.75rem", maxWidth: "440px" }}>
-          <h2 className="text-title" style={{ marginBottom: "0.35rem" }}>
-            Join Bittrees Research
-          </h2>
-          <p style={{ fontSize: "0.875rem", color: "var(--color-ink-muted)", marginBottom: "1.25rem" }}>
-            Membership is an on-chain pass (an ERC-1155 token on Ethereum) valid for 360
-            days. Connect your wallet to begin.
+          <p style={{ fontSize: "1.0rem", color: "var(--color-ink-muted)", lineHeight: 1.7, margin: 0 }}>
+            By studying a wide range of topics, Bittrees Research generates insights that can
+            inform policy, strategy, and decision-making processes, helping to advance society
+            towards a better future.
           </p>
+          <p style={{ fontSize: "1.0rem", color: "var(--color-ink-muted)", lineHeight: 1.7, margin: 0 }}>
+            Bittrees Research places a strong emphasis on historical and contextual relevance,
+            recognizing the importance of understanding past successes and failures in order to
+            develop effective solutions for a more just and equitable society. Join the
+            conversation on how emerging technologies and systems innovation can help create a
+            more equitable and sustainable world.
+          </p>
+        </div>
 
+        {/* Membership card */}
+        <div style={{ margin: "2.5rem auto 0", maxWidth: "440px" }}>
+          <MembershipCard />
+        </div>
+
+        {/* Action */}
+        <div className="card" style={{ margin: "1.75rem auto 0", maxWidth: "440px", textAlign: "left" }}>
           {!isConnected ? (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", alignItems: "flex-start" }}>
-              <ConnectButton chainStatus="icon" showBalance={false} />
-              <p style={{ fontSize: "0.8rem", color: "var(--color-ink-dim)" }}>
-                Already a member? Connect and you'll go straight in.
+            <div style={{ textAlign: "center", display: "flex", flexDirection: "column", gap: "0.85rem", alignItems: "center" }}>
+              <h2 className="text-title">Connect to enter</h2>
+              <p style={{ fontSize: "0.875rem", color: "var(--color-ink-muted)", margin: 0 }}>
+                Connect your wallet — members go straight in; everyone else can join.
               </p>
+              <ConnectButton chainStatus="icon" showBalance={false} />
             </div>
+          ) : isLoading ? (
+            <p style={{ textAlign: "center", fontSize: "0.9rem", color: "var(--color-ink-muted)", margin: 0 }}>
+              Checking your membership&hellip;
+            </p>
           ) : (
-            <MembershipMint mode="join" onMinted={onJoined} />
+            <>
+              <h2 className="text-title" style={{ marginBottom: "0.35rem" }}>
+                {mode === "renew" ? "Your membership has expired" : "Join Bittrees Research"}
+              </h2>
+              <p style={{ fontSize: "0.875rem", color: "var(--color-ink-muted)", marginBottom: "1.1rem" }}>
+                {mode === "renew"
+                  ? "Extend your membership to return to the members area."
+                  : "Membership is an on-chain pass (an ERC-1155 token on Ethereum) valid for 360 days."}
+              </p>
+              <MembershipMint mode={mode} onMinted={onJoined} />
+            </>
           )}
-        </section>
+        </div>
       </main>
 
-      {/* Family footer */}
       <footer style={{ borderTop: "1px solid var(--color-border)", background: "#fff" }}>
         <div
           style={{
@@ -131,15 +127,12 @@ export function MembershipGate({ onJoined }: { onJoined: () => void }) {
             gap: "1.5rem",
             flexWrap: "wrap",
             alignItems: "center",
+            justifyContent: "center",
           }}
         >
           <span className="text-label">Bittrees</span>
           {FAMILY_LINKS.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              style={{ fontSize: "0.8rem", color: "var(--color-ink-muted)", textDecoration: "none" }}
-            >
+            <a key={l.href} href={l.href} style={{ fontSize: "0.8rem", color: "var(--color-ink-muted)", textDecoration: "none" }}>
               {l.label}
             </a>
           ))}

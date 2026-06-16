@@ -13,8 +13,9 @@ import { LayoutProvider } from "@/hooks/useLayoutContext.tsx";
 import Home from "./pages/Home";
 import ResearchPage from "./pages/ResearchPage";
 import PostPage from "./pages/PostPage";
+import Forum from "./pages/Forum";
+import ForumThread from "./pages/ForumThread";
 import ChatPage from "./pages/ChatPage";
-import RoadmapPage from "./pages/RoadmapPage";
 import StructurePage from "./pages/StructurePage";
 import MembershipPage from "./pages/MembershipPage";
 import { MintBNOTEPage } from "./pages/membersPages/MintBNOTEPage.tsx";
@@ -30,10 +31,11 @@ const router = createBrowserRouter([
       { index: true, element: <Home /> },
       { path: "research", element: <ResearchPage /> },
       { path: "research/:slug", element: <PostPage /> },
+      { path: "forum", element: <Forum /> },
+      { path: "forum/:id", element: <ForumThread /> },
       { path: "chat", element: <ChatPage /> },
       { path: "bnote", element: <MintBNOTEPage /> },
       { path: "bit", element: <MintBITPage /> },
-      { path: "roadmap", element: <RoadmapPage /> },
       { path: "structure", element: <StructurePage /> },
       { path: "membership", element: <MembershipPage /> },
       { path: "vision", element: <VisionStatementPage /> },
@@ -46,6 +48,7 @@ const router = createBrowserRouter([
       { path: "mint-bit", element: <Navigate to="/bit" replace /> },
       { path: "mint-brgov", element: <Navigate to="/bnote" replace /> },
       { path: "members", element: <Navigate to="/" replace /> },
+      { path: "roadmap", element: <Navigate to="/" replace /> },
       { path: "codeofethics", element: <Navigate to="/ethics" replace /> },
       { path: "visionstatement", element: <Navigate to="/vision" replace /> },
       { path: "*", element: <Navigate to="/" replace /> },

@@ -31,7 +31,7 @@ export default defineConfig({
   // lazily (dynamically) imported from the Messenger page, so it never weighs on
   // the rest of the app.
   optimizeDeps: {
-    include: ["buffer", "@xmtp/proto"],
+    include: ["buffer"],
     exclude: ["@xmtp/browser-sdk", "@xmtp/wasm-bindings"],
     esbuildOptions: { target: "esnext" },
   },

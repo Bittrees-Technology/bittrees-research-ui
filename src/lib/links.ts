@@ -26,3 +26,38 @@ export const EXPLORERS = {
   bnoteBase: "https://basescan.org/address/0xf1AAfFc982B5F553a730a9eC134715a547f1fe80",
   bit: "https://etherscan.io/token/0x57A447E4d5e18A9423408C365963A73F08B9d18C",
 } as const;
+
+/** Internal routes referenced across the chat/forum components. */
+export const ROUTES = {
+  overview: "/",
+  forum: "/forum",
+  chat: "/chat",
+  membership: "/membership",
+  bnote: "/bnote",
+  bit: "/bit",
+} as const;
+
+/** 0x12… abcd short form. */
+export function shortAddress(a?: string): string {
+  return a ? `${a.slice(0, 6)}…${a.slice(-4)}` : "";
+}
+
+/** Compact human number ("1.2K", "3.4M"). */
+export function fmtNumber(n?: number | bigint): string {
+  const v = typeof n === "bigint" ? Number(n) : n ?? 0;
+  if (!isFinite(v)) return "0";
+  if (Math.abs(v) >= 1_000_000) return `${(v / 1_000_000).toFixed(1).replace(/\.0$/, "")}M`;
+  if (Math.abs(v) >= 1_000) return `${(v / 1_000).toFixed(1).replace(/\.0$/, "")}K`;
+  return String(Math.round(v));
+}
+
+/** "5m", "3h", "2d", or a date — relative time from a unix-seconds timestamp. */
+export function relativeTime(unixSec?: number): string {
+  if (!unixSec) return "";
+  const diff = Math.floor(Date.now() / 1000) - unixSec;
+  if (diff < 60) return "just now";
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  if (diff < 7 * 86400) return `${Math.floor(diff / 86400)}d ago`;
+  return new Date(unixSec * 1000).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+}

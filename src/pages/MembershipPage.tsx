@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { MembershipMint } from "@/components/membership/MembershipMint";
+import { MembershipCard } from "@/components/membership/MembershipCard";
 import { useMembershipStatus } from "@/hooks/membership/useMembershipStatus";
 import { EXPLORERS } from "@/lib/links";
 
@@ -24,7 +25,14 @@ export default function MembershipPage() {
         intro="Membership is an on-chain pass — an ERC-1155 token on Ethereum, valid for 360 days. Renewing mints a fresh term; you keep access as long as any token is unexpired."
       />
 
-      <div style={{ display: "grid", gap: "1.5rem", gridTemplateColumns: "1fr", maxWidth: "640px" }}>
+      <div style={{ display: "grid", gap: "1.5rem", gridTemplateColumns: "1fr", maxWidth: "640px", margin: "0 auto" }}>
+        {/* Membership card */}
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div style={{ maxWidth: "420px", width: "100%" }}>
+            <MembershipCard />
+          </div>
+        </div>
+
         {/* Status */}
         <div className="card">
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>

@@ -5,12 +5,12 @@ import { BittreesMark } from "@/components/Brand";
 import { useMembershipStatus } from "@/hooks/membership/useMembershipStatus";
 
 const NAV = [
-  { to: "/", label: "Home", end: true },
+  { to: "/", label: "Overview", end: true },
   { to: "/research", label: "Research", end: false },
+  { to: "/forum", label: "Forum", end: false },
   { to: "/chat", label: "Chat", end: false },
   { to: "/bnote", label: "BNOTE", end: false },
   { to: "/bit", label: "BIT", end: false },
-  { to: "/roadmap", label: "Roadmap", end: false },
   { to: "/structure", label: "Structure", end: false },
 ];
 
