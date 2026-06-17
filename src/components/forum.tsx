@@ -75,17 +75,24 @@ export function PostCard({ post, linkToThread, replyCount }: { post: ForumPost; 
   return <div className="card">{inner}</div>;
 }
 
+const PROPOSAL_KINDS = ["Discussion", "Research proposal"] as const;
+type ProposalKind = (typeof PROPOSAL_KINDS)[number];
+
 /**
- * Wallet-signed composer. Any connected wallet may post (Base network);
- * BGOV holders get the shareholder chip. `refUID` set → reply mode (body only).
+ * Wallet-signed composer. `refUID` set → reply mode (body only). `proposal` set →
+ * member-proposal mode (adds a Discussion/Research-proposal type selector and tags
+ * the title). Otherwise it's a new top-level discussion (Executive-gated by the
+ * caller). BGOV holders get the shareholder chip.
  */
 export function Composer({
   refUID,
   community,
+  proposal,
   onPosted,
 }: {
   refUID?: `0x${string}`;
   community?: string;
+  proposal?: boolean;
   onPosted?: () => void;
 }) {
   const isReply = !!refUID;
@@ -98,6 +105,7 @@ export function Composer({
 
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [kind, setKind] = useState<ProposalKind>("Discussion");
   const [status, setStatus] = useState<"idle" | "posting" | "error">("idle");
   const [error, setError] = useState<string>();
 
@@ -114,10 +122,11 @@ export function Composer({
         await switchChainAsync({ chainId: base.id });
         wc = (await getWalletClient(wagmiConfig, { chainId: base.id })) ?? walletClient;
       }
+      const outTitle = isReply ? "" : proposal ? `[${kind}] ${title.trim()}` : title.trim();
       await publishPost({
         walletClient: wc,
         account: address,
-        title: isReply ? "" : title.trim(),
+        title: outTitle,
         body: body.trim(),
         refUID,
         community,
@@ -138,7 +147,9 @@ export function Composer({
   if (!isConnected) {
     return (
       <div className="card" style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-        <p style={{ ...dim, margin: 0 }}>{isReply ? "Connect a wallet to reply." : "Connect a wallet to start a discussion."}</p>
+        <p style={{ ...dim, margin: 0 }}>
+          {isReply ? "Connect a wallet to reply." : proposal ? "Connect a wallet to submit a proposal." : "Connect a wallet to start a discussion."}
+        </p>
         <ConnectButton chainStatus="none" showBalance={false} />
       </div>
     );
@@ -147,9 +158,27 @@ export function Composer({
   return (
     <div className="card" style={{ display: "flex", flexDirection: "column", gap: "0.7rem" }}>
       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-        <p className="text-label" style={{ margin: 0 }}>{isReply ? "Reply" : "New discussion"}</p>
+        <p className="text-label" style={{ margin: 0 }}>{isReply ? "Reply" : proposal ? "Propose a topic" : "New discussion"}</p>
         <UserBadges address={address} />
       </div>
+      {proposal && (
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          {PROPOSAL_KINDS.map((k) => {
+            const active = kind === k;
+            return (
+              <button
+                key={k}
+                type="button"
+                onClick={() => setKind(k)}
+                className={active ? "btn-primary" : "btn-ghost"}
+                style={{ fontSize: "0.75rem", padding: "0.3rem 0.8rem", opacity: active ? 1 : 0.8 }}
+              >
+                {k}
+              </button>
+            );
+          })}
+        </div>
+      )}
       {!isReply && (
         <input
           value={title}
@@ -162,7 +191,7 @@ export function Composer({
       <textarea
         value={body}
         onChange={(e) => setBody(e.target.value)}
-        placeholder={isReply ? "Write a reply…" : "What would you like to discuss?"}
+        placeholder={isReply ? "Write a reply…" : proposal ? (kind === "Research proposal" ? "Outline the research proposal — question, scope, and why it matters." : "Describe the discussion you'd like to see started.") : "What would you like to discuss?"}
         rows={isReply ? 3 : 5}
         style={{ ...inputStyle, resize: "vertical", lineHeight: 1.6 }}
       />
@@ -173,10 +202,10 @@ export function Composer({
           onClick={submit}
           style={{ opacity: !canPost || status === "posting" ? 0.55 : 1 }}
         >
-          {status === "posting" ? "Confirm in wallet…" : isReply ? "Post reply" : "Post discussion"}
+          {status === "posting" ? "Confirm in wallet…" : isReply ? "Post reply" : proposal ? "Submit proposal" : "Post discussion"}
         </button>
         <span style={dim}>
-          Signed by your wallet · on-chain on Base{schemaReady === false ? " · first post also registers the forum (one-time)" : ""}
+          {proposal ? "Submitted to the Executives for review · " : ""}Signed by your wallet · on-chain on Base{schemaReady === false ? " · first post also registers the forum (one-time)" : ""}
         </span>
       </div>
       {status === "error" && (

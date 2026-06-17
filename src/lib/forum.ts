@@ -35,6 +35,9 @@ export const RESOLVER: Address = "0x0000000000000000000000000000000000000000";
 export const REVOCABLE = true;
 export const FORUM_COMMUNITY = "bittrees-research";
 export const CONTRIB_COMMUNITY = "bittrees-research-contributors";
+/** Member-submitted proposals (discussion ideas / research proposals). Any member
+ *  may post here; Executives review and can promote one into a real discussion. */
+export const PROPOSAL_COMMUNITY = "bittrees-research-proposals";
 export const EASSCAN_GQL = "https://base.easscan.org/graphql";
 export const EASSCAN_VIEW = "https://base.easscan.org/attestation/view/";
 
