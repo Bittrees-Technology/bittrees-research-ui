@@ -347,6 +347,14 @@ h2, h3, h4, h5, h6 {
     display: none;
   }
 }
+/* Mobile: shrink the wordmark so it doesn't crowd the connect button + menu
+   against the screen edge. The tree mark always stays. */
+@media (max-width: 640px) {
+  .brand-wordmark { font-size: 1rem !important; }
+}
+@media (max-width: 400px) {
+  .brand-wordmark { font-size: 0.92rem !important; letter-spacing: -0.02em !important; }
+}
 
 /* ============================================================
    RainbowKit theme overrides

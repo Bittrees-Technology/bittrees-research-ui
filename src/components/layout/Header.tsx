@@ -77,6 +77,7 @@ export default function Header() {
         >
           <BittreesMark />
           <span
+            className="brand-wordmark"
             style={{
               fontFamily: "var(--font-logo)",
               fontWeight: 700,
@@ -125,7 +126,7 @@ export default function Header() {
           <span className="nav-desktop">
             <MemberChip />
           </span>
-          <ConnectButton chainStatus="icon" showBalance={false} accountStatus="avatar" />
+          <ConnectButton label="Connect" chainStatus="icon" showBalance={false} accountStatus="avatar" />
           <button
             className="nav-mobile-toggle"
             onClick={() => setMobileOpen((v) => !v)}
