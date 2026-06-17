@@ -15,7 +15,7 @@ import ResearchPage from "./pages/ResearchPage";
 import PostPage from "./pages/PostPage";
 import Forum from "./pages/Forum";
 import ForumThread from "./pages/ForumThread";
-import ChatPage from "./pages/ChatPage";
+import Messenger from "./pages/Messenger";
 import StructurePage from "./pages/StructurePage";
 import MembershipPage from "./pages/MembershipPage";
 import Admin from "./pages/Admin";
@@ -34,7 +34,7 @@ const router = createBrowserRouter([
       { path: "research/:slug", element: <PostPage /> },
       { path: "forum", element: <Forum /> },
       { path: "forum/:id", element: <ForumThread /> },
-      { path: "chat", element: <ChatPage /> },
+      { path: "chat", element: <Messenger /> },
       { path: "bnote", element: <MintBNOTEPage /> },
       { path: "bit", element: <MintBITPage /> },
       { path: "structure", element: <StructurePage /> },
