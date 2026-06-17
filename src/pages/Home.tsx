@@ -66,7 +66,6 @@ export default function Home() {
       <section style={{ maxWidth: "720px", margin: "0 auto", width: "100%" }}>
         <div style={{ textAlign: "center", marginBottom: "1.25rem" }}>
           <span className="text-label" style={{ color: "var(--color-primary-hover)" }}>Our vision</span>
-          <h2 className="text-display" style={{ fontSize: "1.7rem", margin: "0.3rem 0 0" }}>Why we exist</h2>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {VISION.map((p, i) => (
