@@ -1,4 +1,3 @@
-import { Link } from "react-router";
 import { FAMILY_LINKS, RESEARCH_LINKS } from "@/lib/links";
 
 const linkStyle: React.CSSProperties = {
@@ -9,32 +8,14 @@ const linkStyle: React.CSSProperties = {
 
 const COLUMNS = [
   {
-    title: "Explore",
-    internal: true,
-    links: [
-      { label: "Overview", href: "/" },
-      { label: "Research", href: "/research" },
-      { label: "Forum", href: "/forum" },
-      { label: "Members Chat", href: "/chat" },
-      { label: "BNOTE", href: "/bnote" },
-      { label: "BIT", href: "/bit" },
-      { label: "Structure", href: "/structure" },
-      { label: "Membership", href: "/membership" },
-    ],
-  },
-  {
     title: "Bittrees",
-    internal: false,
     links: FAMILY_LINKS.map((l) => ({ label: l.label, href: l.href })),
   },
   {
     title: "Community",
-    internal: false,
     links: [
       { label: "Twitter / X", href: RESEARCH_LINKS.twitter },
       { label: "Paragraph", href: RESEARCH_LINKS.paragraph },
-      { label: "Snapshot", href: RESEARCH_LINKS.snapshot },
-      { label: "Governance Forum", href: RESEARCH_LINKS.forum },
     ],
   },
 ];
@@ -63,17 +44,11 @@ export default function Footer() {
         {COLUMNS.map((col) => (
           <nav key={col.title} style={{ display: "flex", flexDirection: "column", gap: "0.55rem", alignItems: "center", textAlign: "center" }}>
             <span className="text-label">{col.title}</span>
-            {col.links.map((l) =>
-              col.internal ? (
-                <Link key={l.label} to={l.href} style={linkStyle}>
-                  {l.label}
-                </Link>
-              ) : (
-                <a key={l.label} href={l.href} target="_blank" rel="noreferrer" style={linkStyle}>
-                  {l.label}
-                </a>
-              )
-            )}
+            {col.links.map((l) => (
+              <a key={l.label} href={l.href} target="_blank" rel="noreferrer" style={linkStyle}>
+                {l.label}
+              </a>
+            ))}
           </nav>
         ))}
       </div>
