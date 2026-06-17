@@ -35,6 +35,23 @@ export function getCachedSig(addr?: string): string | null {
   if (!addr) return null;
   try { return localStorage.getItem(sigKey(addr)); } catch { return null; }
 }
+
+/**
+ * Signature-free probe: does the store already hold an (encrypted) blob for this
+ * wallet? `source: "gov"` means it carried over from gov.bittrees.org. Lets the UI
+ * offer "restore your messages" before asking the user to sign.
+ */
+export async function hasRemoteSync(addr?: string): Promise<{ exists: boolean; source?: string }> {
+  if (!addr) return { exists: false };
+  try {
+    const r = await fetch(`${SYNC_URL}?address=${addr}`);
+    if (!r.ok) return { exists: false };
+    const j = await r.json();
+    return { exists: !!j?.blob, source: j?.source };
+  } catch {
+    return { exists: false };
+  }
+}
 export function isSyncEnabled(addr?: string): boolean {
   return !!getCachedSig(addr);
 }

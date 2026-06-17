@@ -20,7 +20,7 @@ import {
 import { addContact } from "../lib/contacts";
 import { ensAvailable, ensYearPriceWei, ensLabel, ensAppUrl, ETH_REGISTRAR_CONTROLLER, REGISTRAR_WRITE_ABI, PUBLIC_RESOLVER, REGISTRATION_DURATION, ensRegisterData, ensMinCommitmentAge } from "../lib/ens";
 import { useSavedMessages, addSavedMessage, deleteSavedMessage } from "../lib/savedMessages";
-import { useUserSync, isSyncEnabled, enableSync, disableSync } from "../lib/userSync";
+import { useUserSync, isSyncEnabled, enableSync, disableSync, hasRemoteSync } from "../lib/userSync";
 import {
   BUILTIN_ROOMS,
   joinRoom,
@@ -108,6 +108,10 @@ function DirectMessages() {
         <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.9rem", color: "var(--color-ink-muted)", lineHeight: 1.6, margin: 0 }}>
           Turning on DMs asks your wallet for a one-time signature to create your encrypted XMTP
           inbox. No gas, no transaction.
+        </p>
+        <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.8rem", color: "var(--color-ink-dim)", lineHeight: 1.55, margin: 0 }}>
+          Already use Bittrees messaging on another app with this wallet? After enabling, open
+          <strong> Settings → Sync across devices</strong> to restore your saved messages and preferences.
         </p>
         <div>
           <button className="btn-primary" onClick={xmtp.enable} disabled={xmtp.status === "enabling"} style={{ opacity: xmtp.status === "enabling" ? 0.6 : 1 }}>
@@ -512,7 +516,17 @@ function SyncSection({ owner }: { owner?: string }) {
   const [, force] = useState(0);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string>();
+  const [remote, setRemote] = useState<{ exists: boolean; source?: string }>({ exists: false });
   const enabled = isSyncEnabled(owner);
+
+  // Probe (no signature) for an existing blob so we can offer to restore it — including
+  // one carried over from gov.bittrees.org for this same wallet.
+  useEffect(() => {
+    let alive = true;
+    if (!owner || enabled) { setRemote({ exists: false }); return; }
+    hasRemoteSync(owner).then((r) => { if (alive) setRemote(r); }).catch(() => {});
+    return () => { alive = false; };
+  }, [owner, enabled]);
 
   async function turnOn() {
     if (!walletClient || !owner) return;
@@ -527,6 +541,7 @@ function SyncSection({ owner }: { owner?: string }) {
     }
   }
   function turnOff() { if (owner) { disableSync(owner); force((n) => n + 1); } }
+  const canRestore = !enabled && remote.exists;
 
   return (
     <div>
@@ -536,6 +551,8 @@ function SyncSection({ owner }: { owner?: string }) {
           <span style={{ display: "block", fontFamily: "var(--font-sans)", fontSize: "0.78rem", color: "var(--color-ink-muted)", lineHeight: 1.5 }}>
             {enabled
               ? "On — your Saved Messages and preferences are encrypted to this wallet and synced. The same wallet on another device sees them after you enable sync there."
+              : canRestore
+              ? "Saved messages and preferences were found for this wallet on Bittrees. Turn on to restore them here (one signature, no gas) — they stay encrypted to your wallet."
               : "Off — stored only on this device. Turn on to encrypt them to your wallet and sync across devices (one signature, no gas)."}
           </span>
         </span>
@@ -544,9 +561,15 @@ function SyncSection({ owner }: { owner?: string }) {
         ) : enabled ? (
           <button onClick={turnOff} style={{ ...settingsBtn, flexShrink: 0 }}>Turn off</button>
         ) : (
-          <button className="btn-primary" disabled={busy || !walletClient} onClick={turnOn} style={{ padding: "0.4rem 0.8rem", fontSize: "0.82rem", opacity: busy || !walletClient ? 0.6 : 1, flexShrink: 0 }}>{busy ? "Confirm in wallet…" : "Turn on"}</button>
+          <button className="btn-primary" disabled={busy || !walletClient} onClick={turnOn} style={{ padding: "0.4rem 0.8rem", fontSize: "0.82rem", opacity: busy || !walletClient ? 0.6 : 1, flexShrink: 0 }}>{busy ? "Confirm in wallet…" : canRestore ? "Turn on & restore" : "Turn on"}</button>
         )}
       </div>
+      {canRestore && (
+        <p style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", margin: "0.4rem 0 0", fontSize: "0.72rem" }}>
+          <strong style={{ color: "var(--color-secondary)" }}>✓ Found your messages</strong>
+          <span style={dim}>{remote.source === "gov" ? "· carried over from gov.bittrees.org" : "· ready to restore"}</span>
+        </p>
+      )}
       {enabled && <p style={{ display: "inline-flex", alignItems: "center", gap: "0.3rem", margin: "0.4rem 0 0", fontSize: "0.72rem" }}><strong style={{ color: "var(--color-secondary)" }}>✓ Syncing</strong> <span style={dim}>· encrypted to your wallet</span></p>}
       {err && <p role="alert" style={{ ...dim, color: "var(--color-ink)", fontSize: "0.72rem", margin: "0.35rem 0 0" }}>{err}</p>}
     </div>

@@ -14,6 +14,12 @@ import { recoverMessageAddress, getAddress } from "viem";
 const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const PREFIX = "bittrees:research:usersync:"; // + <addrLower> → { blob, updatedAt }
+// gov.bittrees.org writes the SAME encrypted blob (identical SYNC_MESSAGE + cipher)
+// under this prefix in the SAME Upstash store. When a wallet has no research blob yet,
+// we fall back to its gov blob so a member's Saved Messages + preferences carry over —
+// the same wallet re-derives the same key and decrypts it client-side. Read-only: the
+// first push from research writes to PREFIX, after which research owns its own copy.
+const GOV_PREFIX = "bittrees:usersync:";
 const MAX_BLOB = 400_000; // ~400 KB ciphertext cap
 
 // MUST match SYNC_MESSAGE in src/lib/userSync.ts exactly.
@@ -49,7 +55,14 @@ export default async function handler(req, res) {
     if (req.method === "GET") {
       const address = String(req.query.address || "");
       if (!isAddr(address)) return res.status(400).json({ error: "bad address" });
-      const data = await readJson(PREFIX + address.toLowerCase(), null);
+      const addr = address.toLowerCase();
+      let data = await readJson(PREFIX + addr, null);
+      // Carry-over: no research blob yet → fall back to this wallet's gov blob (same
+      // store, same encryption). `source` lets the client note it came from gov.
+      if (!data || !data.blob) {
+        const gov = await readJson(GOV_PREFIX + addr, null);
+        if (gov && gov.blob) return res.status(200).json({ ...gov, source: "gov" });
+      }
       return res.status(200).json(data || { blob: null, updatedAt: 0 });
     }
 
