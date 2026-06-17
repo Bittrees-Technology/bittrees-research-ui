@@ -41,8 +41,8 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { address } = useAccount();
   const isAdmin = useAdminAccess(address) !== "none";
-  // Admin sits far-left when present.
-  const navItems = isAdmin ? [{ to: "/admin", label: "Admin", end: false }, ...NAV] : NAV;
+  // Admin sits far-right (after Structure) when present.
+  const navItems = isAdmin ? [...NAV, { to: "/admin", label: "Admin", end: false }] : NAV;
 
   return (
     <header

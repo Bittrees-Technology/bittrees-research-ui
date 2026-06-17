@@ -1,11 +1,43 @@
-import { BittreesMark } from "@/components/Brand";
+import { Link } from "react-router";
 import { FAMILY_LINKS, RESEARCH_LINKS } from "@/lib/links";
 
 const linkStyle: React.CSSProperties = {
-  fontSize: "0.8rem",
+  fontSize: "0.82rem",
   color: "var(--color-ink-muted)",
   textDecoration: "none",
 };
+
+const COLUMNS = [
+  {
+    title: "Explore",
+    internal: true,
+    links: [
+      { label: "Overview", href: "/" },
+      { label: "Research", href: "/research" },
+      { label: "Forum", href: "/forum" },
+      { label: "Members Chat", href: "/chat" },
+      { label: "BNOTE", href: "/bnote" },
+      { label: "BIT", href: "/bit" },
+      { label: "Structure", href: "/structure" },
+      { label: "Membership", href: "/membership" },
+    ],
+  },
+  {
+    title: "Bittrees",
+    internal: false,
+    links: FAMILY_LINKS.map((l) => ({ label: l.label, href: l.href })),
+  },
+  {
+    title: "Community",
+    internal: false,
+    links: [
+      { label: "Twitter / X", href: RESEARCH_LINKS.twitter },
+      { label: "Paragraph", href: RESEARCH_LINKS.paragraph },
+      { label: "Snapshot", href: RESEARCH_LINKS.snapshot },
+      { label: "Governance Forum", href: RESEARCH_LINKS.forum },
+    ],
+  },
+];
 
 export default function Footer() {
   return (
@@ -21,88 +53,37 @@ export default function Footer() {
         style={{
           maxWidth: "1140px",
           margin: "0 auto",
-          padding: "2rem 1.5rem",
+          padding: "2.75rem 1.5rem",
           display: "flex",
+          gap: "4rem",
           flexWrap: "wrap",
-          gap: "2rem",
-          justifyContent: "space-between",
+          justifyContent: "center",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
-          <BittreesMark size={26} />
-          <span
-            style={{
-              fontFamily: "var(--font-logo)",
-              fontWeight: 700,
-              fontSize: "1rem",
-              color: "var(--color-ink)",
-            }}
-          >
-            Bittrees Research
-          </span>
-        </div>
-
-        <div style={{ display: "flex", gap: "2.5rem", flexWrap: "wrap" }}>
-          <FooterCol title="Bittrees">
-            {FAMILY_LINKS.map((l) => (
-              <a key={l.href} href={l.href} style={linkStyle}>
-                {l.label}
-              </a>
-            ))}
-          </FooterCol>
-          <FooterCol title="Community">
-            <a href={RESEARCH_LINKS.snapshot} style={linkStyle} target="_blank" rel="noreferrer">
-              Snapshot
-            </a>
-            <a href={RESEARCH_LINKS.forum} style={linkStyle} target="_blank" rel="noreferrer">
-              Forum
-            </a>
-            <a href={RESEARCH_LINKS.twitter} style={linkStyle} target="_blank" rel="noreferrer">
-              Twitter
-            </a>
-            <a href={RESEARCH_LINKS.paragraph} style={linkStyle} target="_blank" rel="noreferrer">
-              Paragraph
-            </a>
-          </FooterCol>
-        </div>
+        {COLUMNS.map((col) => (
+          <nav key={col.title} style={{ display: "flex", flexDirection: "column", gap: "0.55rem", alignItems: "center", textAlign: "center" }}>
+            <span className="text-label">{col.title}</span>
+            {col.links.map((l) =>
+              col.internal ? (
+                <Link key={l.label} to={l.href} style={linkStyle}>
+                  {l.label}
+                </Link>
+              ) : (
+                <a key={l.label} href={l.href} target="_blank" rel="noreferrer" style={linkStyle}>
+                  {l.label}
+                </a>
+              )
+            )}
+          </nav>
+        ))}
       </div>
 
-      <div
-        style={{
-          borderTop: "1px solid var(--color-border-light)",
-          maxWidth: "1140px",
-          margin: "0 auto",
-          padding: "0.9rem 1.5rem",
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-between",
-          gap: "0.5rem",
-        }}
-      >
-        <p
-          style={{
-            fontSize: "0.72rem",
-            color: "var(--color-ink-dim)",
-            fontFamily: "var(--font-serif)",
-            margin: 0,
-          }}
-        >
-          Members-only research foundation &middot; informational only — not investment,
-          legal, or tax advice, and not an offer to sell any security.
-        </p>
-        <p style={{ fontSize: "0.72rem", color: "var(--color-ink-dim)", margin: 0, whiteSpace: "nowrap" }}>
-          &copy; {new Date().getFullYear()} Bittrees Research
+      <div style={{ borderTop: "1px solid var(--color-border-light)", padding: "1rem 1.5rem", textAlign: "center" }}>
+        <p style={{ fontSize: "0.72rem", color: "var(--color-ink-dim)", margin: 0, lineHeight: 1.5 }}>
+          Members‑only research foundation · informational only — not investment, legal, or tax advice,
+          and not an offer to sell any security. &copy; {new Date().getFullYear()} Bittrees Research
         </p>
       </div>
     </footer>
-  );
-}
-
-function FooterCol({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "0.45rem" }}>
-      <span className="text-label">{title}</span>
-      {children}
-    </div>
   );
 }
