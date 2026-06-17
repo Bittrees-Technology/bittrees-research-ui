@@ -7,7 +7,7 @@ export function MintBNOTEPage() {
       <PageHeader
         label="Preferred stock"
         title="BNOTE"
-        intro="Bittrees Research preferred stock — the foundation's Bitcoin-denominated capital intake. Acquire BNOTE, then convert it to the Index Token (BIT)."
+        intro="Bittrees Research Preferred Stock"
       />
       <div style={{ display: "flex", justifyContent: "center", marginBottom: "1.75rem" }}>
         <img

@@ -1,11 +1,5 @@
 import { PageHeader } from "@/components/PageHeader";
-import {
-  TOKEN_STACK,
-  ORG_ARMS,
-  CAPITAL_FLOW,
-  GOVERNANCE,
-  shortAddr,
-} from "@/lib/research";
+import { TOKEN_STACK, ORG_ARMS, shortAddr } from "@/lib/research";
 
 export default function StructurePage() {
   return (
@@ -13,7 +7,7 @@ export default function StructurePage() {
       <PageHeader
         label="Structure"
         title="Structure"
-        intro="How Bittrees Research is organized — where the foundation sits, the on-chain token stack, the flow of capital, and how it's governed."
+        intro="How Bittrees Research is organized — where the foundation sits and the on-chain token stack."
       />
 
       {/* Where Research sits */}
@@ -95,67 +89,6 @@ export default function StructurePage() {
               ))}
             </tbody>
           </table>
-        </div>
-      </section>
-
-      {/* Capital flow */}
-      <section>
-        <h2 className="text-title" style={{ marginBottom: "1rem" }}>
-          Flow of capital
-        </h2>
-        <div style={{ display: "flex", flexWrap: "wrap", alignItems: "stretch", gap: "0.5rem" }}>
-          {CAPITAL_FLOW.map((s, i) => (
-            <div key={s.step} style={{ display: "flex", alignItems: "stretch", gap: "0.5rem", flex: "1 1 200px" }}>
-              <div className="card-subtle" style={{ padding: "1rem 1.1rem", flex: 1 }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.35rem" }}>
-                  <span
-                    style={{
-                      display: "inline-flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "1.4rem",
-                      height: "1.4rem",
-                      borderRadius: "999px",
-                      background: "var(--color-primary)",
-                      color: "#1A1A1A",
-                      fontSize: "0.75rem",
-                      fontWeight: 700,
-                    }}
-                  >
-                    {i + 1}
-                  </span>
-                  <strong style={{ fontSize: "0.95rem" }}>{s.step}</strong>
-                </div>
-                <p style={{ fontSize: "0.83rem", color: "var(--color-ink-muted)", margin: 0 }}>{s.detail}</p>
-              </div>
-              {i < CAPITAL_FLOW.length - 1 && (
-                <span style={{ alignSelf: "center", color: "var(--color-primary)", fontSize: "1.2rem" }} aria-hidden>
-                  →
-                </span>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Governance */}
-      <section>
-        <h2 className="text-title" style={{ marginBottom: "1rem" }}>
-          Governance
-        </h2>
-        <div className="card" style={{ maxWidth: "640px" }}>
-          <p style={{ fontSize: "0.9rem", color: "var(--color-ink-muted)", marginBottom: "1rem" }}>
-            Research governs off-chain through a Snapshot space, with discussion on the
-            community forum.
-          </p>
-          <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-            <a href={GOVERNANCE.snapshot} target="_blank" rel="noreferrer" className="btn-ghost">
-              Snapshot · {GOVERNANCE.snapshotSpace} ↗
-            </a>
-            <a href={GOVERNANCE.forum} target="_blank" rel="noreferrer" className="btn-ghost">
-              Governance Forum ↗
-            </a>
-          </div>
         </div>
       </section>
     </div>
