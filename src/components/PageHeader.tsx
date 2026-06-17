@@ -2,12 +2,14 @@ interface Props {
   label: string;
   title: string;
   intro?: string;
+  /** Center the label, title, and intro (default left-aligned). */
+  center?: boolean;
 }
 
 /** Consistent page heading: small uppercase label, serif display title, optional intro. */
-export function PageHeader({ label, title, intro }: Props) {
+export function PageHeader({ label, title, intro, center }: Props) {
   return (
-    <header style={{ marginBottom: "1.75rem" }}>
+    <header style={{ marginBottom: "1.75rem", textAlign: center ? "center" : undefined }}>
       <span className="text-label" style={{ color: "var(--color-primary-hover)" }}>
         {label}
       </span>
@@ -15,7 +17,7 @@ export function PageHeader({ label, title, intro }: Props) {
         {title}
       </h1>
       {intro && (
-        <p style={{ fontSize: "1rem", color: "var(--color-ink-muted)", maxWidth: "62ch", margin: 0 }}>
+        <p style={{ fontSize: "1rem", color: "var(--color-ink-muted)", maxWidth: "62ch", margin: center ? "0 auto" : 0 }}>
           {intro}
         </p>
       )}

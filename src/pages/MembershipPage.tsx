@@ -20,6 +20,7 @@ export default function MembershipPage() {
   return (
     <div>
       <PageHeader
+        center
         label="Membership"
         title="Your membership"
         intro="Membership is an on-chain pass — an ERC-1155 token on Ethereum, valid for 360 days. Renewing mints a fresh term; you keep access as long as any token is unexpired."

@@ -433,17 +433,39 @@ h2, h3, h4, h5, h6 {
    ============================================================ */
 .member-frame {
   display: inline-block;
-  padding: 12px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #B8860B 0%, #F6E27A 22%, #C9A227 50%, #F6E27A 78%, #9E7409 100%);
-  box-shadow: 0 10px 30px rgba(26, 22, 10, 0.22), inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  padding: 13px;
+  border-radius: 8px;
+  /* Polished-metal gold: dark edges, two bright sheen bands along the diagonal. */
+  background: linear-gradient(135deg,
+    #6e5310 0%,
+    #c9a227 9%,
+    #f4dd84 19%,
+    #fff6cf 28%,
+    #d8b53e 42%,
+    #a9801a 52%,
+    #d8b53e 63%,
+    #f6e49a 79%,
+    #c9a227 90%,
+    #6e5310 100%);
+  /* Drop shadow + beveled edge (top-left highlight, bottom-right shade) + hairline. */
+  box-shadow:
+    0 14px 34px rgba(26, 22, 10, 0.30),
+    inset 0 2px 3px rgba(255, 252, 235, 0.65),
+    inset 2px 0 3px rgba(255, 252, 235, 0.35),
+    inset 0 -3px 5px rgba(82, 56, 6, 0.60),
+    inset -2px 0 4px rgba(82, 56, 6, 0.45),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22);
   max-width: 100%;
 }
 .member-frame-inner {
-  padding: 7px;
-  background: #fffdf7;
-  border: 1px solid rgba(120, 90, 20, 0.35);
+  /* No mat: the gold meets the card directly, separated only by a fine dark rabbet. */
+  padding: 0;
+  background: transparent;
   border-radius: 3px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(54, 38, 6, 0.70),
+    inset 0 0 0 2px rgba(214, 178, 70, 0.55);
 }
 .member-frame img {
   display: block;
@@ -451,5 +473,5 @@ h2, h3, h4, h5, h6 {
   height: auto;
   border-radius: 2px;
 }
-.member-frame--sm { padding: 8px; border-radius: 5px; }
-.member-frame--sm .member-frame-inner { padding: 5px; }
+.member-frame--sm { padding: 9px; border-radius: 6px; }
+.member-frame--sm .member-frame-inner { padding: 0; }
