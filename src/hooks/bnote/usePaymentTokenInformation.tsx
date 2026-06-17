@@ -16,6 +16,12 @@ export type PaymentTokenDictionary = {
   [address: string]: PaymentToken;
 };
 
+/**
+ * BNOTE may have several payment tokens enabled on-chain, but the UI offers only
+ * these three (matched case-insensitively against each token's ERC-20 symbol).
+ */
+const ALLOWED_PAYMENT_SYMBOLS = new Set(["btree", "wbtc", "tbtc"]);
+
 export function usePaymentTokenInformation({
   bnoteContractAddress,
 }: {
@@ -108,8 +114,10 @@ export function usePaymentTokenInformation({
       } as PaymentToken;
     });
 
-    // Filter out inactive tokens
-    const activeTokens = processedTokens.filter((token) => token.active);
+    // Keep only tokens that are active on-chain AND in the allowed set (BTREE/WBTC/tBTC).
+    const activeTokens = processedTokens.filter(
+      (token) => token.active && ALLOWED_PAYMENT_SYMBOLS.has(token.name.trim().toLowerCase())
+    );
 
     // Convert array of PaymentToken to dictionary
     const activeTokensDictionary: PaymentTokenDictionary = {};
