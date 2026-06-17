@@ -18,7 +18,7 @@ import type { Hash } from "viem";
  * Mirrors the gov contributor flow.
  */
 
-const APPLY_ROLES = ["Researcher", "Contributor", "Steward", "Operations", "Moderator"] as const;
+const APPLY_ROLES = ["Researcher", "Contributor", "Assistant", "Steward"] as const;
 const EXPERTISE = ["Business", "Technology", "Community", "Research"] as const;
 const REGIONS = ["EMEA", "APAC", "LATAM", "NORAM"] as const;
 const LANGUAGES = [

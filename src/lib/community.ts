@@ -36,10 +36,10 @@ export function useCommunity() {
   return useQuery({ queryKey: ["community"], staleTime: 60_000, queryFn: fetchCommunity });
 }
 
-/** Addresses (lowercase) who can review contributor applications — Operations or Executive. */
+/** Addresses (lowercase) who can review contributor applications — Executives. */
 export function opsHolders(roles: RolesMap): string[] {
   return Object.entries(roles ?? {})
-    .filter(([, list]) => list.some((r) => /^(operations|ops|executive)$/i.test(r.label)))
+    .filter(([, list]) => list.some((r) => /^executive$/i.test(r.label)))
     .map(([addr]) => addr.toLowerCase());
 }
 
@@ -63,7 +63,7 @@ export function useRoleDefs(): { data: RoleDef[] | undefined } {
 
 /**
  * Every role available to assign, in dropdown order: the built-in powers roles
- * (Executive / Operations / Moderator) and built-in assignable roles
+ * (Executive / Assistant) and built-in assignable roles
  * (Researcher / Steward) first, then admin-created roles. A created role with the
  * same label as a built-in overrides its color/description but stays locked.
  */
@@ -156,13 +156,12 @@ export async function moderateItem(opts: { walletClient: WalletClient; account: 
 
 /**
  * Built-in roles that carry POWERS (assign the exact label in Admin → Roles).
- * Executive = full admin (auto-granted to the super-admin); Operations review
- * contributor applications; Moderator moderates flagged content.
+ * Executive = full admin (auto-granted to the super-admin) and reviews contributor
+ * applications; Assistant moderates flagged content.
  */
 export const KNOWN_ROLES: { label: string; grants: string; color: string }[] = [
-  { label: "Executive", grants: "Full administration — manage roles, rooms, and moderation.", color: "#1A1A1A" },
-  { label: "Operations", grants: "Review private contributor applications.", color: "#2563EB" },
-  { label: "Moderator", grants: "Moderate community-flagged posts & messages (approve / remove).", color: "#7C3AED" },
+  { label: "Executive", grants: "Full administration — manage roles, rooms, moderation, and review contributor applications.", color: "#1A1A1A" },
+  { label: "Assistant", grants: "Moderate community-flagged posts & messages (approve / remove).", color: "#7C3AED" },
 ];
 
 /**

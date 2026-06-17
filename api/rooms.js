@@ -30,7 +30,7 @@ function hasFullRole(rolesMap, addrLower) {
 
 // Who may PROPOSE a room (pending an admin's approval): role-holders.
 const PROPOSALS_KEY = "bittrees:research:roomproposals"; // [{ id, name, blurb, gate, by, at }]
-const PROPOSE_ROLE_RE = /^(operations|executive|researcher|steward)$/i;
+const PROPOSE_ROLE_RE = /^(executive|researcher|steward)$/i;
 function hasProposeRole(rolesMap, addrLower) {
   const list = (rolesMap && rolesMap[addrLower]) || [];
   return list.some((r) => PROPOSE_ROLE_RE.test(String(r?.label || "")));

@@ -32,7 +32,7 @@ export default function Admin() {
       <div style={{ maxWidth: "640px", margin: "0 auto", textAlign: "center" }}>
         <PageHeader label="Admin" title="Admin" />
         <p style={{ color: "var(--color-ink-muted)" }}>
-          This area is for Bittrees Research executives and moderators.
+          This area is for Bittrees Research executives and assistants.
         </p>
       </div>
     );
@@ -213,7 +213,24 @@ function RolesTab() {
           <input value={newLabel} onChange={(e) => setNewLabel(e.target.value)} placeholder="New role label" style={{ ...input, width: "180px" }} />
           <input type="color" value={newColor} onChange={(e) => setNewColor(e.target.value)} style={{ width: "40px", height: "34px", border: "1px solid var(--color-border)", borderRadius: "2px", background: "#fff" }} />
           <input value={newDesc} onChange={(e) => setNewDesc(e.target.value)} placeholder="Description (optional)" style={{ ...input, flex: 1, minWidth: "180px" }} />
-          <button className="btn-ghost" disabled={busy || !newLabel.trim()} onClick={() => run(async () => { await createRole({ walletClient: walletClient!, account: address as `0x${string}`, label: newLabel.trim(), color: newColor, description: newDesc.trim() }); setNewLabel(""); setNewDesc(""); })}>Create role</button>
+          <button
+            className="btn-ghost"
+            disabled={busy || !newLabel.trim()}
+            onClick={() => {
+              const name = newLabel.trim();
+              if (roleDefs.some((r) => r.label.toLowerCase() === name.toLowerCase())) {
+                setErr(`Role "${name}" already exists`);
+                return;
+              }
+              run(async () => {
+                await createRole({ walletClient: walletClient!, account: address as `0x${string}`, label: name, color: newColor, description: newDesc.trim() });
+                setNewLabel("");
+                setNewDesc("");
+              });
+            }}
+          >
+            Create role
+          </button>
         </div>
       </section>
     </div>

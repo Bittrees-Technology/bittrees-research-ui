@@ -4,7 +4,7 @@ import { useUserRoles } from "./community";
  * Admin access tiers for Bittrees Research.
  *  - "full"       — the standing super-admin (executive) address, or anyone holding
  *                   the Executive role. Every Admin tab + write access.
- *  - "moderation" — holders of the Moderator role (Moderation tab only).
+ *  - "moderation" — holders of the Assistant role (Moderation tab only).
  *  - "none"       — no admin access.
  *
  * The same tiers are enforced server-side in api/community.js + api/rooms.js, so
@@ -12,7 +12,7 @@ import { useUserRoles } from "./community";
  */
 export const SUPER_ADMIN = "0xe5350d96fc3161bf5c385843ec5ee24e8b465b2f"; // executive — always full access
 const FULL_ROLE_RE = /^executive$/i;
-const MOD_ROLE_RE = /^(moderator|mod)$/i;
+const MOD_ROLE_RE = /^assistant$/i;
 
 export type AdminLevel = "full" | "moderation" | "none";
 

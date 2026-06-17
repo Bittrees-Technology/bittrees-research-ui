@@ -180,6 +180,10 @@ export default async function handler(req, res) {
       const defs = (await readJson(ROLEDEFS_KEY, [])) || [];
       const without = defs.filter((d) => String(d.label || "").toLowerCase() !== label.toLowerCase());
       if (body.createRole) {
+        // Reject duplicates — a role with this title already exists (built-in or catalog).
+        const RESERVED = ["executive", "assistant", "researcher", "steward"];
+        const dup = RESERVED.includes(label.toLowerCase()) || defs.some((d) => String(d.label || "").toLowerCase() === label.toLowerCase());
+        if (dup) { res.status(409).json({ error: `Role "${label}" already exists` }); return; }
         const def = { label, color: String(op.color || "").slice(0, 16), description: String(op.description || "").slice(0, 200) };
         const next = [...without, def];
         await writeJson(ROLEDEFS_KEY, next);
@@ -260,8 +264,8 @@ export default async function handler(req, res) {
       const [mods, rolesRaw] = await Promise.all([spaceRoles(true), readJson(ROLES_KEY, {})]);
       const roles = rolesRaw || {};
       if (mods.length === 0 && signer !== SUPER_ADMIN) { res.status(503).json({ error: "could not verify moderators" }); return; }
-      // Full admins (space admin / super / Partner-tier) OR the Moderator role may moderate.
-      if (!isFullAdmin(signer, mods, roles) && !hasRole(roles, signer, /^(moderator|mod)$/i)) { res.status(403).json({ error: "not authorized to moderate" }); return; }
+      // Full admins (super-admin / space admin / Executive) OR the Assistant role may moderate.
+      if (!isFullAdmin(signer, mods, roles) && !hasRole(roles, signer, /^assistant$/i)) { res.status(403).json({ error: "not authorized to moderate" }); return; }
       const flags = (await readJson(FLAGS_KEY, {})) || {};
       const rec = flags[id];
       if (rec) {
