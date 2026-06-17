@@ -1,6 +1,12 @@
 import { http } from "wagmi";
+import type { Chain } from "viem";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
-import { ALL_CHAINS } from "@/lib/constants/chains.ts";
+import { ALL_CHAINS, PRODUCTION_CHAINS } from "@/lib/constants/chains.ts";
+
+// The wallet/network switcher only offers mainnet + Base. Sepolia / Base Sepolia
+// show up only when VITE_ENABLE_TESTNETS=true (local dev), never in production.
+const SHOW_TESTNETS = (import.meta.env.VITE_ENABLE_TESTNETS as string | undefined) === "true";
+const WALLET_CHAINS: readonly [Chain, ...Chain[]] = SHOW_TESTNETS ? ALL_CHAINS : PRODUCTION_CHAINS;
 
 /**
  * Shared wallet/RPC config for Bittrees Research. Exported as a module singleton
@@ -29,9 +35,9 @@ export const wagmiConfig = getDefaultConfig({
   appUrl: appOrigin,
   appIcon: `${appOrigin}/bittrees_logo_tree.png`,
   projectId,
-  chains: ALL_CHAINS,
+  chains: WALLET_CHAINS,
   transports: Object.fromEntries(
-    ALL_CHAINS.map((c) => [
+    WALLET_CHAINS.map((c) => [
       c.id,
       c.id === 1 && mainnetRpc ? http(mainnetRpc, httpConfig) : http(undefined, httpConfig),
     ])
