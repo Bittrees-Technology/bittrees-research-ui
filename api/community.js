@@ -4,7 +4,7 @@ import { recoverMessageAddress, getAddress } from "viem";
  * Community registry — admin-assigned custom roles/tags AND community moderation
  * flags. Backed by Vercel KV / Upstash over its REST API. Reads are public.
  * Writes are signed:
- *   - roles (assign/unassign): a live gov.bittrees.eth space ADMIN
+ *   - roles (assign/unassign): a live research.bittrees.eth space ADMIN
  *   - flag/unflag: any BGOV holder (shareholder), verified server-side
  *   - moderate (approve/remove): a space admin OR moderator
  *
@@ -17,11 +17,11 @@ import { recoverMessageAddress, getAddress } from "viem";
 
 const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const ROLES_KEY = "bittrees:roles"; // { <addrLower>: [{ label, color }] }
-const ROLEDEFS_KEY = "bittrees:roledefs"; // [{ label, color, description }] — the catalog of assignable roles
-const FLAGS_KEY = "bittrees:flags"; // { <itemId>: { by:[addr], mod:'approved'|'removed'|null, surface, preview } }
-const ENCKEYS_KEY = "bittrees:enckeys"; // { <addrLower>: <x25519 pubkey hex> } — for encrypting applications
-const SNAPSHOT_SPACE = "gov.bittrees.eth";
+const ROLES_KEY = "bittrees:research:roles"; // { <addrLower>: [{ label, color }] }
+const ROLEDEFS_KEY = "bittrees:research:roledefs"; // [{ label, color, description }] — the catalog of assignable roles
+const FLAGS_KEY = "bittrees:research:flags"; // { <itemId>: { by:[addr], mod:'approved'|'removed'|null, surface, preview } }
+const ENCKEYS_KEY = "bittrees:research:enckeys"; // { <addrLower>: <x25519 pubkey hex> } — for encrypting applications
+const SNAPSHOT_SPACE = "research.bittrees.eth";
 const REPLAY_WINDOW_MS = 10 * 60 * 1000;
 export const FLAG_HIDE_THRESHOLD = 2;
 

@@ -24,7 +24,7 @@ const SAFE_TX_SERVICE = "https://api.safe.global/tx-service/eth";
 // Role gating reads the same admin-assigned roles registry as /api/community.
 const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const ROLES_KEY = "bittrees:roles"; // { <addrLower>: [{ label, color }] }
+const ROLES_KEY = "bittrees:research:roles"; // { <addrLower>: [{ label, color }] }
 
 /** The admin-assigned roles map from KV ({} if KV isn't configured). */
 async function readRoles() {

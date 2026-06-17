@@ -4,7 +4,7 @@ import { recoverMessageAddress, getAddress } from "viem";
  * Community-room registry — built-in room chatIds AND admin-created custom rooms
  * (each with its own gate), so creating a room makes it live for everyone with no
  * redeploy. Backed by Vercel KV / Upstash Redis over its REST API (no SDK). Reads
- * are public; writes require a signature from a live gov.bittrees.eth space admin.
+ * are public; writes require a signature from a live research.bittrees.eth space admin.
  *
  * Vercel KV / Upstash inject these when you connect a store:
  *   KV_REST_API_URL / KV_REST_API_TOKEN  (or UPSTASH_REDIS_REST_URL / _TOKEN)
@@ -12,11 +12,11 @@ import { recoverMessageAddress, getAddress } from "viem";
 
 const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const ROOMS_KEY = "bittrees:rooms"; // { roomKey: chatId } for built-in rooms
-const CUSTOM_KEY = "bittrees:customrooms"; // [{ key, name, blurb, gate, chatId }]
-const ICONS_KEY = "bittrees:roomicons"; // { roomKey: emoji | image URL } — admin-set
-const ROLES_KEY = "bittrees:roles"; // { <addrLower>: [{ label, color }] } — admin-assigned roles
-const SNAPSHOT_SPACE = "gov.bittrees.eth";
+const ROOMS_KEY = "bittrees:research:rooms"; // { roomKey: chatId } for built-in rooms
+const CUSTOM_KEY = "bittrees:research:customrooms"; // [{ key, name, blurb, gate, chatId }]
+const ICONS_KEY = "bittrees:research:roomicons"; // { roomKey: emoji | image URL } — admin-set
+const ROLES_KEY = "bittrees:research:roles"; // { <addrLower>: [{ label, color }] } — admin-assigned roles
+const SNAPSHOT_SPACE = "research.bittrees.eth";
 const REPLAY_WINDOW_MS = 10 * 60 * 1000;
 
 // Full admin access: the standing super-admin (executive) or the Executive role.
@@ -29,7 +29,7 @@ function hasFullRole(rolesMap, addrLower) {
 }
 
 // Who may PROPOSE a room (pending an admin's approval): role-holders.
-const PROPOSALS_KEY = "bittrees:roomproposals"; // [{ id, name, blurb, gate, by, at }]
+const PROPOSALS_KEY = "bittrees:research:roomproposals"; // [{ id, name, blurb, gate, by, at }]
 const PROPOSE_ROLE_RE = /^(operations|executive|researcher|steward)$/i;
 function hasProposeRole(rolesMap, addrLower) {
   const list = (rolesMap && rolesMap[addrLower]) || [];
@@ -95,7 +95,7 @@ function validGate(g) {
   return validRule(g);
 }
 
-/** Verify the request is signed by a full admin: a live gov.bittrees.eth space
+/** Verify the request is signed by a full admin: a live research.bittrees.eth space
  *  admin, the super-admin address, or a Partner/Junior Partner/Associate role. */
 async function verifyAdmin(address, signature, message) {
   if (!isAddr(address)) return { ok: false, code: 400, error: "invalid address" };

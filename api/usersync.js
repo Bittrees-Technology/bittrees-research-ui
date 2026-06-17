@@ -13,7 +13,7 @@ import { recoverMessageAddress, getAddress } from "viem";
 
 const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
-const PREFIX = "bittrees:usersync:"; // + <addrLower> → { blob, updatedAt }
+const PREFIX = "bittrees:research:usersync:"; // + <addrLower> → { blob, updatedAt }
 const MAX_BLOB = 400_000; // ~400 KB ciphertext cap
 
 // MUST match SYNC_MESSAGE in src/lib/userSync.ts exactly.
