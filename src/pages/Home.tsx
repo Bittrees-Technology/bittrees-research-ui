@@ -4,22 +4,6 @@ import { useMembershipStatus } from "@/hooks/membership/useMembershipStatus";
 import { ContributorForm } from "@/components/ContributorForm";
 import { RESEARCH_LINKS } from "@/lib/links";
 
-interface Section {
-  to: string;
-  label: string;
-  title: string;
-  desc: string;
-}
-
-const SECTIONS: Section[] = [
-  { to: "/research", label: "Research", title: "Research Library", desc: "Original essays and analysis, published natively." },
-  { to: "/forum", label: "Community", title: "Forum", desc: "On-chain, wallet-signed member discussions." },
-  { to: "/chat", label: "Community", title: "Members Chat", desc: "Gated rooms, direct messages, and announcements." },
-  { to: "/bnote", label: "Preferred", title: "BNOTE", desc: "Bitcoin-backed preferred stock of the foundation." },
-  { to: "/bit", label: "Index", title: "BIT", desc: "Convert BNOTE into the Bittrees Index Token." },
-  { to: "/structure", label: "Structure", title: "Structure", desc: "Governance, tokens, and the entity map." },
-];
-
 const VISION: string[] = [
   "At Bittrees Research, we are a purpose-driven organization that exists to advance society towards a more just and equitable future by funding public goods and promoting research in emerging technologies and systems innovation. We recognize the importance of historical and contextual relevance in our work, and strive to create new knowledge, tools, and systems that have a positive impact in the metaverse and beyond.",
   "Our organization is made up of a diverse group of individuals who are passionate about using their expertise and resources to create a better world. We bring together researchers, innovators, creatives, and community members to collaborate on cutting-edge projects that contribute to our shared vision of a more equitable and sustainable society.",
@@ -51,17 +35,6 @@ export default function Home() {
             {expiringSoon ? "Renew membership" : "Manage membership"}
           </Link>
         </div>
-      </section>
-
-      {/* Sections */}
-      <section style={{ display: "grid", gap: "1rem", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))" }}>
-        {SECTIONS.map((s) => (
-          <Link key={s.to} to={s.to} className="card-link">
-            <span className="text-label">{s.label}</span>
-            <h3 style={{ fontSize: "1.15rem", margin: "0.3rem 0 0.4rem" }}>{s.title}</h3>
-            <p style={{ fontSize: "0.875rem", color: "var(--color-ink-muted)", margin: 0 }}>{s.desc}</p>
-          </Link>
-        ))}
       </section>
 
       {/* Vision statement */}
