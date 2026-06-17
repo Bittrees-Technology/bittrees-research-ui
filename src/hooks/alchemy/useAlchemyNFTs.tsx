@@ -3,8 +3,10 @@ import {Alchemy, OwnedNft} from 'alchemy-sdk';
 import type { ChainId } from '@/lib/constants/contracts';
 import {CHAIN_TO_ALCHEMY_NETWORK} from "@/lib/constants/chains.ts";
 
-// TODO fetch this from the .env and secure it on Alchemy against being used by other domains
-const ALCHEMY_API_KEY = 'g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN'// import.meta.env.VITE_ALCHEMY_API_KEY;
+// Public, browser-exposed Alchemy key — domain-restrict it on the Alchemy
+// dashboard. Override per-deployment with VITE_ALCHEMY_API_KEY.
+const ALCHEMY_API_KEY =
+  (import.meta.env.VITE_ALCHEMY_API_KEY as string) || "g6X4-HRGshx5XNp7gpDxLPeX-WSpw9pN";
 
 /**
  * Generic hook to get NFTs for specific contracts on any supported chain
@@ -33,9 +35,9 @@ export function useAlchemyNFTs(
             let pagingToken: string | undefined = undefined;
             const ownedNfts: OwnedNft[] = [];
             do {
-                const response = await alchemy.nft.getNftsForOwner(ownerAddress, {
-                    contractAddresses,
-                });
+                const opts: { contractAddresses: string[]; pageKey?: string } = { contractAddresses };
+                if (pagingToken) opts.pageKey = pagingToken;
+                const response = await alchemy.nft.getNftsForOwner(ownerAddress, opts);
 
                 ownedNfts.push(...response.ownedNfts);
                 pagingToken = response.pageKey;
