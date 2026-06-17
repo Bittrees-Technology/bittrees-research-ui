@@ -59,7 +59,20 @@ const router = createBrowserRouter([
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
-const queryClient = new QueryClient();
+// Cache reads across navigations so re-mounting a view (e.g. the membership
+// check, fired from the gate, the header chip, and the Membership page) doesn't
+// re-hit the chain/Alchemy every time. Data stays fresh for a minute and warm
+// for 30, and we don't refetch just because the window regained focus.
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60_000,
+      gcTime: 30 * 60_000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 root.render(
   <WagmiProvider config={wagmiConfig}>

@@ -48,6 +48,7 @@ export function useMembershipStatus(): MembershipStatus {
   } = useAlchemyNFTs(address, [membershipAddress], mainnet.id);
 
   const tokenIds = ownedNfts.map((nft) => nft.tokenId);
+  const statusCacheKey = address ? `br_membership_${address.toLowerCase()}` : undefined;
 
   const statusQuery = useQuery({
     queryKey: ["membership", "status", address, tokenIds],
@@ -72,13 +73,24 @@ export function useMembershipStatus(): MembershipStatus {
           })),
         }),
       ]);
-      return tokenIds.map((tokenId, i) => ({
+      const result = tokenIds.map((tokenId, i) => ({
         tokenId,
         isExpired: expiredResults[i]?.result === true,
         expiresAt: Number(stampResults[i]?.result ?? 0n),
       }));
+      try { if (statusCacheKey) localStorage.setItem(statusCacheKey, JSON.stringify(result)); } catch { /* quota */ }
+      return result;
     },
     enabled: Boolean(address && tokenIds.length > 0),
+    staleTime: 5 * 60_000,
+    // Paint from the last cached status instantly on reload; revalidate in bg.
+    initialData: statusCacheKey
+      ? (): MembershipToken[] | undefined => {
+          try { const c = JSON.parse(localStorage.getItem(statusCacheKey) || "null"); return Array.isArray(c) ? c : undefined; }
+          catch { return undefined; }
+        }
+      : undefined,
+    initialDataUpdatedAt: 0,
   });
 
   const tokens = statusQuery.data ?? [];
