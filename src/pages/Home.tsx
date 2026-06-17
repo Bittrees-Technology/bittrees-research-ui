@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link } from "react-router";
 import { useMembershipStatus } from "@/hooks/membership/useMembershipStatus";
 import { ContributorForm } from "@/components/ContributorForm";
@@ -28,6 +29,7 @@ const VISION: string[] = [
 
 export default function Home() {
   const { daysLeft, expiringSoon } = useMembershipStatus();
+  const [showApply, setShowApply] = useState(false);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
@@ -78,9 +80,15 @@ export default function Home() {
 
       <hr className="gold-rule" style={{ maxWidth: "720px", margin: "0 auto", width: "100%" }} />
 
-      {/* Contributor form */}
-      <section>
-        <ContributorForm />
+      {/* Contributor form — gated behind a centered button */}
+      <section style={{ textAlign: "center" }}>
+        {showApply ? (
+          <ContributorForm />
+        ) : (
+          <button className="btn-primary" onClick={() => setShowApply(true)}>
+            Apply to contribute
+          </button>
+        )}
       </section>
 
       {/* Secondary links */}

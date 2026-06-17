@@ -7,7 +7,6 @@ import { wagmiConfig } from "@/lib/wagmi";
 import { publishPost, CONTRIB_COMMUNITY, useSchemaRegistered } from "@/lib/forum";
 import { fetchCommunity, opsHolders } from "@/lib/community";
 import { deriveEncKeypair, encryptApplication, pubKeyFromHex, type Application } from "@/lib/appcrypto";
-import { shortAddress } from "@/lib/links";
 import { ChipMultiSelect, SearchMultiSelect } from "@/components/multiselect";
 import type { Hash } from "viem";
 
@@ -19,7 +18,6 @@ import type { Hash } from "viem";
  */
 
 const APPLY_ROLES = ["Researcher", "Contributor", "Assistant", "Steward"] as const;
-const EXPERTISE = ["Business", "Technology", "Community", "Research"] as const;
 const REGIONS = ["EMEA", "APAC", "LATAM", "NORAM"] as const;
 const LANGUAGES = [
   "English", "Mandarin Chinese", "Hindi", "Spanish", "French", "Standard Arabic", "Bengali",
@@ -42,7 +40,6 @@ export function ContributorForm() {
 
   const [name, setName] = useState("");
   const [roles, setRoles] = useState<string[]>([]);
-  const [expertise, setExpertise] = useState<string[]>([]);
   const [specialty, setSpecialty] = useState("");
   const [region, setRegion] = useState<string[]>([]);
   const [languages, setLanguages] = useState<string[]>([]);
@@ -50,7 +47,6 @@ export function ContributorForm() {
   const [email, setEmail] = useState("");
   const [twitter, setTwitter] = useState("");
   const [telegram, setTelegram] = useState("");
-  const [wallet, setWallet] = useState("");
   const [referrer, setReferrer] = useState("");
 
   const [status, setStatus] = useState<"idle" | "posting" | "done" | "error">("idle");
@@ -77,7 +73,6 @@ export function ContributorForm() {
       const app: Application = {
         name: name.trim(),
         roles,
-        expertise,
         region,
         languages,
         specialty: specialty.trim(),
@@ -85,7 +80,7 @@ export function ContributorForm() {
         email: email.trim(),
         twitter: twitter.trim(),
         telegram: telegram.trim(),
-        wallet: wallet.trim() || address,
+        wallet: address,
         referrer: referrer.trim(),
       };
       const { publicKey } = await deriveEncKeypair(wc, address);
@@ -153,10 +148,6 @@ export function ContributorForm() {
             <ChipMultiSelect options={APPLY_ROLES} value={roles} onChange={setRoles} />
           </Field>
 
-          <Field label="Area(s) of expertise">
-            <ChipMultiSelect options={EXPERTISE} value={expertise} onChange={setExpertise} />
-          </Field>
-
           <Field label="Briefly describe your specialty and what you'd contribute" required>
             <textarea value={specialty} onChange={(e) => setSpecialty(e.target.value)} rows={5} placeholder="A few sentences on your specialty and what you'd contribute." style={{ ...inputStyle, resize: "vertical", lineHeight: 1.6 }} />
           </Field>
@@ -179,10 +170,6 @@ export function ContributorForm() {
             <Field label="Telegram"><input value={telegram} onChange={(e) => setTelegram(e.target.value)} placeholder="@handle" maxLength={80} style={inputStyle} /></Field>
             <Field label="If someone referred you, their name"><input value={referrer} onChange={(e) => setReferrer(e.target.value)} placeholder="Referrer (optional)" maxLength={120} style={inputStyle} /></Field>
           </div>
-
-          <Field label="Preferred ETH wallet">
-            <input value={wallet} onChange={(e) => setWallet(e.target.value)} placeholder={address ? `Defaults to ${shortAddress(address)}` : "0x…"} maxLength={64} style={{ ...inputStyle, fontFamily: "var(--font-mono)", fontSize: "0.82rem" }} />
-          </Field>
 
           <p style={{ fontFamily: "var(--font-sans)", fontSize: "0.72rem", color: "var(--color-ink-dim)", lineHeight: 1.55, margin: 0 }}>
             Submitting signs once to derive your encryption key (no gas), then records the encrypted
