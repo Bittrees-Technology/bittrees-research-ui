@@ -9,8 +9,10 @@ import "./index.css";
 import { wagmiConfig } from "@/lib/wagmi.ts";
 import Layout from "@/components/layout/Layout";
 import { LayoutProvider } from "@/hooks/useLayoutContext.tsx";
+import { ROUTES } from "@/lib/links";
 
 import Home from "./pages/Home";
+import Contribute from "./pages/Contribute";
 import ResearchPage from "./pages/ResearchPage";
 import PostPage from "./pages/PostPage";
 import Forum from "./pages/Forum";
@@ -30,6 +32,7 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <Home /> },
+      { path: ROUTES.contribute.slice(1), element: <Contribute /> },
       { path: "research", element: <ResearchPage /> },
       { path: "research/:slug", element: <PostPage /> },
       { path: "forum", element: <Forum /> },

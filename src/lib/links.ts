@@ -30,6 +30,7 @@ export const EXPLORERS = {
 /** Internal routes referenced across the chat/forum components. */
 export const ROUTES = {
   overview: "/",
+  contribute: "/contribute",
   forum: "/forum",
   chat: "/chat",
   membership: "/membership",

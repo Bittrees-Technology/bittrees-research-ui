@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Link } from "react-router";
 import { useMembershipStatus } from "@/hooks/membership/useMembershipStatus";
-import { ContributorForm } from "@/components/ContributorForm";
-import { RESEARCH_LINKS } from "@/lib/links";
+import { RESEARCH_LINKS, ROUTES } from "@/lib/links";
 
 const VISION: string[] = [
   "At Bittrees Research, we are a purpose-driven organization that exists to advance society towards a more just and equitable future by funding public goods and promoting research in emerging technologies and systems innovation. We recognize the importance of historical and contextual relevance in our work, and strive to create new knowledge, tools, and systems that have a positive impact in the metaverse and beyond.",
@@ -13,7 +11,6 @@ const VISION: string[] = [
 
 export default function Home() {
   const { daysLeft, expiringSoon } = useMembershipStatus();
-  const [showApply, setShowApply] = useState(false);
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "2.5rem" }}>
@@ -53,15 +50,11 @@ export default function Home() {
 
       <hr className="gold-rule" style={{ maxWidth: "720px", margin: "0 auto", width: "100%" }} />
 
-      {/* Contributor form — gated behind a centered button */}
+      {/* Contributor application */}
       <section style={{ textAlign: "center" }}>
-        {showApply ? (
-          <ContributorForm />
-        ) : (
-          <button className="btn-primary" onClick={() => setShowApply(true)}>
-            Apply to contribute
-          </button>
-        )}
+        <Link to={ROUTES.contribute} className="btn-primary">
+          Apply to contribute
+        </Link>
       </section>
 
       {/* Secondary links */}
